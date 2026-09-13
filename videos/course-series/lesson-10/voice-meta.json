@@ -1,0 +1,218 @@
+[
+  {
+    "scene": "s1",
+    "index": 0,
+    "file": "assets/voice-xiaoxiao/s1-00.mp3",
+    "duration": 10.92,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s1",
+    "index": 1,
+    "file": "assets/voice-xiaoxiao/s1-01.mp3",
+    "duration": 11.472,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s1",
+    "index": 2,
+    "file": "assets/voice-xiaoxiao/s1-02.mp3",
+    "duration": 8.88,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s2",
+    "index": 0,
+    "file": "assets/voice-xiaoxiao/s2-00.mp3",
+    "duration": 10.104,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s2",
+    "index": 1,
+    "file": "assets/voice-xiaoxiao/s2-01.mp3",
+    "duration": 11.136,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s2",
+    "index": 2,
+    "file": "assets/voice-xiaoxiao/s2-02.mp3",
+    "duration": 8.448,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s2",
+    "index": 3,
+    "file": "assets/voice-xiaoxiao/s2-03.mp3",
+    "duration": 11.232,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s3",
+    "index": 0,
+    "file": "assets/voice-xiaoxiao/s3-00.mp3",
+    "duration": 11.112,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s3",
+    "index": 1,
+    "file": "assets/voice-xiaoxiao/s3-01.mp3",
+    "duration": 7.776,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s3",
+    "index": 2,
+    "file": "assets/voice-xiaoxiao/s3-02.mp3",
+    "duration": 9.24,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s3",
+    "index": 3,
+    "file": "assets/voice-xiaoxiao/s3-03.mp3",
+    "duration": 9.744,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s4",
+    "index": 0,
+    "file": "assets/voice-xiaoxiao/s4-00.mp3",
+    "duration": 10.152,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s4",
+    "index": 1,
+    "file": "assets/voice-xiaoxiao/s4-01.mp3",
+    "duration": 10.032,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s4",
+    "index": 2,
+    "file": "assets/voice-xiaoxiao/s4-02.mp3",
+    "duration": 8.472,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s5",
+    "index": 0,
+    "file": "assets/voice-xiaoxiao/s5-00.mp3",
+    "duration": 24.552,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s5",
+    "index": 1,
+    "file": "assets/voice-xiaoxiao/s5-01.mp3",
+    "duration": 8.712,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s5",
+    "index": 2,
+    "file": "assets/voice-xiaoxiao/s5-02.mp3",
+    "duration": 9.984,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s5",
+    "index": 3,
+    "file": "assets/voice-xiaoxiao/s5-03.mp3",
+    "duration": 11.28,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s6",
+    "index": 0,
+    "file": "assets/voice-xiaoxiao/s6-00.mp3",
+    "duration": 17.4,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s6",
+    "index": 1,
+    "file": "assets/voice-xiaoxiao/s6-01.mp3",
+    "duration": 10.32,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s7",
+    "index": 0,
+    "file": "assets/voice-xiaoxiao/s7-00.mp3",
+    "duration": 11.088,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s7",
+    "index": 1,
+    "file": "assets/voice-xiaoxiao/s7-01.mp3",
+    "duration": 13.032,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s7",
+    "index": 2,
+    "file": "assets/voice-xiaoxiao/s7-02.mp3",
+    "duration": 13.032,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s7",
+    "index": 3,
+    "file": "assets/voice-xiaoxiao/s7-03.mp3",
+    "duration": 11.76,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s8",
+    "index": 0,
+    "file": "assets/voice-xiaoxiao/s8-00.mp3",
+    "duration": 9.48,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s8",
+    "index": 1,
+    "file": "assets/voice-xiaoxiao/s8-01.mp3",
+    "duration": 20.064,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  },
+  {
+    "scene": "s8",
+    "index": 2,
+    "file": "assets/voice-xiaoxiao/s8-02.mp3",
+    "duration": 12.96,
+    "voice": "zh-CN-XiaoxiaoNeural",
+    "rate": "-8%"
+  }
+]

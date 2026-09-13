@@ -1,0 +1,1182 @@
+[
+  {
+    "scene": "read",
+    "start": 0,
+    "duration": 44.791666666666664,
+    "events": [
+      {
+        "subject": "underline1",
+        "time": 10.174,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "underline2",
+        "time": 17.25,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "order1",
+        "time": 12.174,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "order2",
+        "time": 20.25,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "note",
+        "time": 28.118,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      }
+    ]
+  },
+  {
+    "scene": "pair",
+    "start": 44.791666666666664,
+    "duration": 48.916666666666664,
+    "events": [
+      {
+        "subject": "water-links",
+        "time": 3.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "one-a0",
+        "time": 7.65,
+        "props": {
+          "opacity": 0.14
+        }
+      },
+      {
+        "subject": "two-a0",
+        "time": 7.65,
+        "props": {
+          "opacity": 0.14
+        }
+      },
+      {
+        "subject": "one-a1",
+        "time": 7.83,
+        "props": {
+          "opacity": 0.14
+        }
+      },
+      {
+        "subject": "two-a1",
+        "time": 7.83,
+        "props": {
+          "opacity": 0.14
+        }
+      },
+      {
+        "subject": "one-a2",
+        "time": 8.01,
+        "props": {
+          "opacity": 0.14
+        }
+      },
+      {
+        "subject": "two-a2",
+        "time": 8.01,
+        "props": {
+          "opacity": 0.14
+        }
+      },
+      {
+        "subject": "one-b0",
+        "time": 17.71,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b0",
+        "time": 17.71,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b1",
+        "time": 17.83,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b1",
+        "time": 17.83,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b2",
+        "time": 17.95,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b2",
+        "time": 17.95,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b3",
+        "time": 18.07,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b3",
+        "time": 18.07,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b4",
+        "time": 18.19,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b4",
+        "time": 18.19,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b5",
+        "time": 18.31,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b5",
+        "time": 18.31,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b6",
+        "time": 18.43,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b6",
+        "time": 18.43,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b7",
+        "time": 18.55,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b7",
+        "time": 18.55,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b8",
+        "time": 18.67,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b8",
+        "time": 18.67,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b9",
+        "time": 18.79,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b9",
+        "time": 18.79,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b10",
+        "time": 18.91,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b10",
+        "time": 18.91,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b11",
+        "time": 19.03,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b11",
+        "time": 19.03,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b12",
+        "time": 19.15,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b12",
+        "time": 19.15,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b13",
+        "time": 19.27,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b13",
+        "time": 19.27,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b14",
+        "time": 19.39,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b14",
+        "time": 19.39,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "one-b15",
+        "time": 19.51,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "two-b15",
+        "time": 19.51,
+        "props": {
+          "opacity": 0.13
+        }
+      },
+      {
+        "subject": "water-links",
+        "time": 14.71,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "one-b16",
+        "time": 26.778,
+        "props": {
+          "scale": 1.07,
+          "transformOrigin": "50% 50%",
+          "duration": 0.45,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "one-b16",
+        "time": 28.778,
+        "props": {
+          "x": -572,
+          "y": 364,
+          "scale": 1.5,
+          "transformOrigin": "50% 50%"
+        }
+      },
+      {
+        "subject": "one-b17",
+        "time": 26.778,
+        "props": {
+          "scale": 1.07,
+          "transformOrigin": "50% 50%",
+          "duration": 0.45,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "one-b17",
+        "time": 28.778,
+        "props": {
+          "x": -479,
+          "y": 364,
+          "scale": 1.5,
+          "transformOrigin": "50% 50%"
+        }
+      },
+      {
+        "subject": "one-b18",
+        "time": 26.778,
+        "props": {
+          "scale": 1.07,
+          "transformOrigin": "50% 50%",
+          "duration": 0.45,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "one-b18",
+        "time": 28.778,
+        "props": {
+          "x": -386,
+          "y": 364,
+          "scale": 1.5,
+          "transformOrigin": "50% 50%"
+        }
+      },
+      {
+        "subject": "one-b19",
+        "time": 26.778,
+        "props": {
+          "scale": 1.07,
+          "transformOrigin": "50% 50%",
+          "duration": 0.45,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "one-b19",
+        "time": 28.778,
+        "props": {
+          "x": -293,
+          "y": 364,
+          "scale": 1.5,
+          "transformOrigin": "50% 50%"
+        }
+      },
+      {
+        "subject": "extra-label",
+        "time": 28.778,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "difference",
+        "time": 36.182,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      }
+    ]
+  },
+  {
+    "scene": "share",
+    "start": 93.70833333333333,
+    "duration": 47.333333333333336,
+    "events": [
+      {
+        "subject": "arrow0",
+        "time": 9.238,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "coin0",
+        "time": 11.238,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "cup0",
+        "time": 11.238,
+        "props": {
+          "scale": 1.07,
+          "transformOrigin": "50% 50%",
+          "duration": 0.45,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "arrow1",
+        "time": 9.838,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "coin1",
+        "time": 11.938,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "cup1",
+        "time": 11.938,
+        "props": {
+          "scale": 1.07,
+          "transformOrigin": "50% 50%",
+          "duration": 0.45,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "arrow2",
+        "time": 10.438,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "coin2",
+        "time": 12.638,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "cup2",
+        "time": 12.638,
+        "props": {
+          "scale": 1.07,
+          "transformOrigin": "50% 50%",
+          "duration": 0.45,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "arrow3",
+        "time": 11.038,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "coin3",
+        "time": 13.338,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "cup3",
+        "time": 13.338,
+        "props": {
+          "scale": 1.07,
+          "transformOrigin": "50% 50%",
+          "duration": 0.45,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "formula",
+        "time": 21.674,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "reason",
+        "time": 33.95,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      }
+    ]
+  },
+  {
+    "scene": "back",
+    "start": 141.04166666666666,
+    "duration": 46.625,
+    "events": [
+      {
+        "subject": "cupbar",
+        "time": 2.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "bottlebar",
+        "time": 10.686,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "price0",
+        "time": 18.754,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "price1",
+        "time": 19.254,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "price2",
+        "time": 19.754,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "check1",
+        "time": 25.822,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "check2",
+        "time": 35.25,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      }
+    ]
+  },
+  {
+    "scene": "contest",
+    "start": 187.66666666666666,
+    "duration": 36.916666666666664,
+    "events": [
+      {
+        "subject": "underline1",
+        "time": 9.454,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "underline2",
+        "time": 15.138,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "order1",
+        "time": 11.454,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "order2",
+        "time": 18.138,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "note",
+        "time": 24.014,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      }
+    ]
+  },
+  {
+    "scene": "bundle",
+    "start": 224.58333333333331,
+    "duration": 42.5,
+    "events": [
+      {
+        "subject": "p0",
+        "time": 11.494,
+        "props": {
+          "x": 95,
+          "y": -155
+        }
+      },
+      {
+        "subject": "ring0",
+        "time": 11.894,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "price0",
+        "time": 23.242,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "p1",
+        "time": 12.194,
+        "props": {
+          "x": 95,
+          "y": -155
+        }
+      },
+      {
+        "subject": "ring1",
+        "time": 12.594,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "price1",
+        "time": 23.692,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "p2",
+        "time": 12.894,
+        "props": {
+          "x": 95,
+          "y": -155
+        }
+      },
+      {
+        "subject": "ring2",
+        "time": 13.294,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "price2",
+        "time": 24.142,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "p3",
+        "time": 13.594,
+        "props": {
+          "x": 95,
+          "y": -155
+        }
+      },
+      {
+        "subject": "ring3",
+        "time": 13.994,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "price3",
+        "time": 24.592,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "divide",
+        "time": 23.242,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "note",
+        "time": 29.294,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      }
+    ]
+  },
+  {
+    "scene": "usebundle",
+    "start": 267.0833333333333,
+    "duration": 54.541666666666664,
+    "events": [
+      {
+        "subject": "ring0",
+        "time": 13.126,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "price0",
+        "time": 14.526,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "ring1",
+        "time": 13.726,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "price1",
+        "time": 15.126,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "ring2",
+        "time": 14.326,
+        "props": {
+          "strokeDashoffset": 0,
+          "duration": 1.2,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "price2",
+        "time": 15.726,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "p0",
+        "time": 12.526,
+        "props": {
+          "x": 115,
+          "y": -200
+        }
+      },
+      {
+        "subject": "p1",
+        "time": 13.126,
+        "props": {
+          "x": 195,
+          "y": -200
+        }
+      },
+      {
+        "subject": "p2",
+        "time": 13.726,
+        "props": {
+          "x": 275,
+          "y": -200
+        }
+      },
+      {
+        "subject": "p3",
+        "time": 22.53,
+        "props": {
+          "x": 275,
+          "y": -180
+        }
+      },
+      {
+        "subject": "p4",
+        "time": 23.13,
+        "props": {
+          "x": 155,
+          "y": -180
+        }
+      },
+      {
+        "subject": "leftbox",
+        "time": 22.73,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "known",
+        "time": 15.526,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "remaining",
+        "time": 33.31,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "why",
+        "time": 42.226,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      }
+    ]
+  },
+  {
+    "scene": "prices",
+    "start": 321.625,
+    "duration": 36.333333333333336,
+    "events": [
+      {
+        "subject": "penprice",
+        "time": 3.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "each0",
+        "time": 2.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "each1",
+        "time": 3.35,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "kit",
+        "time": 9.506,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "pen",
+        "time": 16.882,
+        "props": {
+          "y": 42,
+          "opacity": 0.25
+        }
+      },
+      {
+        "subject": "eraserprice",
+        "time": 17.882,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "why",
+        "time": 23.798,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      }
+    ]
+  },
+  {
+    "scene": "verify",
+    "start": 357.9583333333333,
+    "duration": 49.708333333333336,
+    "events": [
+      {
+        "subject": "first",
+        "time": 4.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "second",
+        "time": 16.198,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "summary",
+        "time": 22.122,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      },
+      {
+        "subject": "limit",
+        "time": 33.878,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "duration": 0.7,
+          "ease": "power2.out"
+        }
+      }
+    ]
+  },
+  {
+    "scene": "challenge",
+    "start": 407.66666666666663,
+    "duration": 59.083333333333336,
+    "events": []
+  }
+]

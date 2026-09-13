@@ -1,0 +1,1557 @@
+[
+  {
+    "scene": "s1",
+    "start": 0,
+    "duration": 34.333333333333336,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s2",
+    "start": 34.333333333333336,
+    "duration": 40.583333333333336,
+    "events": [
+      {
+        "subject": "part0",
+        "time": 2.65,
+        "props": {
+          "x": -10,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part0",
+        "time": 12.25,
+        "props": {
+          "x": -10,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part0",
+        "time": 24.002,
+        "props": {
+          "x": -10,
+          "y": -30,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part1",
+        "time": 2.675,
+        "props": {
+          "x": 16,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part1",
+        "time": 12.275,
+        "props": {
+          "x": 21,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part1",
+        "time": 24.026999999999997,
+        "props": {
+          "x": 61,
+          "y": -30,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part2",
+        "time": 2.6999999999999997,
+        "props": {
+          "x": 42,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part2",
+        "time": 12.3,
+        "props": {
+          "x": 52,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part2",
+        "time": 24.052,
+        "props": {
+          "x": 132,
+          "y": -30,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part3",
+        "time": 2.725,
+        "props": {
+          "x": 68,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part3",
+        "time": 12.325,
+        "props": {
+          "x": 83,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part3",
+        "time": 24.076999999999998,
+        "props": {
+          "x": 203,
+          "y": -30,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part4",
+        "time": 2.75,
+        "props": {
+          "x": 94,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part4",
+        "time": 12.35,
+        "props": {
+          "x": 114,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part4",
+        "time": 24.102,
+        "props": {
+          "x": -406,
+          "y": 40,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part5",
+        "time": 2.775,
+        "props": {
+          "x": 120,
+          "y": -20,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part5",
+        "time": 12.375,
+        "props": {
+          "x": -505,
+          "y": 80,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part5",
+        "time": 24.127,
+        "props": {
+          "x": -335,
+          "y": 40,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part6",
+        "time": 2.8,
+        "props": {
+          "x": -604,
+          "y": 80,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part6",
+        "time": 12.4,
+        "props": {
+          "x": -474,
+          "y": 80,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part6",
+        "time": 24.151999999999997,
+        "props": {
+          "x": -264,
+          "y": 40,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part7",
+        "time": 2.8249999999999997,
+        "props": {
+          "x": -578,
+          "y": 80,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part7",
+        "time": 12.425,
+        "props": {
+          "x": -443,
+          "y": 80,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part7",
+        "time": 24.177,
+        "props": {
+          "x": -193,
+          "y": 40,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part8",
+        "time": 2.85,
+        "props": {
+          "x": 240,
+          "y": -8,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part8",
+        "time": 12.45,
+        "props": {
+          "x": 380,
+          "y": -8,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part8",
+        "time": 24.201999999999998,
+        "props": {
+          "x": -10,
+          "y": 22,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part9",
+        "time": 2.875,
+        "props": {
+          "x": 266,
+          "y": -8,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part9",
+        "time": 12.475,
+        "props": {
+          "x": 411,
+          "y": -8,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part9",
+        "time": 24.227,
+        "props": {
+          "x": 61,
+          "y": 22,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part10",
+        "time": 2.9,
+        "props": {
+          "x": 292,
+          "y": -8,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part10",
+        "time": 12.5,
+        "props": {
+          "x": -208,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part10",
+        "time": 24.252,
+        "props": {
+          "x": 132,
+          "y": 22,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part11",
+        "time": 2.925,
+        "props": {
+          "x": 318,
+          "y": -8,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part11",
+        "time": 12.525,
+        "props": {
+          "x": -177,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part11",
+        "time": 24.276999999999997,
+        "props": {
+          "x": 203,
+          "y": 22,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part12",
+        "time": 2.9499999999999997,
+        "props": {
+          "x": -406,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part12",
+        "time": 12.55,
+        "props": {
+          "x": -146,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part12",
+        "time": 24.302,
+        "props": {
+          "x": -406,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part13",
+        "time": 2.975,
+        "props": {
+          "x": -380,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part13",
+        "time": 12.575,
+        "props": {
+          "x": -115,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part13",
+        "time": 24.326999999999998,
+        "props": {
+          "x": -335,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part14",
+        "time": 3,
+        "props": {
+          "x": -354,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part14",
+        "time": 12.6,
+        "props": {
+          "x": -84,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part14",
+        "time": 24.352,
+        "props": {
+          "x": -264,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part15",
+        "time": 3.025,
+        "props": {
+          "x": -328,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part15",
+        "time": 12.625,
+        "props": {
+          "x": -703,
+          "y": 192,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part15",
+        "time": 24.377,
+        "props": {
+          "x": -193,
+          "y": 92,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part16",
+        "time": 3.05,
+        "props": {
+          "x": 490,
+          "y": 4,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part16",
+        "time": 12.65,
+        "props": {
+          "x": 120,
+          "y": 104,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part16",
+        "time": 24.401999999999997,
+        "props": {
+          "x": -10,
+          "y": 74,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part17",
+        "time": 3.0749999999999997,
+        "props": {
+          "x": 516,
+          "y": 4,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part17",
+        "time": 12.675,
+        "props": {
+          "x": 151,
+          "y": 104,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part17",
+        "time": 24.427,
+        "props": {
+          "x": 61,
+          "y": 74,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part18",
+        "time": 3.1,
+        "props": {
+          "x": -208,
+          "y": 104,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part18",
+        "time": 12.7,
+        "props": {
+          "x": 182,
+          "y": 104,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part18",
+        "time": 24.451999999999998,
+        "props": {
+          "x": 132,
+          "y": 74,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part19",
+        "time": 3.125,
+        "props": {
+          "x": -182,
+          "y": 104,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part19",
+        "time": 12.725,
+        "props": {
+          "x": 213,
+          "y": 104,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part19",
+        "time": 24.477,
+        "props": {
+          "x": 203,
+          "y": 74,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part20",
+        "time": 3.15,
+        "props": {
+          "x": -156,
+          "y": 104,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part20",
+        "time": 12.75,
+        "props": {
+          "x": -341,
+          "y": 214,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part20 circle",
+        "time": 12.25,
+        "props": {
+          "fill": "#FF8666"
+        }
+      },
+      {
+        "subject": "part20",
+        "time": 24.502,
+        "props": {
+          "x": -406,
+          "y": 144,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part20 circle",
+        "time": 24.002,
+        "props": {
+          "fill": "#45C7FF"
+        }
+      },
+      {
+        "subject": "part21",
+        "time": 3.175,
+        "props": {
+          "x": -130,
+          "y": 104,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part21",
+        "time": 12.775,
+        "props": {
+          "x": -290,
+          "y": 214,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part21 circle",
+        "time": 12.25,
+        "props": {
+          "fill": "#FF8666"
+        }
+      },
+      {
+        "subject": "part21",
+        "time": 24.526999999999997,
+        "props": {
+          "x": -335,
+          "y": 144,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part21 circle",
+        "time": 24.002,
+        "props": {
+          "fill": "#45C7FF"
+        }
+      },
+      {
+        "subject": "part22",
+        "time": 3.1999999999999997,
+        "props": {
+          "x": -104,
+          "y": 104,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part22",
+        "time": 12.8,
+        "props": {
+          "x": -239,
+          "y": 214,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part22 circle",
+        "time": 12.25,
+        "props": {
+          "fill": "#FF8666"
+        }
+      },
+      {
+        "subject": "part22",
+        "time": 24.552,
+        "props": {
+          "x": -264,
+          "y": 144,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part22 circle",
+        "time": 24.002,
+        "props": {
+          "fill": "#45C7FF"
+        }
+      },
+      {
+        "subject": "part23",
+        "time": 3.225,
+        "props": {
+          "x": -78,
+          "y": 104,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part23",
+        "time": 12.825,
+        "props": {
+          "x": -188,
+          "y": 214,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part23 circle",
+        "time": 12.25,
+        "props": {
+          "fill": "#FF8666"
+        }
+      },
+      {
+        "subject": "part23",
+        "time": 24.576999999999998,
+        "props": {
+          "x": -193,
+          "y": 144,
+          "duration": 1.5
+        }
+      },
+      {
+        "subject": "part23 circle",
+        "time": 24.002,
+        "props": {
+          "fill": "#45C7FF"
+        }
+      },
+      {
+        "subject": "sixlabel",
+        "time": 4.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "sixlabel",
+        "time": 10.25,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "left",
+        "time": 14.25,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "left",
+        "time": 24.002,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "fourlabel",
+        "time": 26.002,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 11.25,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 22.002,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 32.754000000000005,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s3",
+    "start": 74.91666666666667,
+    "duration": 41.916666666666664,
+    "events": [
+      {
+        "subject": "a0",
+        "time": 0.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0",
+        "time": 0.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "link0",
+        "time": 1.4500000000000002,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "a1",
+        "time": 2.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1",
+        "time": 2.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "link1",
+        "time": 3.4499999999999997,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "a2",
+        "time": 4.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b2",
+        "time": 4.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "link2",
+        "time": 5.45,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "a3",
+        "time": 6.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b3",
+        "time": 6.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "link3",
+        "time": 7.45,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 12.906,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 21.954,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 33.522,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s4",
+    "start": 116.83333333333334,
+    "duration": 41,
+    "events": [
+      {
+        "subject": "card0",
+        "time": 1.65,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "card1",
+        "time": 10.194,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "card2",
+        "time": 21.354,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 10.194,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 21.354,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 31.266,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s5",
+    "start": 157.83333333333334,
+    "duration": 45.291666666666664,
+    "events": [
+      {
+        "subject": "edge0",
+        "time": 0.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "edge1",
+        "time": 0.87,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "edge2",
+        "time": 11.77,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "edge3",
+        "time": 11.99,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "edge4",
+        "time": 12.21,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "edge5",
+        "time": 12.43,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "node1",
+        "time": 0.88,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "node2",
+        "time": 1.11,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "node3",
+        "time": 12.02,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "node4",
+        "time": 12.25,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "node5",
+        "time": 12.48,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "node6",
+        "time": 12.71,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 12.33,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 22.482,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 33.066,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s6",
+    "start": 203.125,
+    "duration": 24.25,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s7",
+    "start": 227.375,
+    "duration": 46.291666666666664,
+    "events": [
+      {
+        "subject": "left0",
+        "time": 0.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "right0",
+        "time": 0.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "join0",
+        "time": 0.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "left1",
+        "time": 2.05,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "right1",
+        "time": 2.05,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "join1",
+        "time": 2.05,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "left2",
+        "time": 3.4499999999999997,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "right2",
+        "time": 3.4499999999999997,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "join2",
+        "time": 3.4499999999999997,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "left3",
+        "time": 4.85,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "right3",
+        "time": 4.85,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "join3",
+        "time": 4.85,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "left4",
+        "time": 13.266,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "right4",
+        "time": 13.266,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "join4",
+        "time": 13.266,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "left4",
+        "time": 16.266,
+        "props": {
+          "x": 220
+        }
+      },
+      {
+        "subject": "right4",
+        "time": 16.266,
+        "props": {
+          "x": -310,
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "join4",
+        "time": 16.266,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "count",
+        "time": 24.682,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 13.266,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 23.682,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 34.77,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s8",
+    "start": 273.6666666666667,
+    "duration": 46.25,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  }
+]

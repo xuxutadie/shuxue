@@ -1,0 +1,587 @@
+[
+  {
+    "scene": "s1",
+    "start": 0,
+    "duration": 35.25,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s2",
+    "start": 35.25,
+    "duration": 40.333333333333336,
+    "events": [
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 9.882,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 20.49,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 32.178,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s3",
+    "start": 75.58333333333334,
+    "duration": 43.5,
+    "events": [
+      {
+        "subject": "slow",
+        "time": 2.65,
+        "props": {
+          "x": 49.199999999999996,
+          "duration": 2
+        }
+      },
+      {
+        "subject": "fast",
+        "time": 2.65,
+        "props": {
+          "x": 73.8,
+          "duration": 2
+        }
+      },
+      {
+        "subject": "gap",
+        "time": 2.65,
+        "props": {
+          "x": 73.8,
+          "scaleX": 0.9,
+          "transformOrigin": "left center",
+          "duration": 2
+        }
+      },
+      {
+        "subject": "slow",
+        "time": 25.45,
+        "props": {
+          "x": 98.39999999999999,
+          "duration": 2
+        }
+      },
+      {
+        "subject": "fast",
+        "time": 25.45,
+        "props": {
+          "x": 147.6,
+          "duration": 2
+        }
+      },
+      {
+        "subject": "gap",
+        "time": 25.45,
+        "props": {
+          "x": 147.6,
+          "scaleX": 0.8,
+          "transformOrigin": "left center",
+          "duration": 2
+        }
+      },
+      {
+        "subject": "gaplabel",
+        "time": 2.65,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 11.994,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 24.45,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 35.274,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s4",
+    "start": 119.08333333333334,
+    "duration": 40.083333333333336,
+    "events": [
+      {
+        "subject": "slow",
+        "time": 2.65,
+        "props": {
+          "x": 491.99999999999994,
+          "duration": 7,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "fast",
+        "time": 2.65,
+        "props": {
+          "x": 738,
+          "duration": 7,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "gap",
+        "time": 2.65,
+        "props": {
+          "x": 738,
+          "scaleX": 0,
+          "transformOrigin": "left center",
+          "duration": 7,
+          "ease": "none"
+        }
+      },
+      {
+        "subject": "gaplabel",
+        "time": 2.65,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "meet",
+        "time": 9.714,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 9.714,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 18.834,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 29.826,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s5",
+    "start": 159.16666666666669,
+    "duration": 33.791666666666664,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s6",
+    "start": 192.95833333333334,
+    "duration": 52.958333333333336,
+    "events": [
+      {
+        "subject": "slow",
+        "time": 12.306,
+        "props": {
+          "x": 148.8,
+          "duration": 2
+        }
+      },
+      {
+        "subject": "fast",
+        "time": 12.306,
+        "props": {
+          "x": 223.2,
+          "duration": 2
+        }
+      },
+      {
+        "subject": "gap",
+        "time": 12.306,
+        "props": {
+          "x": 223.2,
+          "scaleX": 0.6,
+          "transformOrigin": "left center",
+          "duration": 2
+        }
+      },
+      {
+        "subject": "stage0",
+        "time": 12.306,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "stage0",
+        "time": 22.418,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "slow",
+        "time": 23.418,
+        "props": {
+          "x": 223.2,
+          "duration": 2
+        }
+      },
+      {
+        "subject": "fast",
+        "time": 23.418,
+        "props": {
+          "x": 223.2,
+          "duration": 2
+        }
+      },
+      {
+        "subject": "gap",
+        "time": 23.418,
+        "props": {
+          "x": 223.2,
+          "scaleX": 1,
+          "transformOrigin": "left center",
+          "duration": 2
+        }
+      },
+      {
+        "subject": "stage1",
+        "time": 23.418,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "stage1",
+        "time": 38.474,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "slow",
+        "time": 39.474,
+        "props": {
+          "x": 595.2,
+          "duration": 5
+        }
+      },
+      {
+        "subject": "fast",
+        "time": 39.474,
+        "props": {
+          "x": 781.2,
+          "duration": 5
+        }
+      },
+      {
+        "subject": "gap",
+        "time": 39.474,
+        "props": {
+          "x": 781.2,
+          "scaleX": 0,
+          "transformOrigin": "left center",
+          "duration": 5
+        }
+      },
+      {
+        "subject": "stage2",
+        "time": 39.474,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 12.306,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 23.418,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 39.474,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s7",
+    "start": 245.91666666666669,
+    "duration": 51.791666666666664,
+    "events": [
+      {
+        "subject": "slow",
+        "time": 1.65,
+        "props": {
+          "x": 595.2,
+          "duration": 5
+        }
+      },
+      {
+        "subject": "fast",
+        "time": 1.65,
+        "props": {
+          "x": 781.2,
+          "duration": 5
+        }
+      },
+      {
+        "subject": "gap",
+        "time": 1.65,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "same",
+        "time": 25.29,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "verify",
+        "time": 26.29,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 13.962,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 25.29,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 37.89,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s8",
+    "start": 297.70833333333337,
+    "duration": 52.666666666666664,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,19 @@
+{
+  "name": "math-explorers-online",
+  "version": "2.0.0",
+  "private": true,
+  "description": "五年级数学思维在线教学平台",
+  "scripts": {
+    "start": "node server/index.js",
+    "teacher": "node server/create-teacher.js",
+    "test": "node --test tests/online.test.cjs tests/preparation.test.cjs tests/course-videos.test.cjs tests/teacher-flow.test.cjs"
+  },
+  "engines": { "node": ">=22" },
+  "dependencies": {
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "argon2": "^0.44.0",
+    "helmet": "^8.1.0",
+    "express-rate-limit": "^8.1.0"
+  }
+}

@@ -1,0 +1,1447 @@
+{
+  "duration": 466.75,
+  "scenes": [
+    {
+      "id": "read",
+      "title": "先读懂题，再开始算",
+      "tag": "01 / 读懂问题",
+      "lines": [
+        {
+          "cue": "intro",
+          "text": "今天，我们从一道完整的应用题出发，学会消去。先读题，再一起找出每一步的理由。",
+          "scene": "read",
+          "index": 0,
+          "file": "assets/voice-xiaoxiao/read-00.mp3",
+          "duration": 9.024,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 0.65,
+          "captions": [
+            {
+              "start": 0.75,
+              "duration": 4.9,
+              "text": "今天，我们从一道完整的应用题出发，学会消去。"
+            },
+            {
+              "start": 5.65,
+              "duration": 4.067,
+              "text": "先读题，再一起找出每一步的理由。"
+            }
+          ]
+        },
+        {
+          "cue": "first",
+          "text": "学校第一次买了三个水瓶和二十个茶杯，共用去一百三十四元。",
+          "scene": "read",
+          "index": 1,
+          "file": "assets/voice-xiaoxiao/read-01.mp3",
+          "duration": 6.576,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 10.174,
+          "captions": [
+            {
+              "start": 10.274,
+              "duration": 6.572,
+              "text": "学校第一次买了三个水瓶和二十个茶杯，共用去一百三十四元。"
+            }
+          ]
+        },
+        {
+          "cue": "second",
+          "text": "第二次买了同样的三个水瓶和十六个茶杯，共用去一百一十八元。水瓶和茶杯的单价各是多少元？",
+          "scene": "read",
+          "index": 2,
+          "file": "assets/voice-xiaoxiao/read-02.mp3",
+          "duration": 10.368,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 17.25,
+          "captions": [
+            {
+              "start": 17.35,
+              "duration": 6.517,
+              "text": "第二次买了同样的三个水瓶和十六个茶杯，共用去一百一十八元。"
+            },
+            {
+              "start": 23.867,
+              "duration": 3.796,
+              "text": "水瓶和茶杯的单价各是多少元？"
+            }
+          ]
+        },
+        {
+          "cue": "meaning",
+          "text": "这里的两个金额，都是整次购物的总价。题目要找的单价，是一个水瓶和一个茶杯各要多少钱。把文字整理成两张购物单，注意相同商品的单价相同。",
+          "scene": "read",
+          "index": 3,
+          "file": "assets/voice-xiaoxiao/read-03.mp3",
+          "duration": 15.432,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 28.118,
+          "captions": [
+            {
+              "start": 28.218,
+              "duration": 3.922,
+              "text": "这里的两个金额，都是整次购物的总价。"
+            },
+            {
+              "start": 32.14,
+              "duration": 5.679,
+              "text": "题目要找的单价，是一个水瓶和一个茶杯各要多少钱。"
+            },
+            {
+              "start": 37.819,
+              "duration": 5.779,
+              "text": "把文字整理成两张购物单，注意相同商品的单价相同。"
+            }
+          ]
+        }
+      ],
+      "start": 0,
+      "duration": 44.791666666666664
+    },
+    {
+      "id": "pair",
+      "title": "同样的费用，可以先抵消",
+      "tag": "02 / 找到相同",
+      "lines": [
+        {
+          "cue": "books",
+          "text": "把两张购物单上下对齐。两次都买了三个同样的水瓶，所以水瓶花的钱一样多。这部分费用，解释不了第一次为什么多花钱。",
+          "scene": "pair",
+          "index": 0,
+          "file": "assets/voice-xiaoxiao/pair-00.mp3",
+          "duration": 13.56,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 0.65,
+          "captions": [
+            {
+              "start": 0.75,
+              "duration": 2.808,
+              "text": "把两张购物单上下对齐。"
+            },
+            {
+              "start": 3.558,
+              "duration": 5.924,
+              "text": "两次都买了三个同样的水瓶，所以水瓶花的钱一样多。"
+            },
+            {
+              "start": 9.482,
+              "duration": 4.774,
+              "text": "这部分费用，解释不了第一次为什么多花钱。"
+            }
+          ]
+        },
+        {
+          "cue": "cups",
+          "text": "再看茶杯。两边都有的这十六个，也可以一一配对。把相同部分暂时移出比较，第一张订单还剩四个茶杯。",
+          "scene": "pair",
+          "index": 1,
+          "file": "assets/voice-xiaoxiao/pair-01.mp3",
+          "duration": 11.568,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 14.71,
+          "captions": [
+            {
+              "start": 14.81,
+              "duration": 1.598,
+              "text": "再看茶杯。"
+            },
+            {
+              "start": 16.408,
+              "duration": 4.035,
+              "text": "两边都有的这十六个，也可以一一配对。"
+            },
+            {
+              "start": 20.444,
+              "duration": 5.874,
+              "text": "把相同部分暂时移出比较，第一张订单还剩四个茶杯。"
+            }
+          ]
+        },
+        {
+          "cue": "extra",
+          "text": "现在，多买的商品只剩这四个茶杯。第一次多花的钱，就是买这四个茶杯用去的钱。",
+          "scene": "pair",
+          "index": 2,
+          "file": "assets/voice-xiaoxiao/pair-02.mp3",
+          "duration": 8.904,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 26.778,
+          "captions": [
+            {
+              "start": 26.878,
+              "duration": 4.18,
+              "text": "现在，多买的商品只剩这四个茶杯。"
+            },
+            {
+              "start": 31.058,
+              "duration": 4.652,
+              "text": "第一次多花的钱，就是买这四个茶杯用去的钱。"
+            }
+          ]
+        },
+        {
+          "cue": "money",
+          "text": "一百三十四减一百一十八，等于十六元。注意，消去不是说商品免费，而是比较差额时，相同的费用抵消了。",
+          "scene": "pair",
+          "index": 3,
+          "file": "assets/voice-xiaoxiao/pair-03.mp3",
+          "duration": 11.496,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 36.182,
+          "captions": [
+            {
+              "start": 36.282,
+              "duration": 4.18,
+              "text": "一百三十四减一百一十八，等于十六元。"
+            },
+            {
+              "start": 40.462,
+              "duration": 7.247,
+              "text": "注意，消去不是说商品免费，而是比较差额时，相同的费用抵消了。"
+            }
+          ]
+        }
+      ],
+      "start": 44.791666666666664,
+      "duration": 48.916666666666664
+    },
+    {
+      "id": "share",
+      "title": "16元属于4个杯子，不是1个",
+      "tag": "03 / 理解除法",
+      "lines": [
+        {
+          "cue": "total",
+          "text": "这十六元，是四个茶杯合起来的价格。我们还不能说，一个茶杯就是十六元。",
+          "scene": "share",
+          "index": 0,
+          "file": "assets/voice-xiaoxiao/share-00.mp3",
+          "duration": 8.088,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 0.65,
+          "captions": [
+            {
+              "start": 0.75,
+              "duration": 4.03,
+              "text": "这十六元，是四个茶杯合起来的价格。"
+            },
+            {
+              "start": 4.78,
+              "duration": 3.999,
+              "text": "我们还不能说，一个茶杯就是十六元。"
+            }
+          ]
+        },
+        {
+          "cue": "split",
+          "text": "四个同样的茶杯，每个价格相同。把十六元平均分成四份，每份四元，才是一个茶杯的价格。",
+          "scene": "share",
+          "index": 1,
+          "file": "assets/voice-xiaoxiao/share-01.mp3",
+          "duration": 9.936,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 9.238,
+          "captions": [
+            {
+              "start": 9.338,
+              "duration": 3.609,
+              "text": "四个同样的茶杯，每个价格相同。"
+            },
+            {
+              "start": 12.947,
+              "duration": 6.268,
+              "text": "把十六元平均分成四份，每份四元，才是一个茶杯的价格。"
+            }
+          ]
+        },
+        {
+          "cue": "formula",
+          "text": "把刚才的图写成算式：价钱差，一百三十四减一百一十八；数量差，二十减十六。用价钱差除以数量差，得到每个茶杯四元。",
+          "scene": "share",
+          "index": 2,
+          "file": "assets/voice-xiaoxiao/share-02.mp3",
+          "duration": 13.776,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 19.674,
+          "captions": [
+            {
+              "start": 19.774,
+              "duration": 8.772,
+              "text": "把刚才的图写成算式：价钱差，一百三十四减一百一十八；数量差，二十减十六。"
+            },
+            {
+              "start": 28.546,
+              "duration": 4.937,
+              "text": "用价钱差除以数量差，得到每个茶杯四元。"
+            }
+          ]
+        },
+        {
+          "cue": "reason",
+          "text": "做这一步以前，一定要先确认：价钱的差，是否只对应一种商品的数量差。刚才我们先消去了相同费用，所以可以这样算。",
+          "scene": "share",
+          "index": 3,
+          "file": "assets/voice-xiaoxiao/share-03.mp3",
+          "duration": 12.168,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 33.95,
+          "captions": [
+            {
+              "start": 34.05,
+              "duration": 7.359,
+              "text": "做这一步以前，一定要先确认：价钱的差，是否只对应一种商品的数量差。"
+            },
+            {
+              "start": 41.409,
+              "duration": 4.747,
+              "text": "刚才我们先消去了相同费用，所以可以这样算。"
+            }
+          ]
+        }
+      ],
+      "start": 93.70833333333333,
+      "duration": 47.333333333333336
+    },
+    {
+      "id": "back",
+      "title": "回到原题，求出另一种价格",
+      "tag": "04 / 代回检验",
+      "lines": [
+        {
+          "cue": "cupcost",
+          "text": "知道茶杯每个四元，再看第二张购物单。十六个茶杯，一共六十四元。",
+          "scene": "back",
+          "index": 0,
+          "file": "assets/voice-xiaoxiao/back-00.mp3",
+          "duration": 7.536,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 0.65,
+          "captions": [
+            {
+              "start": 0.75,
+              "duration": 4.071,
+              "text": "知道茶杯每个四元，再看第二张购物单。"
+            },
+            {
+              "start": 4.821,
+              "duration": 3.415,
+              "text": "十六个茶杯，一共六十四元。"
+            }
+          ]
+        },
+        {
+          "cue": "remaining",
+          "text": "总价一百一十八元，扣掉茶杯的六十四元，剩下五十四元。这是三个水瓶的总价。",
+          "scene": "back",
+          "index": 1,
+          "file": "assets/voice-xiaoxiao/back-01.mp3",
+          "duration": 8.568,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 8.686,
+          "captions": [
+            {
+              "start": 8.786,
+              "duration": 5.933,
+              "text": "总价一百一十八元，扣掉茶杯的六十四元，剩下五十四元。"
+            },
+            {
+              "start": 14.719,
+              "duration": 2.586,
+              "text": "这是三个水瓶的总价。"
+            }
+          ]
+        },
+        {
+          "cue": "bottle",
+          "text": "五十四除以三，等于十八元，所以一个水瓶十八元。",
+          "scene": "back",
+          "index": 2,
+          "file": "assets/voice-xiaoxiao/back-02.mp3",
+          "duration": 5.568,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 17.754,
+          "captions": [
+            {
+              "start": 17.854,
+              "duration": 5.553,
+              "text": "五十四除以三，等于十八元，所以一个水瓶十八元。"
+            }
+          ]
+        },
+        {
+          "cue": "check1",
+          "text": "回到第一次购买：三个水瓶五十四元，二十个茶杯八十元，合起来一百三十四元，符合。",
+          "scene": "back",
+          "index": 3,
+          "file": "assets/voice-xiaoxiao/back-03.mp3",
+          "duration": 8.928,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 23.822,
+          "captions": [
+            {
+              "start": 23.922,
+              "duration": 8.909,
+              "text": "回到第一次购买：三个水瓶五十四元，二十个茶杯八十元，合起来一百三十四元，符合。"
+            }
+          ]
+        },
+        {
+          "cue": "check2",
+          "text": "第二次：三个水瓶五十四元，十六个茶杯六十四元，合起来一百一十八元，也符合。两组条件都满足，答案才可靠。",
+          "scene": "back",
+          "index": 4,
+          "file": "assets/voice-xiaoxiao/back-04.mp3",
+          "duration": 12.144,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 33.25,
+          "captions": [
+            {
+              "start": 33.35,
+              "duration": 8.419,
+              "text": "第二次：三个水瓶五十四元，十六个茶杯六十四元，合起来一百一十八元，也符合。"
+            },
+            {
+              "start": 41.769,
+              "duration": 3.66,
+              "text": "两组条件都满足，答案才可靠。"
+            }
+          ]
+        }
+      ],
+      "start": 141.04166666666666,
+      "duration": 46.625
+    },
+    {
+      "id": "contest",
+      "title": "两种数量都变了，怎样想？",
+      "tag": "05 / 换个角度",
+      "lines": [
+        {
+          "cue": "intro",
+          "text": "再看一道题，这次两种商品的数量都变了。先完整读题，再找容易入手的条件。",
+          "scene": "contest",
+          "index": 0,
+          "file": "assets/voice-xiaoxiao/contest-00.mp3",
+          "duration": 8.304,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 0.65,
+          "captions": [
+            {
+              "start": 0.75,
+              "duration": 4.275,
+              "text": "再看一道题，这次两种商品的数量都变了。"
+            },
+            {
+              "start": 5.025,
+              "duration": 3.959,
+              "text": "先完整读题，再找容易入手的条件。"
+            }
+          ]
+        },
+        {
+          "cue": "first",
+          "text": "小磊买三块橡皮，五支铅笔需付十点六元。",
+          "scene": "contest",
+          "index": 1,
+          "file": "assets/voice-xiaoxiao/contest-01.mp3",
+          "duration": 5.184,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 9.454,
+          "captions": [
+            {
+              "start": 9.554,
+              "duration": 5.186,
+              "text": "小磊买三块橡皮，五支铅笔需付十点六元。"
+            }
+          ]
+        },
+        {
+          "cue": "second",
+          "text": "若他买同品种的四块橡皮，四支铅笔需付十二元，则一块橡皮的价格是多少元？",
+          "scene": "contest",
+          "index": 2,
+          "file": "assets/voice-xiaoxiao/contest-02.mp3",
+          "duration": 8.376,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 15.138,
+          "captions": [
+            {
+              "start": 15.238,
+              "duration": 8.365,
+              "text": "若他买同品种的四块橡皮，四支铅笔需付十二元，则一块橡皮的价格是多少元？"
+            }
+          ]
+        },
+        {
+          "cue": "compare",
+          "text": "这一次，橡皮和铅笔的数量都变了。不过，第二种买法里的橡皮和铅笔恰好一样多。我们可以从这里入手。",
+          "scene": "contest",
+          "index": 3,
+          "file": "assets/voice-xiaoxiao/contest-03.mp3",
+          "duration": 11.688,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 24.014,
+          "captions": [
+            {
+              "start": 24.114,
+              "duration": 3.908,
+              "text": "这一次，橡皮和铅笔的数量都变了。"
+            },
+            {
+              "start": 28.022,
+              "duration": 5.054,
+              "text": "不过，第二种买法里的橡皮和铅笔恰好一样多。"
+            },
+            {
+              "start": 33.076,
+              "duration": 2.668,
+              "text": "我们可以从这里入手。"
+            }
+          ]
+        }
+      ],
+      "start": 187.66666666666666,
+      "duration": 36.916666666666664
+    },
+    {
+      "id": "bundle",
+      "title": "4套共12元，每套多少钱？",
+      "tag": "06 / 配成一套",
+      "lines": [
+        {
+          "cue": "read",
+          "text": "先看第二种买法：四块橡皮和四支铅笔，共十二元。把一块橡皮和一支铅笔配成一套。",
+          "scene": "bundle",
+          "index": 0,
+          "file": "assets/voice-xiaoxiao/bundle-00.mp3",
+          "duration": 9.744,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 0.65,
+          "captions": [
+            {
+              "start": 0.75,
+              "duration": 5.851,
+              "text": "先看第二种买法：四块橡皮和四支铅笔，共十二元。"
+            },
+            {
+              "start": 6.601,
+              "duration": 3.823,
+              "text": "把一块橡皮和一支铅笔配成一套。"
+            }
+          ]
+        },
+        {
+          "cue": "pair",
+          "text": "看，每一块橡皮都和一支铅笔配对，正好组成四套。每套的东西完全一样，所以每套的价钱也一样。",
+          "scene": "bundle",
+          "index": 1,
+          "file": "assets/voice-xiaoxiao/bundle-01.mp3",
+          "duration": 10.848,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 10.894,
+          "captions": [
+            {
+              "start": 10.994,
+              "duration": 5.77,
+              "text": "看，每一块橡皮都和一支铅笔配对，正好组成四套。"
+            },
+            {
+              "start": 16.764,
+              "duration": 5.018,
+              "text": "每套的东西完全一样，所以每套的价钱也一样。"
+            }
+          ]
+        },
+        {
+          "cue": "divide",
+          "text": "四套共十二元，平均分成四份，十二除以四，每套三元。",
+          "scene": "bundle",
+          "index": 2,
+          "file": "assets/voice-xiaoxiao/bundle-02.mp3",
+          "duration": 6.552,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 22.242,
+          "captions": [
+            {
+              "start": 22.342,
+              "duration": 6.531,
+              "text": "四套共十二元，平均分成四份，十二除以四，每套三元。"
+            }
+          ]
+        },
+        {
+          "cue": "meaning",
+          "text": "注意，三元是一块橡皮加一支铅笔的总价，还不是任何一种商品的单价。我们先求出一套的价钱，再去看另一种买法。",
+          "scene": "bundle",
+          "index": 3,
+          "file": "assets/voice-xiaoxiao/bundle-03.mp3",
+          "duration": 11.976,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 29.294,
+          "captions": [
+            {
+              "start": 29.394,
+              "duration": 7.386,
+              "text": "注意，三元是一块橡皮加一支铅笔的总价，还不是任何一种商品的单价。"
+            },
+            {
+              "start": 36.78,
+              "duration": 4.516,
+              "text": "我们先求出一套的价钱，再去看另一种买法。"
+            }
+          ]
+        }
+      ],
+      "start": 224.58333333333331,
+      "duration": 42.5
+    },
+    {
+      "id": "usebundle",
+      "title": "圈出3套，还剩下什么？",
+      "tag": "07 / 找到剩余",
+      "lines": [
+        {
+          "cue": "read",
+          "text": "第一种买法，是三块橡皮和五支铅笔，共十点六元。我们就在这些商品里配一配，不增加，也不拿走商品。",
+          "scene": "usebundle",
+          "index": 0,
+          "file": "assets/voice-xiaoxiao/usebundle-00.mp3",
+          "duration": 11.376,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 0.65,
+          "captions": [
+            {
+              "start": 0.75,
+              "duration": 5.77,
+              "text": "第一种买法，是三块橡皮和五支铅笔，共十点六元。"
+            },
+            {
+              "start": 6.52,
+              "duration": 5.535,
+              "text": "我们就在这些商品里配一配，不增加，也不拿走商品。"
+            }
+          ]
+        },
+        {
+          "cue": "pair",
+          "text": "三块橡皮，分别配上三支铅笔，正好圈出三套。每套三元，三套一共九元。",
+          "scene": "usebundle",
+          "index": 1,
+          "file": "assets/voice-xiaoxiao/usebundle-01.mp3",
+          "duration": 8.904,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 12.526,
+          "captions": [
+            {
+              "start": 12.626,
+              "duration": 5.43,
+              "text": "三块橡皮，分别配上三支铅笔，正好圈出三套。"
+            },
+            {
+              "start": 18.056,
+              "duration": 3.415,
+              "text": "每套三元，三套一共九元。"
+            }
+          ]
+        },
+        {
+          "cue": "left",
+          "text": "五支铅笔里，用了三支来配套，还剩两支。这两支铅笔，不属于刚才圈出的三套。",
+          "scene": "usebundle",
+          "index": 2,
+          "file": "assets/voice-xiaoxiao/usebundle-02.mp3",
+          "duration": 8.88,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 21.93,
+          "captions": [
+            {
+              "start": 22.03,
+              "duration": 4.655,
+              "text": "五支铅笔里，用了三支来配套，还剩两支。"
+            },
+            {
+              "start": 26.685,
+              "duration": 4.176,
+              "text": "这两支铅笔，不属于刚才圈出的三套。"
+            }
+          ]
+        },
+        {
+          "cue": "subtract",
+          "text": "十点六元里面，九元付给了三套商品。剩下的十点六减九，等于一点六元，就是这两支铅笔的总价。",
+          "scene": "usebundle",
+          "index": 3,
+          "file": "assets/voice-xiaoxiao/usebundle-03.mp3",
+          "duration": 10.416,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 31.31,
+          "captions": [
+            {
+              "start": 31.41,
+              "duration": 4.098,
+              "text": "十点六元里面，九元付给了三套商品。"
+            },
+            {
+              "start": 35.508,
+              "duration": 6.268,
+              "text": "剩下的十点六减九，等于一点六元，就是这两支铅笔的总价。"
+            }
+          ]
+        },
+        {
+          "cue": "reason",
+          "text": "这样，我们先算出相同组合的费用，再从总价里扣除。剩下的钱，只对应剩下的两支铅笔，问题就简单了。",
+          "scene": "usebundle",
+          "index": 4,
+          "file": "assets/voice-xiaoxiao/usebundle-04.mp3",
+          "duration": 11.112,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 42.226,
+          "captions": [
+            {
+              "start": 42.326,
+              "duration": 5.579,
+              "text": "这样，我们先算出相同组合的费用，再从总价里扣除。"
+            },
+            {
+              "start": 47.905,
+              "duration": 5.48,
+              "text": "剩下的钱，只对应剩下的两支铅笔，问题就简单了。"
+            }
+          ]
+        }
+      ],
+      "start": 267.0833333333333,
+      "duration": 54.541666666666664
+    },
+    {
+      "id": "prices",
+      "title": "先求铅笔，再拆开一套",
+      "tag": "08 / 求出单价",
+      "lines": [
+        {
+          "cue": "pencils",
+          "text": "两支同品种的铅笔共一点六元，平均分成两份，每支铅笔零点八元。",
+          "scene": "prices",
+          "index": 0,
+          "file": "assets/voice-xiaoxiao/prices-00.mp3",
+          "duration": 7.656,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 0.65,
+          "captions": [
+            {
+              "start": 0.75,
+              "duration": 7.645,
+              "text": "两支同品种的铅笔共一点六元，平均分成两份，每支铅笔零点八元。"
+            }
+          ]
+        },
+        {
+          "cue": "kit",
+          "text": "再看我们刚才配好的一套。一块橡皮加一支铅笔，一共三元。",
+          "scene": "prices",
+          "index": 1,
+          "file": "assets/voice-xiaoxiao/prices-01.mp3",
+          "duration": 6.576,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 8.806,
+          "captions": [
+            {
+              "start": 8.906,
+              "duration": 2.631,
+              "text": "再看我们刚才配好的一套。"
+            },
+            {
+              "start": 11.537,
+              "duration": 3.877,
+              "text": "一块橡皮加一支铅笔，一共三元。"
+            }
+          ]
+        },
+        {
+          "cue": "eraser",
+          "text": "从三元里扣掉铅笔的零点八元，剩下二点二元，就是一块橡皮的价格。",
+          "scene": "prices",
+          "index": 2,
+          "file": "assets/voice-xiaoxiao/prices-02.mp3",
+          "duration": 7.416,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 15.882,
+          "captions": [
+            {
+              "start": 15.982,
+              "duration": 7.414,
+              "text": "从三元里扣掉铅笔的零点八元，剩下二点二元，就是一块橡皮的价格。"
+            }
+          ]
+        },
+        {
+          "cue": "why",
+          "text": "我们先算铅笔，是因为配好三套后，恰好剩下两支铅笔。选择先算什么，要看题目里的条件怎样整理更方便。",
+          "scene": "prices",
+          "index": 3,
+          "file": "assets/voice-xiaoxiao/prices-03.mp3",
+          "duration": 11.304,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 23.798,
+          "captions": [
+            {
+              "start": 23.898,
+              "duration": 5.715,
+              "text": "我们先算铅笔，是因为配好三套后，恰好剩下两支铅笔。"
+            },
+            {
+              "start": 29.613,
+              "duration": 5.535,
+              "text": "选择先算什么，要看题目里的条件怎样整理更方便。"
+            }
+          ]
+        }
+      ],
+      "start": 321.625,
+      "duration": 36.333333333333336
+    },
+    {
+      "id": "verify",
+      "title": "放回原来的两次购买，检验",
+      "tag": "09 / 检验方法",
+      "lines": [
+        {
+          "cue": "first",
+          "text": "把橡皮二点二元、铅笔零点八元，放回第一种买法。三块橡皮六点六元，五支铅笔四元，共十点六元，符合。",
+          "scene": "verify",
+          "index": 0,
+          "file": "assets/voice-xiaoxiao/verify-00.mp3",
+          "duration": 12.048,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 0.65,
+          "captions": [
+            {
+              "start": 0.75,
+              "duration": 5.471,
+              "text": "把橡皮二点二元、铅笔零点八元，放回第一种买法。"
+            },
+            {
+              "start": 6.221,
+              "duration": 6.513,
+              "text": "三块橡皮六点六元，五支铅笔四元，共十点六元，符合。"
+            }
+          ]
+        },
+        {
+          "cue": "second",
+          "text": "第二种买法：四块橡皮八点八元，四支铅笔三点二元，共十二元，也符合。",
+          "scene": "verify",
+          "index": 1,
+          "file": "assets/voice-xiaoxiao/verify-01.mp3",
+          "duration": 8.424,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 13.198,
+          "captions": [
+            {
+              "start": 13.298,
+              "duration": 8.406,
+              "text": "第二种买法：四块橡皮八点八元，四支铅笔三点二元，共十二元，也符合。"
+            }
+          ]
+        },
+        {
+          "cue": "summary",
+          "text": "这道题的路线是：配成相同的一套，先求一套的价钱；再圈出已知费用的部分，算剩下的商品，最后代回检验。",
+          "scene": "verify",
+          "index": 2,
+          "file": "assets/voice-xiaoxiao/verify-02.mp3",
+          "duration": 11.256,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 22.122,
+          "captions": [
+            {
+              "start": 22.222,
+              "duration": 11.182,
+              "text": "这道题的路线是：配成相同的一套，先求一套的价钱；再圈出已知费用的部分，算剩下的商品，最后代回检验。"
+            }
+          ]
+        },
+        {
+          "cue": "limit",
+          "text": "配套方便，是因为这道题恰好有四块橡皮和四支铅笔，可以分成四个相同组合。以后遇到新题，也要先观察条件，不能看到两种商品就照搬。",
+          "scene": "verify",
+          "index": 3,
+          "file": "assets/voice-xiaoxiao/verify-03.mp3",
+          "duration": 14.616,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 33.878,
+          "captions": [
+            {
+              "start": 33.978,
+              "duration": 8.365,
+              "text": "配套方便，是因为这道题恰好有四块橡皮和四支铅笔，可以分成四个相同组合。"
+            },
+            {
+              "start": 42.343,
+              "duration": 6.201,
+              "text": "以后遇到新题，也要先观察条件，不能看到两种商品就照搬。"
+            }
+          ]
+        }
+      ],
+      "start": 357.9583333333333,
+      "duration": 49.708333333333336
+    },
+    {
+      "id": "challenge",
+      "title": "换你来讲：算出新的购物总价",
+      "tag": "10 / 小老师讲堂",
+      "lines": [
+        {
+          "cue": "intro",
+          "text": "现在，换你当小老师。先完整读题，再独立想办法。",
+          "scene": "challenge",
+          "index": 0,
+          "file": "assets/voice-xiaoxiao/challenge-00.mp3",
+          "duration": 6.216,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 0.65,
+          "captions": [
+            {
+              "start": 0.75,
+              "duration": 2.699,
+              "text": "现在，换你当小老师。"
+            },
+            {
+              "start": 3.449,
+              "duration": 3.456,
+              "text": "先完整读题，再独立想办法。"
+            }
+          ]
+        },
+        {
+          "cue": "first",
+          "text": "美术小组购买绘画用品。四盒彩笔和四本绘画本共六十四元；两盒同样的彩笔和五本同样的绘画本共四十七元。",
+          "scene": "challenge",
+          "index": 1,
+          "file": "assets/voice-xiaoxiao/challenge-01.mp3",
+          "duration": 12.552,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 7.366,
+          "captions": [
+            {
+              "start": 7.466,
+              "duration": 2.943,
+              "text": "美术小组购买绘画用品。"
+            },
+            {
+              "start": 10.409,
+              "duration": 9.543,
+              "text": "四盒彩笔和四本绘画本共六十四元；两盒同样的彩笔和五本同样的绘画本共四十七元。"
+            }
+          ]
+        },
+        {
+          "cue": "second",
+          "text": "同种商品的单价相同，购买时没有折扣。活动还需要购买三盒彩笔和六本绘画本，一共应付多少元？",
+          "scene": "challenge",
+          "index": 2,
+          "file": "assets/voice-xiaoxiao/challenge-02.mp3",
+          "duration": 10.824,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 20.418,
+          "captions": [
+            {
+              "start": 20.518,
+              "duration": 4.492,
+              "text": "同种商品的单价相同，购买时没有折扣。"
+            },
+            {
+              "start": 25.01,
+              "duration": 6.268,
+              "text": "活动还需要购买三盒彩笔和六本绘画本，一共应付多少元？"
+            }
+          ]
+        },
+        {
+          "cue": "ask",
+          "text": "请写出完整的计算过程，并说明每一步的理由。",
+          "scene": "challenge",
+          "index": 3,
+          "file": "assets/voice-xiaoxiao/challenge-03.mp3",
+          "duration": 4.92,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 31.742,
+          "captions": [
+            {
+              "start": 31.842,
+              "duration": 4.901,
+              "text": "请写出完整的计算过程，并说明每一步的理由。"
+            }
+          ]
+        },
+        {
+          "cue": "pause",
+          "text": "暂停视频，可以在草稿纸上画图和计算。准备好以后，上台讲清你的思路，并检查原来的两组条件。",
+          "pause": 10,
+          "scene": "challenge",
+          "index": 4,
+          "file": "assets/voice-xiaoxiao/challenge-04.mp3",
+          "duration": 10.704,
+          "voice": "zh-CN-XiaoxiaoNeural",
+          "rate": "-8%",
+          "start": 37.162,
+          "captions": [
+            {
+              "start": 37.262,
+              "duration": 4.452,
+              "text": "暂停视频，可以在草稿纸上画图和计算。"
+            },
+            {
+              "start": 41.714,
+              "duration": 6.201,
+              "text": "准备好以后，上台讲清你的思路，并检查原来的两组条件。"
+            }
+          ]
+        }
+      ],
+      "start": 407.66666666666663,
+      "duration": 59.083333333333336
+    }
+  ],
+  "captions": [
+    {
+      "start": 0.75,
+      "end": 5.65,
+      "text": "今天，我们从一道完整的应用题出发，学会消去。"
+    },
+    {
+      "start": 5.65,
+      "end": 9.717,
+      "text": "先读题，再一起找出每一步的理由。"
+    },
+    {
+      "start": 10.274,
+      "end": 16.846,
+      "text": "学校第一次买了三个水瓶和二十个茶杯，共用去一百三十四元。"
+    },
+    {
+      "start": 17.35,
+      "end": 23.867,
+      "text": "第二次买了同样的三个水瓶和十六个茶杯，共用去一百一十八元。"
+    },
+    {
+      "start": 23.867,
+      "end": 27.663,
+      "text": "水瓶和茶杯的单价各是多少元？"
+    },
+    {
+      "start": 28.218,
+      "end": 32.14,
+      "text": "这里的两个金额，都是整次购物的总价。"
+    },
+    {
+      "start": 32.14,
+      "end": 37.819,
+      "text": "题目要找的单价，是一个水瓶和一个茶杯各要多少钱。"
+    },
+    {
+      "start": 37.819,
+      "end": 43.598,
+      "text": "把文字整理成两张购物单，注意相同商品的单价相同。"
+    },
+    {
+      "start": 45.541666666666664,
+      "end": 48.349666666666664,
+      "text": "把两张购物单上下对齐。"
+    },
+    {
+      "start": 48.349666666666664,
+      "end": 54.273666666666664,
+      "text": "两次都买了三个同样的水瓶，所以水瓶花的钱一样多。"
+    },
+    {
+      "start": 54.273666666666664,
+      "end": 59.047666666666665,
+      "text": "这部分费用，解释不了第一次为什么多花钱。"
+    },
+    {
+      "start": 59.60166666666667,
+      "end": 61.199666666666666,
+      "text": "再看茶杯。"
+    },
+    {
+      "start": 61.199666666666666,
+      "end": 65.23466666666667,
+      "text": "两边都有的这十六个，也可以一一配对。"
+    },
+    {
+      "start": 65.23566666666666,
+      "end": 71.10966666666666,
+      "text": "把相同部分暂时移出比较，第一张订单还剩四个茶杯。"
+    },
+    {
+      "start": 71.66966666666667,
+      "end": 75.84966666666668,
+      "text": "现在，多买的商品只剩这四个茶杯。"
+    },
+    {
+      "start": 75.84966666666666,
+      "end": 80.50166666666667,
+      "text": "第一次多花的钱，就是买这四个茶杯用去的钱。"
+    },
+    {
+      "start": 81.07366666666667,
+      "end": 85.25366666666667,
+      "text": "一百三十四减一百一十八，等于十六元。"
+    },
+    {
+      "start": 85.25366666666667,
+      "end": 92.50066666666667,
+      "text": "注意，消去不是说商品免费，而是比较差额时，相同的费用抵消了。"
+    },
+    {
+      "start": 94.45833333333333,
+      "end": 98.48833333333333,
+      "text": "这十六元，是四个茶杯合起来的价格。"
+    },
+    {
+      "start": 98.48833333333333,
+      "end": 102.48733333333332,
+      "text": "我们还不能说，一个茶杯就是十六元。"
+    },
+    {
+      "start": 103.04633333333332,
+      "end": 106.65533333333332,
+      "text": "四个同样的茶杯，每个价格相同。"
+    },
+    {
+      "start": 106.65533333333333,
+      "end": 112.92333333333333,
+      "text": "把十六元平均分成四份，每份四元，才是一个茶杯的价格。"
+    },
+    {
+      "start": 113.48233333333333,
+      "end": 122.25433333333334,
+      "text": "把刚才的图写成算式：价钱差，一百三十四减一百一十八；数量差，二十减十六。"
+    },
+    {
+      "start": 122.25433333333334,
+      "end": 127.19133333333333,
+      "text": "用价钱差除以数量差，得到每个茶杯四元。"
+    },
+    {
+      "start": 127.75833333333333,
+      "end": 135.11733333333333,
+      "text": "做这一步以前，一定要先确认：价钱的差，是否只对应一种商品的数量差。"
+    },
+    {
+      "start": 135.11733333333333,
+      "end": 139.86433333333332,
+      "text": "刚才我们先消去了相同费用，所以可以这样算。"
+    },
+    {
+      "start": 141.79166666666666,
+      "end": 145.86266666666666,
+      "text": "知道茶杯每个四元，再看第二张购物单。"
+    },
+    {
+      "start": 145.86266666666666,
+      "end": 149.27766666666665,
+      "text": "十六个茶杯，一共六十四元。"
+    },
+    {
+      "start": 149.82766666666666,
+      "end": 155.76066666666665,
+      "text": "总价一百一十八元，扣掉茶杯的六十四元，剩下五十四元。"
+    },
+    {
+      "start": 155.76066666666665,
+      "end": 158.34666666666666,
+      "text": "这是三个水瓶的总价。"
+    },
+    {
+      "start": 158.89566666666667,
+      "end": 164.44866666666667,
+      "text": "五十四除以三，等于十八元，所以一个水瓶十八元。"
+    },
+    {
+      "start": 164.96366666666665,
+      "end": 173.87266666666665,
+      "text": "回到第一次购买：三个水瓶五十四元，二十个茶杯八十元，合起来一百三十四元，符合。"
+    },
+    {
+      "start": 174.39166666666665,
+      "end": 182.81066666666666,
+      "text": "第二次：三个水瓶五十四元，十六个茶杯六十四元，合起来一百一十八元，也符合。"
+    },
+    {
+      "start": 182.81066666666666,
+      "end": 186.47066666666666,
+      "text": "两组条件都满足，答案才可靠。"
+    },
+    {
+      "start": 188.41666666666666,
+      "end": 192.69166666666666,
+      "text": "再看一道题，这次两种商品的数量都变了。"
+    },
+    {
+      "start": 192.69166666666666,
+      "end": 196.65066666666667,
+      "text": "先完整读题，再找容易入手的条件。"
+    },
+    {
+      "start": 197.22066666666666,
+      "end": 202.40666666666667,
+      "text": "小磊买三块橡皮，五支铅笔需付十点六元。"
+    },
+    {
+      "start": 202.90466666666666,
+      "end": 211.26966666666667,
+      "text": "若他买同品种的四块橡皮，四支铅笔需付十二元，则一块橡皮的价格是多少元？"
+    },
+    {
+      "start": 211.78066666666666,
+      "end": 215.68866666666665,
+      "text": "这一次，橡皮和铅笔的数量都变了。"
+    },
+    {
+      "start": 215.68866666666665,
+      "end": 220.74266666666665,
+      "text": "不过，第二种买法里的橡皮和铅笔恰好一样多。"
+    },
+    {
+      "start": 220.74266666666665,
+      "end": 223.41066666666666,
+      "text": "我们可以从这里入手。"
+    },
+    {
+      "start": 225.33333333333331,
+      "end": 231.1843333333333,
+      "text": "先看第二种买法：四块橡皮和四支铅笔，共十二元。"
+    },
+    {
+      "start": 231.1843333333333,
+      "end": 235.00733333333332,
+      "text": "把一块橡皮和一支铅笔配成一套。"
+    },
+    {
+      "start": 235.5773333333333,
+      "end": 241.34733333333332,
+      "text": "看，每一块橡皮都和一支铅笔配对，正好组成四套。"
+    },
+    {
+      "start": 241.34733333333332,
+      "end": 246.36533333333333,
+      "text": "每套的东西完全一样，所以每套的价钱也一样。"
+    },
+    {
+      "start": 246.9253333333333,
+      "end": 253.4563333333333,
+      "text": "四套共十二元，平均分成四份，十二除以四，每套三元。"
+    },
+    {
+      "start": 253.97733333333332,
+      "end": 261.36333333333334,
+      "text": "注意，三元是一块橡皮加一支铅笔的总价，还不是任何一种商品的单价。"
+    },
+    {
+      "start": 261.36333333333334,
+      "end": 265.87933333333336,
+      "text": "我们先求出一套的价钱，再去看另一种买法。"
+    },
+    {
+      "start": 267.8333333333333,
+      "end": 273.6033333333333,
+      "text": "第一种买法，是三块橡皮和五支铅笔，共十点六元。"
+    },
+    {
+      "start": 273.6033333333333,
+      "end": 279.1383333333333,
+      "text": "我们就在这些商品里配一配，不增加，也不拿走商品。"
+    },
+    {
+      "start": 279.7093333333333,
+      "end": 285.1393333333333,
+      "text": "三块橡皮，分别配上三支铅笔，正好圈出三套。"
+    },
+    {
+      "start": 285.1393333333333,
+      "end": 288.5543333333333,
+      "text": "每套三元，三套一共九元。"
+    },
+    {
+      "start": 289.11333333333334,
+      "end": 293.7683333333333,
+      "text": "五支铅笔里，用了三支来配套，还剩两支。"
+    },
+    {
+      "start": 293.7683333333333,
+      "end": 297.9443333333333,
+      "text": "这两支铅笔，不属于刚才圈出的三套。"
+    },
+    {
+      "start": 298.49333333333334,
+      "end": 302.59133333333335,
+      "text": "十点六元里面，九元付给了三套商品。"
+    },
+    {
+      "start": 302.5913333333333,
+      "end": 308.85933333333327,
+      "text": "剩下的十点六减九，等于一点六元，就是这两支铅笔的总价。"
+    },
+    {
+      "start": 309.40933333333334,
+      "end": 314.98833333333334,
+      "text": "这样，我们先算出相同组合的费用，再从总价里扣除。"
+    },
+    {
+      "start": 314.98833333333334,
+      "end": 320.46833333333336,
+      "text": "剩下的钱，只对应剩下的两支铅笔，问题就简单了。"
+    },
+    {
+      "start": 322.375,
+      "end": 330.02,
+      "text": "两支同品种的铅笔共一点六元，平均分成两份，每支铅笔零点八元。"
+    },
+    {
+      "start": 330.531,
+      "end": 333.162,
+      "text": "再看我们刚才配好的一套。"
+    },
+    {
+      "start": 333.162,
+      "end": 337.039,
+      "text": "一块橡皮加一支铅笔，一共三元。"
+    },
+    {
+      "start": 337.60699999999997,
+      "end": 345.02099999999996,
+      "text": "从三元里扣掉铅笔的零点八元，剩下二点二元，就是一块橡皮的价格。"
+    },
+    {
+      "start": 345.523,
+      "end": 351.238,
+      "text": "我们先算铅笔，是因为配好三套后，恰好剩下两支铅笔。"
+    },
+    {
+      "start": 351.238,
+      "end": 356.773,
+      "text": "选择先算什么，要看题目里的条件怎样整理更方便。"
+    },
+    {
+      "start": 358.7083333333333,
+      "end": 364.1793333333333,
+      "text": "把橡皮二点二元、铅笔零点八元，放回第一种买法。"
+    },
+    {
+      "start": 364.1793333333333,
+      "end": 370.6923333333333,
+      "text": "三块橡皮六点六元，五支铅笔四元，共十点六元，符合。"
+    },
+    {
+      "start": 371.2563333333333,
+      "end": 379.6623333333333,
+      "text": "第二种买法：四块橡皮八点八元，四支铅笔三点二元，共十二元，也符合。"
+    },
+    {
+      "start": 380.1803333333333,
+      "end": 391.3623333333333,
+      "text": "这道题的路线是：配成相同的一套，先求一套的价钱；再圈出已知费用的部分，算剩下的商品，最后代回检验。"
+    },
+    {
+      "start": 391.9363333333333,
+      "end": 400.30133333333333,
+      "text": "配套方便，是因为这道题恰好有四块橡皮和四支铅笔，可以分成四个相同组合。"
+    },
+    {
+      "start": 400.30133333333333,
+      "end": 406.50233333333335,
+      "text": "以后遇到新题，也要先观察条件，不能看到两种商品就照搬。"
+    },
+    {
+      "start": 408.41666666666663,
+      "end": 411.11566666666664,
+      "text": "现在，换你当小老师。"
+    },
+    {
+      "start": 411.11566666666664,
+      "end": 414.57166666666666,
+      "text": "先完整读题，再独立想办法。"
+    },
+    {
+      "start": 415.13266666666664,
+      "end": 418.0756666666666,
+      "text": "美术小组购买绘画用品。"
+    },
+    {
+      "start": 418.0756666666666,
+      "end": 427.6186666666666,
+      "text": "四盒彩笔和四本绘画本共六十四元；两盒同样的彩笔和五本同样的绘画本共四十七元。"
+    },
+    {
+      "start": 428.18466666666666,
+      "end": 432.6766666666667,
+      "text": "同种商品的单价相同，购买时没有折扣。"
+    },
+    {
+      "start": 432.6766666666666,
+      "end": 438.9446666666666,
+      "text": "活动还需要购买三盒彩笔和六本绘画本，一共应付多少元？"
+    },
+    {
+      "start": 439.5086666666666,
+      "end": 444.4096666666666,
+      "text": "请写出完整的计算过程，并说明每一步的理由。"
+    },
+    {
+      "start": 444.92866666666663,
+      "end": 449.3806666666666,
+      "text": "暂停视频，可以在草稿纸上画图和计算。"
+    },
+    {
+      "start": 449.3806666666666,
+      "end": 455.58166666666665,
+      "text": "准备好以后，上台讲清你的思路，并检查原来的两组条件。"
+    }
+  ]
+}

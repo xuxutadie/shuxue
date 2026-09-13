@@ -1,0 +1,97 @@
+{
+  "ok": false,
+  "platform": "win32",
+  "arch": "x64",
+  "checks": [
+    {
+      "name": "Version",
+      "ok": false,
+      "detail": "0.8.17 → 0.8.34 available",
+      "hint": "Run: hyperframes upgrade"
+    },
+    {
+      "name": "Node.js",
+      "ok": true,
+      "detail": "v24.11.1 (win32 x64)"
+    },
+    {
+      "name": "CPU",
+      "ok": true,
+      "detail": "32 cores · 13th Gen Intel(R) Core(TM) i9-13900HX @ 2419MHz"
+    },
+    {
+      "name": "Memory",
+      "ok": false,
+      "detail": "31.7 GB total · 1.5 GB available",
+      "hint": "Low memory — renders may fail. Close other apps or increase RAM."
+    },
+    {
+      "name": "Disk",
+      "ok": true,
+      "detail": "278.2 GB free"
+    },
+    {
+      "name": "Frames cache",
+      "ok": true,
+      "detail": "$HOME\\AppData\\Local\\Temp\\hyperframes-extract-cache-u · 10.6 GB free at $HOME\\AppData\\Local\\Temp\\hyperframes-extract-cache-u · default"
+    },
+    {
+      "name": "Archive extractor",
+      "ok": true,
+      "detail": "Built into Windows"
+    },
+    {
+      "name": "Environment",
+      "ok": true,
+      "detail": "non-TTY"
+    },
+    {
+      "name": "whisper-cpp",
+      "ok": false,
+      "detail": "Not found (optional — needed for transcription)",
+      "hint": "Build with cmake: https://github.com/ggml-org/whisper.cpp#building"
+    },
+    {
+      "name": "TTS (Kokoro)",
+      "ok": true,
+      "detail": "Kokoro deps installed"
+    },
+    {
+      "name": "BGM (MusicGen)",
+      "ok": false,
+      "detail": "Not installed (optional — local music fallback)",
+      "hint": "pip install transformers torch soundfile numpy"
+    },
+    {
+      "name": "FFmpeg",
+      "ok": true,
+      "detail": "ffmpeg 9.0.1-full_build-www.gyan.dev at $HOME\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-9.0.1-full_build\\bin\\ffmpeg.exe"
+    },
+    {
+      "name": "FFprobe",
+      "ok": true,
+      "detail": "ffprobe 9.0.1-full_build-www.gyan.dev at $HOME\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg_Microsoft.Winget.Source_8wekyb3d8bbwe\\ffmpeg-9.0.1-full_build\\bin\\ffprobe.exe"
+    },
+    {
+      "name": "Chrome",
+      "ok": true,
+      "detail": "cache: $HOME\\.cache\\hyperframes\\chrome\\chrome-headless-shell\\win64-152.0.7977.30\\chrome-headless-shell-win64\\chrome-headless-shell.exe"
+    },
+    {
+      "name": "Docker",
+      "ok": true,
+      "detail": "Docker version 29.3.1, build c2be9cc"
+    },
+    {
+      "name": "Docker running",
+      "ok": false,
+      "detail": "Not running",
+      "hint": "Start Docker Desktop or run: sudo systemctl start docker"
+    }
+  ],
+  "_meta": {
+    "version": "0.8.17",
+    "latestVersion": "0.8.34",
+    "updateAvailable": true
+  }
+}

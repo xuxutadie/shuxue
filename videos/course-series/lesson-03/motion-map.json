@@ -1,0 +1,519 @@
+[
+  {
+    "scene": "s1",
+    "start": 0,
+    "duration": 36.208333333333336,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s2",
+    "start": 36.208333333333336,
+    "duration": 42.291666666666664,
+    "events": [
+      {
+        "subject": "ring",
+        "time": 12.276,
+        "props": {
+          "x": 220,
+          "y": 0,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 13.126,
+        "props": {
+          "x": 440,
+          "y": 0,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 13.975999999999999,
+        "props": {
+          "x": 660,
+          "y": 0,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 14.826,
+        "props": {
+          "x": 0,
+          "y": 140,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 15.676,
+        "props": {
+          "x": 220,
+          "y": 140,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 16.526,
+        "props": {
+          "x": 440,
+          "y": 140,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 17.376,
+        "props": {
+          "x": 660,
+          "y": 140,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 18.226,
+        "props": {
+          "x": 0,
+          "y": 280,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 19.076,
+        "props": {
+          "x": 220,
+          "y": 280,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 19.926000000000002,
+        "props": {
+          "x": 440,
+          "y": 280,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 20.776,
+        "props": {
+          "x": 660,
+          "y": 280,
+          "duration": 0.6
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 12.426,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 22.962,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 35.154,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s3",
+    "start": 78.5,
+    "duration": 41.541666666666664,
+    "events": [
+      {
+        "subject": "six",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 12.65,
+        "props": {
+          "x": 220
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 14.65,
+        "props": {
+          "x": 440
+        }
+      },
+      {
+        "subject": "car02",
+        "time": 20.042,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "answer",
+        "time": 10.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 10.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 21.042,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 30.186,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s4",
+    "start": 120.04166666666666,
+    "duration": 42.625,
+    "events": [
+      {
+        "subject": "ring",
+        "time": 1.05,
+        "props": {
+          "x": 660
+        }
+      },
+      {
+        "subject": "tail",
+        "time": 2.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "next",
+        "time": 23.138,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "ring",
+        "time": 23.138,
+        "props": {
+          "x": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 12.522,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 21.138,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 33.258,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s5",
+    "start": 162.66666666666666,
+    "duration": 34.583333333333336,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s6",
+    "start": 197.25,
+    "duration": 41.291666666666664,
+    "events": [
+      {
+        "subject": "v1",
+        "time": 1.75,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "v2",
+        "time": 2.85,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "v3",
+        "time": 3.95,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "v4",
+        "time": 18.41,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "v5",
+        "time": 19.51,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "v6",
+        "time": 20.61,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "v7",
+        "time": 21.71,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 9.882,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 19.41,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 32.274,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s7",
+    "start": 238.54166666666666,
+    "duration": 53.166666666666664,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  }
+]

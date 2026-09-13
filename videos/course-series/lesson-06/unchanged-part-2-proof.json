@@ -1,0 +1,11 @@
+{
+  "previousHash": "9ea562cb03e51b51b9eb674cb424e781703ef16937820dcb187a892b57573239",
+  "files": {
+    "segments\\part-2.html": "5208a93c2ea553e1f81abcbc9ccf6bb5ef550688a72bc777c07b33b9069f8e32",
+    "voice-meta.json": "36ae10b1e65019048b13768cf027c8221fd5928657812b7da8475031f38467ff",
+    "compositions\\s6.html": "ca38aa41b68a56f4f0e4113098c1c4f865a2654e974a06e58e639c111b65650b",
+    "compositions\\s7.html": "5da130bed9766329835e68f4f91cd56d00222d2ec262507d40629da7d0db7b55",
+    "compositions\\s8.html": "aa07d415e13a15d68d86130b2a80850e01bbd0a8276a1fc3f0dc30f49f3190e5"
+  },
+  "mediaHash": "3bf7ba176ee9e11d981e67ee21700089cb2ea9d3fc6c961f63726acab1543d9e"
+}

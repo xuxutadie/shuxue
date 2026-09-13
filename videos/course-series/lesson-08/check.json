@@ -1,0 +1,92 @@
+[hyperframes] browserGpuMode probe → hardware (WebGL renderer vendor="Google Inc. (Intel)" renderer="ANGLE (Intel, Intel(R) UHD Graphics (0x0000A788) Direct3D11 vs_5_0 ps_5_0, D3D11)")
+{
+  "ok": true,
+  "strict": false,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "filesScanned": 9
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": []
+  },
+  "layout": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "duration": 350.37500000000006,
+    "samples": [
+      25.38,
+      64.29,
+      106.903,
+      147.943,
+      183.497,
+      231.088,
+      283.207,
+      335.628
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 0,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": true,
+    "samples": [
+      25.38,
+      64.29,
+      147.943,
+      231.088,
+      335.628
+    ],
+    "checked": 52,
+    "passed": 52
+  },
+  "snapshots": {
+    "enabled": true,
+    "files": [
+      "snapshots\\frame-00-at-25.4s.png",
+      "snapshots\\frame-01-at-64.3s.png",
+      "snapshots\\frame-02-at-147.9s.png",
+      "snapshots\\frame-03-at-231.1s.png",
+      "snapshots\\frame-04-at-335.6s.png"
+    ],
+    "times": [
+      25.38,
+      64.29,
+      147.943,
+      231.088,
+      335.628
+    ],
+    "findingFiles": []
+  },
+  "_meta": {
+    "version": "0.8.17",
+    "latestVersion": "0.8.34",
+    "updateAvailable": true
+  }
+}

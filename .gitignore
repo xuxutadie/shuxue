@@ -1,0 +1,27 @@
+node_modules/
+.runtime/
+backups/
+.env
+*.log
+
+# 本机配置、备份、截图与临时文件不进入代码仓库。
+.env.*
+!.env.example
+tmp/
+snapshots/
+__pycache__/
+*.pyc
+*.dump
+*.pem
+*.key
+
+# 保留视频制作代码和时间轴；成片统一由 public/media 提供。
+videos/**/*.mp4
+videos/**/*.mp3
+videos/**/*.wav
+videos/**/*.png
+videos/**/*.jpg
+videos/**/*.jsonl
+videos/**/segments/
+videos/**/.waveform-cache/
+videos/**/*.receipt.json

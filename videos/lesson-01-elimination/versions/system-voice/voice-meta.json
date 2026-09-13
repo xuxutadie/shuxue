@@ -1,0 +1,200 @@
+﻿[
+    {
+        "scene":  "read",
+        "index":  0,
+        "file":  "assets/voice/read-00.wav",
+        "duration":  8.869116
+    },
+    {
+        "scene":  "read",
+        "index":  1,
+        "file":  "assets/voice/read-01.wav",
+        "duration":  9.189887
+    },
+    {
+        "scene":  "read",
+        "index":  2,
+        "file":  "assets/voice/read-02.wav",
+        "duration":  12.85229
+    },
+    {
+        "scene":  "read",
+        "index":  3,
+        "file":  "assets/voice/read-03.wav",
+        "duration":  10.610794
+    },
+    {
+        "scene":  "read",
+        "index":  4,
+        "file":  "assets/voice/read-04.wav",
+        "duration":  11.065805
+    },
+    {
+        "scene":  "compare",
+        "index":  0,
+        "file":  "assets/voice/compare-00.wav",
+        "duration":  11.911973
+    },
+    {
+        "scene":  "compare",
+        "index":  1,
+        "file":  "assets/voice/compare-01.wav",
+        "duration":  12.10576
+    },
+    {
+        "scene":  "compare",
+        "index":  2,
+        "file":  "assets/voice/compare-02.wav",
+        "duration":  7.730884
+    },
+    {
+        "scene":  "compare",
+        "index":  3,
+        "file":  "assets/voice/compare-03.wav",
+        "duration":  9.265034
+    },
+    {
+        "scene":  "compare",
+        "index":  4,
+        "file":  "assets/voice/compare-04.wav",
+        "duration":  8.599456
+    },
+    {
+        "scene":  "solve",
+        "index":  0,
+        "file":  "assets/voice/solve-00.wav",
+        "duration":  9.386395
+    },
+    {
+        "scene":  "solve",
+        "index":  1,
+        "file":  "assets/voice/solve-01.wav",
+        "duration":  10.383855
+    },
+    {
+        "scene":  "solve",
+        "index":  2,
+        "file":  "assets/voice/solve-02.wav",
+        "duration":  7.665125
+    },
+    {
+        "scene":  "solve",
+        "index":  3,
+        "file":  "assets/voice/solve-03.wav",
+        "duration":  6.99483
+    },
+    {
+        "scene":  "solve",
+        "index":  4,
+        "file":  "assets/voice/solve-04.wav",
+        "duration":  9.970975
+    },
+    {
+        "scene":  "solve",
+        "index":  5,
+        "file":  "assets/voice/solve-05.wav",
+        "duration":  9.475918
+    },
+    {
+        "scene":  "check",
+        "index":  0,
+        "file":  "assets/voice/check-00.wav",
+        "duration":  10.426984
+    },
+    {
+        "scene":  "check",
+        "index":  1,
+        "file":  "assets/voice/check-01.wav",
+        "duration":  8.999093
+    },
+    {
+        "scene":  "check",
+        "index":  2,
+        "file":  "assets/voice/check-02.wav",
+        "duration":  9.181043
+    },
+    {
+        "scene":  "check",
+        "index":  3,
+        "file":  "assets/voice/check-03.wav",
+        "duration":  10.071383
+    },
+    {
+        "scene":  "variant",
+        "index":  0,
+        "file":  "assets/voice/variant-00.wav",
+        "duration":  12.428073
+    },
+    {
+        "scene":  "variant",
+        "index":  1,
+        "file":  "assets/voice/variant-01.wav",
+        "duration":  10.24644
+    },
+    {
+        "scene":  "variant",
+        "index":  2,
+        "file":  "assets/voice/variant-02.wav",
+        "duration":  10.040363
+    },
+    {
+        "scene":  "variant",
+        "index":  3,
+        "file":  "assets/voice/variant-03.wav",
+        "duration":  9.639229
+    },
+    {
+        "scene":  "variant",
+        "index":  4,
+        "file":  "assets/voice/variant-04.wav",
+        "duration":  12.185986
+    },
+    {
+        "scene":  "variant",
+        "index":  5,
+        "file":  "assets/voice/variant-05.wav",
+        "duration":  12.716689
+    },
+    {
+        "scene":  "teach",
+        "index":  0,
+        "file":  "assets/voice/teach-00.wav",
+        "duration":  11.244127
+    },
+    {
+        "scene":  "teach",
+        "index":  1,
+        "file":  "assets/voice/teach-01.wav",
+        "duration":  8.095374
+    },
+    {
+        "scene":  "teach",
+        "index":  2,
+        "file":  "assets/voice/teach-02.wav",
+        "duration":  8.777143
+    },
+    {
+        "scene":  "teach",
+        "index":  3,
+        "file":  "assets/voice/teach-03.wav",
+        "duration":  8.177823
+    },
+    {
+        "scene":  "teach",
+        "index":  4,
+        "file":  "assets/voice/teach-04.wav",
+        "duration":  11.38644
+    },
+    {
+        "scene":  "teach",
+        "index":  5,
+        "file":  "assets/voice/teach-05.wav",
+        "duration":  14.772744
+    },
+    {
+        "scene":  "teach",
+        "index":  6,
+        "file":  "assets/voice/teach-06.wav",
+        "duration":  13.195374
+    }
+]

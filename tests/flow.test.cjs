@@ -1,0 +1,43 @@
+// 使用最小页面替身验证提交与过期流程；真实页面另外进行浏览器验收。
+const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
+const nodes=new Map(),listeners={};
+function element(){return {innerHTML:'',textContent:'',value:'',style:{},open:false,classList:{toggle(){}},showModal(){this.open=true},close(){this.open=false},click(){},addEventListener(){}}}
+const document={getElementById(id){if(!nodes.has(id))nodes.set(id,element());return nodes.get(id)},addEventListener(type,fn){listeners[type]=fn},querySelector(){return element()},createElement(){return element()}};
+const location={hash:'#home',href:'http://127.0.0.1:8765/'};
+const c=vm.createContext({document,location,window:{scrollTo(){},addEventListener(){}},localStorage:{getItem(){return null},setItem(){}},console,Date,Math,URL,setTimeout(){return 1},clearTimeout(){},setInterval(){return 1},clearInterval(){}});
+vm.runInContext(['data.js','exam-legacy.js','exams.js','core.js','games.js','app.js'].map(f=>fs.readFileSync(f,'utf8')).join('\n'),c);
+const run=s=>vm.runInContext(s,c);
+run("pupil().drafts.A={version:'v2',answers:EXAMS.A.map(q=>q.answer),deadline:Date.now()+100000};submitExam('A')");
+assert.equal(run('Boolean(pupil().exams.A)'),false,'确认前不能交卷');
+assert.equal(nodes.get('dialog').open,true);
+run("submitExam('A',false,true)");
+assert.equal(run("scoreRecord('A',pupil().exams.A).score"),120);
+assert.equal(run('Boolean(pupil().drafts.A)'),false);
+assert.equal(nodes.get('dialog').open,false);
+run("const second=freshStudent('另一位学生');state.students.push(second);state.current=second.id");
+assert.equal(run('Boolean(pupil().exams.A)'),false,'学生记录隔离');
+run("pupil().drafts.A={answers:['125',...Array(19).fill('')],deadline:Date.now()-1000};location.hash='#exam/A';render()");
+assert.equal(run("scoreRecord('A',pupil().exams.A).score"),6);
+assert.equal(run('pupil().exams.A.timedOut'),true);
+assert.equal(run('Boolean(pupil().drafts.A)'),false);
+assert.equal(run("review('A').includes('答案：')"),false,'未开放讲评不得渲染答案');
+run('teacher=true');assert.equal(run("review('A').includes('答案：')"),true);
+run("pupil().exams.A.released=true;teacher=false");assert.equal(run("review('A').includes('答案：')"),true);
+run("pupil().drafts.B={answers:Array(20).fill(''),deadline:Date.now()-1000};location.hash='#home';render()");
+assert.equal(run('pupil().exams.B.timedOut'),true,'离开测评页后返回也应过期交卷');
+assert.equal(run('validateBackup(state)'),true);
+assert.throws(()=>run("{const bad=JSON.parse(JSON.stringify(state));bad.dates[0]='<img onerror=alert(1)>';validateBackup(bad)}"));
+assert.throws(()=>run("{const bad=JSON.parse(JSON.stringify(state));bad.students[0].talk[0]=null;validateBackup(bad)}"));
+console.log('PASS: 提交确认、120分结果、到期交卷、离页超时、学生隔离、讲评开放与备份防损坏');
+
+run('teacher=true');
+listeners.click({target:{closest(){return {dataset:{action:'exam-renew-confirm',kind:'A'}}}}});
+assert.equal(run('Boolean(pupil().exams.A)'),false);
+assert.equal(run('pupil().history.length'),1);
+assert.equal(run("scoreRecord('A',pupil().history[0].record).score"),6);
+listeners.click({target:{closest(){return {dataset:{action:'exam-start',kind:'A'}}}}});
+assert.equal(run('pupil().drafts.A.version'),'v2');
+run("submitExam('A',false,true)");
+assert.equal(run('pupil().exams.A.version'),'v2');
+assert.equal(run('validateBackup(state)'),true);
+console.log('PASS: 新版重测前归档旧答案、历史成绩不变、新作答绑定新版、备份包含历史记录');

@@ -1,0 +1,110 @@
+{
+  "videos": 12,
+  "revisedVideos": [
+    2,
+    4,
+    5,
+    6,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "totalSeconds": 4034.418,
+  "site": "http://127.0.0.1:8766/",
+  "tests": {
+    "passed": 26,
+    "failed": 0
+  },
+  "sourceChecks": 1573,
+  "newPractice": 33,
+  "media": "12条成片与发布文件一致，HTTP分段读取、字幕和封面均通过",
+  "scope": "本机网站；浏览器交互结果记录在revision-browser-verification.json",
+  "lessons": [
+    {
+      "lesson": 1,
+      "seconds": 466.75,
+      "bytes": 18490378,
+      "sha256": "5a2c0dea9de56c5853afdbfa43388518f7b1d9364b1af3d3f9080528d861e25f",
+      "src": "/media/lessons/lesson-01-dopamine-v1.mp4"
+    },
+    {
+      "lesson": 2,
+      "seconds": 312.292,
+      "bytes": 12555930,
+      "sha256": "8cc5179d4246f744f0e64f5b7c8cc4b7d7321e117b05637828b61029d3c2d00e",
+      "src": "/media/lessons/lesson-02-dopamine-v2.mp4"
+    },
+    {
+      "lesson": 3,
+      "seconds": 291.708,
+      "bytes": 11121797,
+      "sha256": "1279e2ee2d2a2b8132dac97d29981d69ac6dfab7020951bff18da68da2648633",
+      "src": "/media/lessons/lesson-03-dopamine-v1.mp4"
+    },
+    {
+      "lesson": 4,
+      "seconds": 319.917,
+      "bytes": 12656819,
+      "sha256": "b2bfca17ceae34c4afbb6de4638c9bfab35d168dc3f17dd0ff304c0e8b8aea57",
+      "src": "/media/lessons/lesson-04-dopamine-v2.mp4"
+    },
+    {
+      "lesson": 5,
+      "seconds": 313.792,
+      "bytes": 12549938,
+      "sha256": "4a61174f04a040eb48451696295de4748ab2c22268b1070276d3d418408610b6",
+      "src": "/media/lessons/lesson-05-dopamine-v2.mp4"
+    },
+    {
+      "lesson": 6,
+      "seconds": 352.667,
+      "bytes": 13677397,
+      "sha256": "0bbde90d20336c7f4f0ee57c9366a76bf782a5358de4eaaea90c2c70212f2f27",
+      "src": "/media/lessons/lesson-06-dopamine-v2.mp4"
+    },
+    {
+      "lesson": 7,
+      "seconds": 306.5,
+      "bytes": 11570272,
+      "sha256": "d5fa9ae59ea50c4d32d937251ce29d5120b69fb0d18bd91a8393fbeb151806c0",
+      "src": "/media/lessons/lesson-07-dopamine-v1.mp4"
+    },
+    {
+      "lesson": 8,
+      "seconds": 350.375,
+      "bytes": 14027217,
+      "sha256": "5e921851df1b99cb11f0cbfb8e297c744ef368fbcd4152a85f66980002b80d98",
+      "src": "/media/lessons/lesson-08-dopamine-v2.mp4"
+    },
+    {
+      "lesson": 9,
+      "seconds": 350.0,
+      "bytes": 13805948,
+      "sha256": "3ea432e038f263ad6f9cae7b05b601debe049660e207b89069a0486acf45a04b",
+      "src": "/media/lessons/lesson-09-dopamine-v2.mp4"
+    },
+    {
+      "lesson": 10,
+      "seconds": 352.375,
+      "bytes": 13713220,
+      "sha256": "078dd50231125e033d90dbb02e94d0a228fa7accc409575141ef2c24216cacff",
+      "src": "/media/lessons/lesson-10-dopamine-v2.mp4"
+    },
+    {
+      "lesson": 11,
+      "seconds": 282.292,
+      "bytes": 10813488,
+      "sha256": "fee980aebf1ee0a53753b27d95ab11f0291e084a9346db8112c53bb4730c2e96",
+      "src": "/media/lessons/lesson-11-dopamine-v2.mp4"
+    },
+    {
+      "lesson": 12,
+      "seconds": 335.75,
+      "bytes": 12902953,
+      "sha256": "91eaa5ad9fcb13c04c0d9bf997c9bdcabd02b1577b1163b146532804756d830e",
+      "src": "/media/lessons/lesson-12-dopamine-v2.mp4"
+    }
+  ]
+}

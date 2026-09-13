@@ -1,0 +1,530 @@
+{
+  "duration": 372.013,
+  "scenes": [
+    {
+      "id": "read",
+      "title": "先读完整题目",
+      "tag": "01 / 读题",
+      "lines": [
+        {
+          "text": "两张订单，能帮我们找出笔和本子的单价吗？先把完整题目读一遍。",
+          "cue": "intro",
+          "scene": "read",
+          "index": 0,
+          "file": "assets/voice/read-00.wav",
+          "duration": 8.869116,
+          "start": 0.6
+        },
+        {
+          "text": "文具店同一种本子的单价相同，同一种笔的单价也相同，购买时没有折扣。",
+          "cue": "condition",
+          "scene": "read",
+          "index": 1,
+          "file": "assets/voice/read-01.wav",
+          "duration": 9.189887,
+          "start": 9.819
+        },
+        {
+          "text": "小明买了两本本子和三支笔，共花十三元。小红买了两本同样的本子和五支同样的笔，共花十七元。",
+          "cue": "orders",
+          "scene": "read",
+          "index": 2,
+          "file": "assets/voice/read-02.wav",
+          "duration": 12.85229,
+          "start": 19.359
+        },
+        {
+          "text": "每支笔多少元？每本本子多少元？还要说明理由，并用两张订单检查答案。",
+          "cue": "ask",
+          "scene": "read",
+          "index": 3,
+          "file": "assets/voice/read-03.wav",
+          "duration": 10.610794,
+          "start": 32.561
+        },
+        {
+          "text": "先找一找，两张订单里，什么相同？什么不同？可以暂停，画在草稿纸上。",
+          "cue": "think",
+          "pause": 4,
+          "scene": "read",
+          "index": 4,
+          "file": "assets/voice/read-04.wav",
+          "duration": 11.065805,
+          "start": 43.522
+        }
+      ],
+      "start": 0,
+      "duration": 59.638
+    },
+    {
+      "id": "compare",
+      "title": "把相同部分，一一配对",
+      "tag": "02 / 比较",
+      "lines": [
+        {
+          "text": "把小红的订单放在上面，小明的放在下面。注意，每一本本子、每一支笔，都上下对齐。",
+          "cue": "align",
+          "scene": "compare",
+          "index": 0,
+          "file": "assets/voice/compare-00.wav",
+          "duration": 11.911973,
+          "start": 0.6
+        },
+        {
+          "text": "两张订单各有两本同样的本子，所以本子的总价相同。比较价钱差时，可以把它们成对消去。",
+          "cue": "books",
+          "scene": "compare",
+          "index": 1,
+          "file": "assets/voice/compare-01.wav",
+          "duration": 12.10576,
+          "start": 12.862
+        },
+        {
+          "text": "两边还有三支同样的笔，也可以一一配对，消去相同的部分。",
+          "cue": "pens",
+          "scene": "compare",
+          "index": 2,
+          "file": "assets/voice/compare-02.wav",
+          "duration": 7.730884,
+          "start": 25.318
+        },
+        {
+          "text": "看！小红的订单只多出两支笔。多付的钱，就花在这两支笔上。",
+          "cue": "extra",
+          "scene": "compare",
+          "index": 3,
+          "file": "assets/voice/compare-03.wav",
+          "duration": 9.265034,
+          "start": 33.399
+        },
+        {
+          "text": "消去，不是说商品免费了，而是相同的费用，在作比较时抵消了。",
+          "cue": "meaning",
+          "pause": 1,
+          "scene": "compare",
+          "index": 4,
+          "file": "assets/voice/compare-04.wav",
+          "duration": 8.599456,
+          "start": 43.014
+        }
+      ],
+      "start": 59.638,
+      "duration": 53.663
+    },
+    {
+      "id": "solve",
+      "title": "先求笔价，再求本子价",
+      "tag": "03 / 求解",
+      "lines": [
+        {
+          "text": "多付的钱是十七减十三，等于四元。多出的笔是五减三，等于两支。",
+          "cue": "difference",
+          "scene": "solve",
+          "index": 0,
+          "file": "assets/voice/solve-00.wav",
+          "duration": 9.386395,
+          "start": 0.6
+        },
+        {
+          "text": "四元是两支笔的总价，不是一支笔的单价。每支笔的价格是四除以二，等于两元。",
+          "cue": "penprice",
+          "scene": "solve",
+          "index": 1,
+          "file": "assets/voice/solve-01.wav",
+          "duration": 10.383855,
+          "start": 10.336
+        },
+        {
+          "text": "再看小明的订单。三支笔，每支两元，一共是六元。",
+          "cue": "pencost",
+          "scene": "solve",
+          "index": 2,
+          "file": "assets/voice/solve-02.wav",
+          "duration": 7.665125,
+          "start": 21.07
+        },
+        {
+          "text": "十三元减去笔的六元，剩下七元，是两本本子的总价。",
+          "cue": "bookcost",
+          "scene": "solve",
+          "index": 3,
+          "file": "assets/voice/solve-03.wav",
+          "duration": 6.99483,
+          "start": 29.085
+        },
+        {
+          "text": "七除以二，等于三点五。因此，每本本子三点五元，也就是三元五角。",
+          "cue": "bookprice",
+          "scene": "solve",
+          "index": 4,
+          "file": "assets/voice/solve-04.wav",
+          "duration": 9.970975,
+          "start": 36.43
+        },
+        {
+          "text": "记住这个顺序：先比较差，求一种单价，再代回原题，求另一种单价。",
+          "cue": "summary",
+          "pause": 1,
+          "scene": "solve",
+          "index": 5,
+          "file": "assets/voice/solve-05.wav",
+          "duration": 9.475918,
+          "start": 46.751
+        }
+      ],
+      "start": 113.30099999999999,
+      "duration": 58.277
+    },
+    {
+      "id": "check",
+      "title": "两张订单，都要检验",
+      "tag": "04 / 检验",
+      "lines": [
+        {
+          "text": "算出答案以后，还要检验。我们把笔两元，本子三点五元，放回两张订单。",
+          "cue": "start",
+          "scene": "check",
+          "index": 0,
+          "file": "assets/voice/check-00.wav",
+          "duration": 10.426984,
+          "start": 0.6
+        },
+        {
+          "text": "小明：两本本子七元，三支笔六元，七加六等于十三元，符合。",
+          "cue": "ming",
+          "scene": "check",
+          "index": 1,
+          "file": "assets/voice/check-01.wav",
+          "duration": 8.999093,
+          "start": 11.377
+        },
+        {
+          "text": "小红：两本本子七元，五支笔十元，七加十等于十七元，也符合。",
+          "cue": "hong",
+          "scene": "check",
+          "index": 2,
+          "file": "assets/voice/check-02.wav",
+          "duration": 9.181043,
+          "start": 20.726
+        },
+        {
+          "text": "两组条件都满足，我们才放心。答：每支笔两元，每本本子三点五元。",
+          "cue": "answer",
+          "pause": 1,
+          "scene": "check",
+          "index": 3,
+          "file": "assets/voice/check-03.wav",
+          "duration": 10.071383,
+          "start": 30.257
+        }
+      ],
+      "start": 171.57799999999997,
+      "duration": 42.379
+    },
+    {
+      "id": "variant",
+      "title": "换一张订单，你还会吗？",
+      "tag": "05 / 变式",
+      "lines": [
+        {
+          "text": "来试一道变式。商品仍按固定单价出售，没有折扣。甲买两本本子和三支笔，共十三元。",
+          "cue": "read1",
+          "scene": "variant",
+          "index": 0,
+          "file": "assets/voice/variant-00.wav",
+          "duration": 12.428073,
+          "start": 0.6
+        },
+        {
+          "text": "乙买两本同样的本子和六支同样的笔，共十九元。每支笔、每本本子各多少元？",
+          "cue": "read2",
+          "scene": "variant",
+          "index": 1,
+          "file": "assets/voice/variant-01.wav",
+          "duration": 10.24644,
+          "start": 13.378
+        },
+        {
+          "text": "请先暂停视频，自己画一画、算一算。说清楚，多付的钱对应几支笔。",
+          "cue": "think",
+          "pause": 5,
+          "scene": "variant",
+          "index": 2,
+          "file": "assets/voice/variant-02.wav",
+          "duration": 10.040363,
+          "start": 23.975
+        },
+        {
+          "text": "本子数量仍然相同。十九减十三，等于六元；六减三，等于三支。",
+          "cue": "difference",
+          "scene": "variant",
+          "index": 3,
+          "file": "assets/voice/variant-03.wav",
+          "duration": 9.639229,
+          "start": 39.365
+        },
+        {
+          "text": "笔的单价是六除以三，等于两元。本子的单价是十三减去三乘二，再除以二，等于三点五元。",
+          "cue": "solution",
+          "scene": "variant",
+          "index": 4,
+          "file": "assets/voice/variant-04.wav",
+          "duration": 12.185986,
+          "start": 49.354
+        },
+        {
+          "text": "检查乙的订单：两本本子七元，六支笔十二元，总价十九元。改变了数量，比较的方法没有变。",
+          "cue": "check",
+          "pause": 1,
+          "scene": "variant",
+          "index": 5,
+          "file": "assets/voice/variant-05.wav",
+          "duration": 12.716689,
+          "start": 61.89
+        }
+      ],
+      "start": 213.95699999999997,
+      "duration": 76.657
+    },
+    {
+      "id": "teach",
+      "title": "现在，换你当小老师",
+      "tag": "06 / 讲出来",
+      "lines": [
+        {
+          "text": "现在请把老师当成第一次学习的同学，用原来的两张订单，讲一次。可以这样开头。",
+          "cue": "intro",
+          "scene": "teach",
+          "index": 0,
+          "file": "assets/voice/teach-00.wav",
+          "duration": 11.244127,
+          "start": 0.6
+        },
+        {
+          "text": "我先发现，两张订单里的本子一样多，所以本子的费用可以抵消。",
+          "cue": "line1",
+          "scene": "teach",
+          "index": 1,
+          "file": "assets/voice/teach-01.wav",
+          "duration": 8.095374,
+          "start": 12.194
+        },
+        {
+          "text": "小红多买了两支笔，多花了四元，所以每支笔四除以二，等于两元。",
+          "cue": "line2",
+          "scene": "teach",
+          "index": 2,
+          "file": "assets/voice/teach-02.wav",
+          "duration": 8.777143,
+          "start": 20.64
+        },
+        {
+          "text": "我再把笔价代回小明的订单，求出本子价，最后检查两张订单。",
+          "cue": "line3",
+          "scene": "teach",
+          "index": 3,
+          "file": "assets/voice/teach-03.wav",
+          "duration": 8.177823,
+          "start": 29.767
+        },
+        {
+          "text": "老师可能会问：四元为什么还要除以二？如果两单本子不一样多，还能直接这样比较吗？",
+          "cue": "questions",
+          "scene": "teach",
+          "index": 4,
+          "file": "assets/voice/teach-04.wav",
+          "duration": 11.38644,
+          "start": 38.294
+        },
+        {
+          "text": "四元对应两支笔。如果本子数量不同，需要先把同一种商品配成一样多，再比较。这是下一步要探索的方法。",
+          "cue": "bridge",
+          "scene": "teach",
+          "index": 5,
+          "file": "assets/voice/teach-05.wav",
+          "duration": 14.772744,
+          "start": 50.031
+        },
+        {
+          "text": "今天记住四步：找相同，比差额，求单价，代回检查。能讲清为什么，你就更接近真正学会了。",
+          "cue": "end",
+          "pause": 2,
+          "scene": "teach",
+          "index": 6,
+          "file": "assets/voice/teach-06.wav",
+          "duration": 13.195374,
+          "start": 65.154
+        }
+      ],
+      "start": 290.614,
+      "duration": 81.399
+    }
+  ],
+  "captions": [
+    {
+      "start": 0.6,
+      "end": 9.469116,
+      "text": "两张订单，能帮我们找出笔和本子的单价吗？先把完整题目读一遍。"
+    },
+    {
+      "start": 9.819,
+      "end": 19.008887,
+      "text": "文具店同一种本子的单价相同，同一种笔的单价也相同，购买时没有折扣。"
+    },
+    {
+      "start": 19.359,
+      "end": 32.211290000000005,
+      "text": "小明买了两本本子和三支笔，共花十三元。小红买了两本同样的本子和五支同样的笔，共花十七元。"
+    },
+    {
+      "start": 32.561,
+      "end": 43.171794,
+      "text": "每支笔多少元？每本本子多少元？还要说明理由，并用两张订单检查答案。"
+    },
+    {
+      "start": 43.522,
+      "end": 54.587804999999996,
+      "text": "先找一找，两张订单里，什么相同？什么不同？可以暂停，画在草稿纸上。"
+    },
+    {
+      "start": 60.238,
+      "end": 72.149973,
+      "text": "把小红的订单放在上面，小明的放在下面。注意，每一本本子、每一支笔，都上下对齐。"
+    },
+    {
+      "start": 72.5,
+      "end": 84.60576,
+      "text": "两张订单各有两本同样的本子，所以本子的总价相同。比较价钱差时，可以把它们成对消去。"
+    },
+    {
+      "start": 84.956,
+      "end": 92.686884,
+      "text": "两边还有三支同样的笔，也可以一一配对，消去相同的部分。"
+    },
+    {
+      "start": 93.037,
+      "end": 102.302034,
+      "text": "看！小红的订单只多出两支笔。多付的钱，就花在这两支笔上。"
+    },
+    {
+      "start": 102.652,
+      "end": 111.251456,
+      "text": "消去，不是说商品免费了，而是相同的费用，在作比较时抵消了。"
+    },
+    {
+      "start": 113.90099999999998,
+      "end": 123.28739499999998,
+      "text": "多付的钱是十七减十三，等于四元。多出的笔是五减三，等于两支。"
+    },
+    {
+      "start": 123.63699999999999,
+      "end": 134.02085499999998,
+      "text": "四元是两支笔的总价，不是一支笔的单价。每支笔的价格是四除以二，等于两元。"
+    },
+    {
+      "start": 134.37099999999998,
+      "end": 142.03612499999997,
+      "text": "再看小明的订单。三支笔，每支两元，一共是六元。"
+    },
+    {
+      "start": 142.386,
+      "end": 149.38083,
+      "text": "十三元减去笔的六元，剩下七元，是两本本子的总价。"
+    },
+    {
+      "start": 149.731,
+      "end": 159.701975,
+      "text": "七除以二，等于三点五。因此，每本本子三点五元，也就是三元五角。"
+    },
+    {
+      "start": 160.052,
+      "end": 169.527918,
+      "text": "记住这个顺序：先比较差，求一种单价，再代回原题，求另一种单价。"
+    },
+    {
+      "start": 172.17799999999997,
+      "end": 182.60498399999997,
+      "text": "算出答案以后，还要检验。我们把笔两元，本子三点五元，放回两张订单。"
+    },
+    {
+      "start": 182.95499999999998,
+      "end": 191.95409299999997,
+      "text": "小明：两本本子七元，三支笔六元，七加六等于十三元，符合。"
+    },
+    {
+      "start": 192.30399999999997,
+      "end": 201.48504299999996,
+      "text": "小红：两本本子七元，五支笔十元，七加十等于十七元，也符合。"
+    },
+    {
+      "start": 201.83499999999998,
+      "end": 211.90638299999998,
+      "text": "两组条件都满足，我们才放心。答：每支笔两元，每本本子三点五元。"
+    },
+    {
+      "start": 214.55699999999996,
+      "end": 226.98507299999997,
+      "text": "来试一道变式。商品仍按固定单价出售，没有折扣。甲买两本本子和三支笔，共十三元。"
+    },
+    {
+      "start": 227.33499999999998,
+      "end": 237.58144,
+      "text": "乙买两本同样的本子和六支同样的笔，共十九元。每支笔、每本本子各多少元？"
+    },
+    {
+      "start": 237.93199999999996,
+      "end": 247.97236299999997,
+      "text": "请先暂停视频，自己画一画、算一算。说清楚，多付的钱对应几支笔。"
+    },
+    {
+      "start": 253.32199999999997,
+      "end": 262.961229,
+      "text": "本子数量仍然相同。十九减十三，等于六元；六减三，等于三支。"
+    },
+    {
+      "start": 263.311,
+      "end": 275.496986,
+      "text": "笔的单价是六除以三，等于两元。本子的单价是十三减去三乘二，再除以二，等于三点五元。"
+    },
+    {
+      "start": 275.847,
+      "end": 288.56368899999995,
+      "text": "检查乙的订单：两本本子七元，六支笔十二元，总价十九元。改变了数量，比较的方法没有变。"
+    },
+    {
+      "start": 291.214,
+      "end": 302.458127,
+      "text": "现在请把老师当成第一次学习的同学，用原来的两张订单，讲一次。可以这样开头。"
+    },
+    {
+      "start": 302.808,
+      "end": 310.903374,
+      "text": "我先发现，两张订单里的本子一样多，所以本子的费用可以抵消。"
+    },
+    {
+      "start": 311.25399999999996,
+      "end": 320.031143,
+      "text": "小红多买了两支笔，多花了四元，所以每支笔四除以二，等于两元。"
+    },
+    {
+      "start": 320.381,
+      "end": 328.55882299999996,
+      "text": "我再把笔价代回小明的订单，求出本子价，最后检查两张订单。"
+    },
+    {
+      "start": 328.90799999999996,
+      "end": 340.29443999999995,
+      "text": "老师可能会问：四元为什么还要除以二？如果两单本子不一样多，还能直接这样比较吗？"
+    },
+    {
+      "start": 340.645,
+      "end": 355.41774399999997,
+      "text": "四元对应两支笔。如果本子数量不同，需要先把同一种商品配成一样多，再比较。这是下一步要探索的方法。"
+    },
+    {
+      "start": 355.768,
+      "end": 368.963374,
+      "text": "今天记住四步：找相同，比差额，求单价，代回检查。能讲清为什么，你就更接近真正学会了。"
+    }
+  ]
+}

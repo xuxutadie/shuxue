@@ -1,0 +1,150 @@
+[hyperframes] browserGpuMode probe → hardware (WebGL renderer vendor="Google Inc. (Intel)" renderer="ANGLE (Intel, Intel(R) UHD Graphics (0x0000A788) Direct3D11 vs_5_0 ps_5_0, D3D11)")
+{
+  "ok": true,
+  "strict": false,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "filesScanned": 8
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": []
+  },
+  "layout": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 2,
+    "findings": [
+      {
+        "code": "content_overlap",
+        "severity": "info",
+        "time": 62.563,
+        "selector": "#s2-old0 > text:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 131.56,
+          "top": 308.25,
+          "right": 433.16,
+          "bottom": 354.72,
+          "width": 301.6,
+          "height": 46.47
+        },
+        "containerSelector": "#s2-new0 > text:nth-of-type(1)",
+        "text": "2大 ＋ 3小 ＝ 31克",
+        "fixHint": "Give each block its own zone, or mark intentional layering with data-layout-allow-overlap.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s2.html",
+        "bbox": {
+          "x": 131.56,
+          "y": 308.25,
+          "width": 301.6,
+          "height": 46.47
+        },
+        "firstSeen": 62.563,
+        "lastSeen": 62.563,
+        "occurrences": 1
+      },
+      {
+        "code": "content_overlap",
+        "severity": "info",
+        "time": 62.563,
+        "selector": "#s2-old1 > text:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 131.56,
+          "top": 540.62,
+          "right": 433.16,
+          "bottom": 587.09,
+          "width": 301.6,
+          "height": 46.47
+        },
+        "containerSelector": "#s2-new1 > text:nth-of-type(1)",
+        "text": "3大 ＋ 2小 ＝ 34克",
+        "fixHint": "Give each block its own zone, or mark intentional layering with data-layout-allow-overlap.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/s2.html",
+        "bbox": {
+          "x": 131.56,
+          "y": 540.62,
+          "width": 301.6,
+          "height": 46.47
+        },
+        "firstSeen": 62.563,
+        "lastSeen": 62.563,
+        "occurrences": 1
+      }
+    ],
+    "duration": 312.2916666666667,
+    "samples": [
+      25.44,
+      73.133,
+      123.533,
+      171.467,
+      207.688,
+      251.005,
+      298.875
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 2,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": true,
+    "samples": [
+      25.44,
+      73.133,
+      171.467,
+      207.688,
+      298.875
+    ],
+    "checked": 46,
+    "passed": 46
+  },
+  "snapshots": {
+    "enabled": true,
+    "files": [
+      "snapshots\\frame-00-at-25.4s.png",
+      "snapshots\\frame-01-at-73.1s.png",
+      "snapshots\\frame-02-at-171.5s.png",
+      "snapshots\\frame-03-at-207.7s.png",
+      "snapshots\\frame-04-at-298.9s.png"
+    ],
+    "times": [
+      25.44,
+      73.133,
+      171.467,
+      207.688,
+      298.875
+    ],
+    "findingFiles": []
+  },
+  "_meta": {
+    "version": "0.8.17",
+    "latestVersion": "0.8.34",
+    "updateAvailable": true
+  }
+}

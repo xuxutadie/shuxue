@@ -1,0 +1,1385 @@
+[
+  {
+    "scene": "s1",
+    "start": 0,
+    "duration": 35.333333333333336,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s2",
+    "start": 35.333333333333336,
+    "duration": 52.5,
+    "events": [
+      {
+        "subject": "old0",
+        "time": 26.758,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "new0",
+        "time": 26.758,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "times0",
+        "time": 26.258,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-2",
+        "time": 27.518,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-3",
+        "time": 27.648,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-4",
+        "time": 27.778,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-5",
+        "time": 27.907999999999998,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-3",
+        "time": 27.648,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-4",
+        "time": 27.778,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-5",
+        "time": 27.907999999999998,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-6",
+        "time": 28.038,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-7",
+        "time": 28.168,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-8",
+        "time": 28.298,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "old1",
+        "time": 26.758,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "new1",
+        "time": 26.758,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "times1",
+        "time": 26.258,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-3",
+        "time": 27.648,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-4",
+        "time": 27.778,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-5",
+        "time": 27.907999999999998,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c1-2",
+        "time": 27.518,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c1-3",
+        "time": 27.648,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "result",
+        "time": 39.378,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 14.418,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 27.258,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 39.378,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s3",
+    "start": 87.83333333333334,
+    "duration": 49.583333333333336,
+    "events": [
+      {
+        "subject": "old0",
+        "time": 1.15,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "new0",
+        "time": 1.15,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "times0",
+        "time": 0.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-0",
+        "time": 3.65,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b0-1",
+        "time": 3.73,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b0-2",
+        "time": 1.9100000000000001,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-2",
+        "time": 3.81,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b0-3",
+        "time": 2.04,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-3",
+        "time": 3.89,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b0-4",
+        "time": 2.17,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-4",
+        "time": 3.9699999999999998,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b0-5",
+        "time": 2.3,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-5",
+        "time": 4.05,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-0",
+        "time": 4.65,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-1",
+        "time": 4.7700000000000005,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-2",
+        "time": 4.890000000000001,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-3",
+        "time": 2.04,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-3",
+        "time": 5.010000000000001,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-4",
+        "time": 2.17,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-5",
+        "time": 2.3,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-6",
+        "time": 2.43,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-7",
+        "time": 2.56,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-8",
+        "time": 2.69,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "old1",
+        "time": 1.15,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "new1",
+        "time": 1.15,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "times1",
+        "time": 0.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-0",
+        "time": 3.65,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b1-1",
+        "time": 3.73,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b1-2",
+        "time": 3.81,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b1-3",
+        "time": 2.04,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-3",
+        "time": 3.89,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b1-4",
+        "time": 2.17,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-4",
+        "time": 3.9699999999999998,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b1-5",
+        "time": 2.3,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-5",
+        "time": 4.05,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c1-0",
+        "time": 4.65,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c1-1",
+        "time": 4.7700000000000005,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c1-2",
+        "time": 1.9100000000000001,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c1-2",
+        "time": 4.890000000000001,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c1-3",
+        "time": 2.04,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c1-3",
+        "time": 5.010000000000001,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "result",
+        "time": 25.434,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 12.21,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 25.434,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 37.386,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s4",
+    "start": 137.41666666666669,
+    "duration": 47.291666666666664,
+    "events": [
+      {
+        "subject": "old0",
+        "time": 11.446,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "new0",
+        "time": 11.446,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "times0",
+        "time": 10.946,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-0",
+        "time": 22.714,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b0-1",
+        "time": 22.793999999999997,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b0-2",
+        "time": 12.206,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-2",
+        "time": 22.874,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b0-3",
+        "time": 12.336,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b0-3",
+        "time": 22.954,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-0",
+        "time": 21.714,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-1",
+        "time": 21.793999999999997,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-2",
+        "time": 21.874,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-3",
+        "time": 12.336,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-3",
+        "time": 21.953999999999997,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-4",
+        "time": 12.466,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-4",
+        "time": 22.034,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c0-5",
+        "time": 12.596,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c0-5",
+        "time": 22.113999999999997,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "old1",
+        "time": 11.446,
+        "props": {
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "new1",
+        "time": 11.446,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "times1",
+        "time": 10.946,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-0",
+        "time": 22.714,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b1-1",
+        "time": 22.793999999999997,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b1-2",
+        "time": 22.874,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b1-3",
+        "time": 12.336,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-3",
+        "time": 22.954,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "b1-4",
+        "time": 12.466,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-5",
+        "time": 12.596,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-6",
+        "time": 12.725999999999999,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-7",
+        "time": 12.856,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "b1-8",
+        "time": 12.986,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c1-0",
+        "time": 21.714,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c1-1",
+        "time": 21.793999999999997,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c1-2",
+        "time": 12.206,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c1-2",
+        "time": 21.874,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c1-3",
+        "time": 12.336,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c1-3",
+        "time": 21.953999999999997,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c1-4",
+        "time": 12.466,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c1-4",
+        "time": 22.034,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "c1-5",
+        "time": 12.596,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "c1-5",
+        "time": 22.113999999999997,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "result",
+        "time": 21.714,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 11.946,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 21.714,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 32.994,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s5",
+    "start": 184.70833333333334,
+    "duration": 31.916666666666668,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s6",
+    "start": 216.625,
+    "duration": 47.75,
+    "events": [
+      {
+        "subject": "small0",
+        "time": 11.178,
+        "props": {
+          "x": 35,
+          "y": -90,
+          "duration": 1.3
+        }
+      },
+      {
+        "subject": "set0",
+        "time": 12.178,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "small1",
+        "time": 11.378,
+        "props": {
+          "x": 35,
+          "y": -90,
+          "duration": 1.3
+        }
+      },
+      {
+        "subject": "set1",
+        "time": 12.378,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "small2",
+        "time": 11.578000000000001,
+        "props": {
+          "x": 35,
+          "y": -90,
+          "duration": 1.3
+        }
+      },
+      {
+        "subject": "set2",
+        "time": 12.578000000000001,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "small3",
+        "time": 11.778,
+        "props": {
+          "x": 35,
+          "y": -90,
+          "duration": 1.3
+        }
+      },
+      {
+        "subject": "set3",
+        "time": 12.778,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "small4",
+        "time": 11.978000000000002,
+        "props": {
+          "x": 35,
+          "y": -90,
+          "duration": 1.3
+        }
+      },
+      {
+        "subject": "set4",
+        "time": 12.978000000000002,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "sum",
+        "time": 14.178,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "set4",
+        "time": 21.978,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "big4",
+        "time": 21.978,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "small4",
+        "time": 21.978,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "four",
+        "time": 22.978,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 11.178,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 21.978,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 33.762,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s7",
+    "start": 264.375,
+    "duration": 47.916666666666664,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  }
+]

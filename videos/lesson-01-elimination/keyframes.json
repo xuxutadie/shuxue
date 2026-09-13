@@ -1,0 +1,1321 @@
+{
+  "project": "lesson-01-elimination",
+  "runtime": "all",
+  "compositions": [
+    {
+      "composition": "index.html",
+      "source": "index.html",
+      "tweens": [],
+      "traces": [],
+      "cssKeyframes": [],
+      "anime": []
+    },
+    {
+      "composition": "read",
+      "source": "compositions/read.html",
+      "tweens": [
+        {
+          "id": "#read-title-fromTo-0",
+          "target": "#read-title",
+          "method": "fromTo",
+          "start": 0,
+          "duration": 0.5,
+          "end": 0.5,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "opacity": 0,
+                "x": -25
+              }
+            },
+            {
+              "pct": 100,
+              "time": 0.5,
+              "properties": {
+                "opacity": 1,
+                "x": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": -25,
+              "y": 0
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#read-progress-fromTo-0-scale",
+          "target": "#read-progress",
+          "method": "fromTo",
+          "group": "scale",
+          "start": 0,
+          "duration": 59.638,
+          "end": 59.638,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "scaleX": 0
+              }
+            },
+            {
+              "pct": 100,
+              "time": 59.638,
+              "properties": {
+                "scaleX": 1
+              }
+            }
+          ],
+          "path": null
+        }
+      ],
+      "traces": [],
+      "cssKeyframes": [],
+      "anime": []
+    },
+    {
+      "composition": "compare",
+      "source": "compositions/compare.html",
+      "tweens": [
+        {
+          "id": "#compare-title-fromTo-0",
+          "target": "#compare-title",
+          "method": "fromTo",
+          "start": 0,
+          "duration": 0.5,
+          "end": 0.5,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "opacity": 0,
+                "x": -25
+              }
+            },
+            {
+              "pct": 100,
+              "time": 0.5,
+              "properties": {
+                "opacity": 1,
+                "x": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": -25,
+              "y": 0
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": ".common-book-to-15862",
+          "target": ".common-book",
+          "method": "to",
+          "start": 15.862,
+          "duration": 1,
+          "end": 16.862,
+          "shape": "keyframes",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 15.862,
+              "properties": {
+                "opacity": 1,
+                "scale": 1,
+                "stagger": 6
+              }
+            },
+            {
+              "pct": 100,
+              "time": 16.862,
+              "properties": {
+                "opacity": 0.12,
+                "scale": 0.86,
+                "stagger": 6
+              }
+            }
+          ],
+          "path": null
+        },
+        {
+          "id": ".common-pen-to-27318",
+          "target": ".common-pen",
+          "method": "to",
+          "start": 27.318,
+          "duration": 1,
+          "end": 28.318,
+          "shape": "keyframes",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 27.318,
+              "properties": {
+                "opacity": 1,
+                "scale": 1,
+                "stagger": 6
+              }
+            },
+            {
+              "pct": 100,
+              "time": 28.318,
+              "properties": {
+                "opacity": 0.12,
+                "scale": 0.86,
+                "stagger": 6
+              }
+            }
+          ],
+          "path": null
+        },
+        {
+          "id": ".extra-pen-fromTo-33399-scale",
+          "target": ".extra-pen",
+          "method": "fromTo",
+          "group": "scale",
+          "start": 33.399,
+          "duration": 0.5,
+          "end": 33.899,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 33.399,
+              "properties": {
+                "scale": 1
+              }
+            },
+            {
+              "pct": 100,
+              "time": 33.899,
+              "properties": {
+                "scale": 1.14
+              }
+            }
+          ],
+          "path": null
+        },
+        {
+          "id": "#compare-extra-fromTo-33399",
+          "target": "#compare-extra",
+          "method": "fromTo",
+          "start": 33.399,
+          "duration": 0.45,
+          "end": 33.849,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 33.399,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 33.849,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#compare-money-fromTo-35399",
+          "target": "#compare-money",
+          "method": "fromTo",
+          "start": 35.399,
+          "duration": 0.45,
+          "end": 35.849,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 35.399,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 35.849,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#compare-meaning-fromTo-43014",
+          "target": "#compare-meaning",
+          "method": "fromTo",
+          "start": 43.014,
+          "duration": 0.45,
+          "end": 43.464,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 43.014,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 43.464,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#compare-progress-fromTo-0-scale",
+          "target": "#compare-progress",
+          "method": "fromTo",
+          "group": "scale",
+          "start": 0,
+          "duration": 53.663,
+          "end": 53.663,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "scaleX": 0
+              }
+            },
+            {
+              "pct": 100,
+              "time": 53.663,
+              "properties": {
+                "scaleX": 1
+              }
+            }
+          ],
+          "path": null
+        }
+      ],
+      "traces": [],
+      "cssKeyframes": [],
+      "anime": []
+    },
+    {
+      "composition": "solve",
+      "source": "compositions/solve.html",
+      "tweens": [
+        {
+          "id": "#solve-title-fromTo-0",
+          "target": "#solve-title",
+          "method": "fromTo",
+          "start": 0,
+          "duration": 0.5,
+          "end": 0.5,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "opacity": 0,
+                "x": -25
+              }
+            },
+            {
+              "pct": 100,
+              "time": 0.5,
+              "properties": {
+                "opacity": 1,
+                "x": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": -25,
+              "y": 0
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#solve-difference-fromTo-600",
+          "target": "#solve-difference",
+          "method": "fromTo",
+          "start": 0.6,
+          "duration": 0.45,
+          "end": 1.05,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0.6,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 1.05,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#solve-penprice-fromTo-10336",
+          "target": "#solve-penprice",
+          "method": "fromTo",
+          "start": 10.336,
+          "duration": 0.45,
+          "end": 10.786,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 10.336,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 10.786,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#solve-pencost-fromTo-21070",
+          "target": "#solve-pencost",
+          "method": "fromTo",
+          "start": 21.07,
+          "duration": 0.45,
+          "end": 21.52,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 21.07,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 21.52,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#solve-bookcost-fromTo-29085",
+          "target": "#solve-bookcost",
+          "method": "fromTo",
+          "start": 29.085,
+          "duration": 0.45,
+          "end": 29.535,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 29.085,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 29.535,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#solve-bookprice-fromTo-36430",
+          "target": "#solve-bookprice",
+          "method": "fromTo",
+          "start": 36.43,
+          "duration": 0.45,
+          "end": 36.88,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 36.43,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 36.88,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#solve-summary-fromTo-46751",
+          "target": "#solve-summary",
+          "method": "fromTo",
+          "start": 46.751,
+          "duration": 0.45,
+          "end": 47.201,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 46.751,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 47.201,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#solve-progress-fromTo-0-scale",
+          "target": "#solve-progress",
+          "method": "fromTo",
+          "group": "scale",
+          "start": 0,
+          "duration": 58.277,
+          "end": 58.277,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "scaleX": 0
+              }
+            },
+            {
+              "pct": 100,
+              "time": 58.277,
+              "properties": {
+                "scaleX": 1
+              }
+            }
+          ],
+          "path": null
+        }
+      ],
+      "traces": [],
+      "cssKeyframes": [],
+      "anime": []
+    },
+    {
+      "composition": "check",
+      "source": "compositions/check.html",
+      "tweens": [
+        {
+          "id": "#check-title-fromTo-0",
+          "target": "#check-title",
+          "method": "fromTo",
+          "start": 0,
+          "duration": 0.5,
+          "end": 0.5,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "opacity": 0,
+                "x": -25
+              }
+            },
+            {
+              "pct": 100,
+              "time": 0.5,
+              "properties": {
+                "opacity": 1,
+                "x": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": -25,
+              "y": 0
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#check-ming-fromTo-11377",
+          "target": "#check-ming",
+          "method": "fromTo",
+          "start": 11.377,
+          "duration": 0.45,
+          "end": 11.827,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 11.377,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 11.827,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#check-hong-fromTo-20726",
+          "target": "#check-hong",
+          "method": "fromTo",
+          "start": 20.726,
+          "duration": 0.45,
+          "end": 21.176,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 20.726,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 21.176,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#check-answer-fromTo-30257",
+          "target": "#check-answer",
+          "method": "fromTo",
+          "start": 30.257,
+          "duration": 0.45,
+          "end": 30.707,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 30.257,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 30.707,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#check-progress-fromTo-0-scale",
+          "target": "#check-progress",
+          "method": "fromTo",
+          "group": "scale",
+          "start": 0,
+          "duration": 42.379,
+          "end": 42.379,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "scaleX": 0
+              }
+            },
+            {
+              "pct": 100,
+              "time": 42.379,
+              "properties": {
+                "scaleX": 1
+              }
+            }
+          ],
+          "path": null
+        }
+      ],
+      "traces": [],
+      "cssKeyframes": [],
+      "anime": []
+    },
+    {
+      "composition": "variant",
+      "source": "compositions/variant.html",
+      "tweens": [
+        {
+          "id": "#variant-title-fromTo-0",
+          "target": "#variant-title",
+          "method": "fromTo",
+          "start": 0,
+          "duration": 0.5,
+          "end": 0.5,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "opacity": 0,
+                "x": -25
+              }
+            },
+            {
+              "pct": 100,
+              "time": 0.5,
+              "properties": {
+                "opacity": 1,
+                "x": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": -25,
+              "y": 0
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#variant-difference-fromTo-39365",
+          "target": "#variant-difference",
+          "method": "fromTo",
+          "start": 39.365,
+          "duration": 0.45,
+          "end": 39.815,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 39.365,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 39.815,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#variant-solution-fromTo-49354",
+          "target": "#variant-solution",
+          "method": "fromTo",
+          "start": 49.354,
+          "duration": 0.45,
+          "end": 49.804,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 49.354,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 49.804,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#variant-check-fromTo-61890",
+          "target": "#variant-check",
+          "method": "fromTo",
+          "start": 61.89,
+          "duration": 0.45,
+          "end": 62.34,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 61.89,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 62.34,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#variant-progress-fromTo-0-scale",
+          "target": "#variant-progress",
+          "method": "fromTo",
+          "group": "scale",
+          "start": 0,
+          "duration": 76.657,
+          "end": 76.657,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "scaleX": 0
+              }
+            },
+            {
+              "pct": 100,
+              "time": 76.657,
+              "properties": {
+                "scaleX": 1
+              }
+            }
+          ],
+          "path": null
+        }
+      ],
+      "traces": [],
+      "cssKeyframes": [],
+      "anime": []
+    },
+    {
+      "composition": "teach",
+      "source": "compositions/teach.html",
+      "tweens": [
+        {
+          "id": "#teach-title-fromTo-0",
+          "target": "#teach-title",
+          "method": "fromTo",
+          "start": 0,
+          "duration": 0.5,
+          "end": 0.5,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "opacity": 0,
+                "x": -25
+              }
+            },
+            {
+              "pct": 100,
+              "time": 0.5,
+              "properties": {
+                "opacity": 1,
+                "x": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": -25,
+              "y": 0
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#teach-line1-fromTo-12194",
+          "target": "#teach-line1",
+          "method": "fromTo",
+          "start": 12.194,
+          "duration": 0.45,
+          "end": 12.644,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 12.194,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 12.644,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#teach-line2-fromTo-20640",
+          "target": "#teach-line2",
+          "method": "fromTo",
+          "start": 20.64,
+          "duration": 0.45,
+          "end": 21.09,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 20.64,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 21.09,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#teach-line3-fromTo-29767",
+          "target": "#teach-line3",
+          "method": "fromTo",
+          "start": 29.767,
+          "duration": 0.45,
+          "end": 30.217,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 29.767,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 30.217,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#teach-questions-fromTo-38294",
+          "target": "#teach-questions",
+          "method": "fromTo",
+          "start": 38.294,
+          "duration": 0.45,
+          "end": 38.744,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 38.294,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 38.744,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#teach-bridge-fromTo-50031",
+          "target": "#teach-bridge",
+          "method": "fromTo",
+          "start": 50.031,
+          "duration": 0.45,
+          "end": 50.481,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 50.031,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 50.481,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#teach-end-fromTo-65154",
+          "target": "#teach-end",
+          "method": "fromTo",
+          "start": 65.154,
+          "duration": 0.45,
+          "end": 65.604,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 65.154,
+              "properties": {
+                "opacity": 0,
+                "y": 16
+              }
+            },
+            {
+              "pct": 100,
+              "time": 65.604,
+              "properties": {
+                "opacity": 1,
+                "y": 0
+              }
+            }
+          ],
+          "path": [
+            {
+              "x": 0,
+              "y": 16
+            },
+            {
+              "x": 0,
+              "y": 0
+            }
+          ]
+        },
+        {
+          "id": "#teach-progress-fromTo-0-scale",
+          "target": "#teach-progress",
+          "method": "fromTo",
+          "group": "scale",
+          "start": 0,
+          "duration": 81.399,
+          "end": 81.399,
+          "shape": "flat",
+          "keyframes": [
+            {
+              "pct": 0,
+              "time": 0,
+              "properties": {
+                "scaleX": 0
+              }
+            },
+            {
+              "pct": 100,
+              "time": 81.399,
+              "properties": {
+                "scaleX": 1
+              }
+            }
+          ],
+          "path": null
+        }
+      ],
+      "traces": [],
+      "cssKeyframes": [],
+      "anime": []
+    }
+  ],
+  "_meta": {
+    "version": "0.8.17",
+    "latestVersion": "0.8.34",
+    "updateAvailable": true
+  }
+}

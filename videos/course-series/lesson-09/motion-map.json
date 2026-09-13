@@ -1,0 +1,1068 @@
+[
+  {
+    "scene": "s1",
+    "start": 0,
+    "duration": 34.833333333333336,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s2",
+    "start": 34.833333333333336,
+    "duration": 42,
+    "events": [
+      {
+        "subject": "grown0",
+        "time": 2.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "grown1",
+        "time": 13.162,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 12.162,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 23.058,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 33.522,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s3",
+    "start": 76.83333333333334,
+    "duration": 37.291666666666664,
+    "events": [
+      {
+        "subject": "grown0",
+        "time": 2.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "base0",
+        "time": 2.65,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "grown1",
+        "time": 13.042,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "base1",
+        "time": 2.65,
+        "props": {
+          "opacity": 0.12
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 12.042,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 20.01,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 28.746,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s4",
+    "start": 114.125,
+    "duration": 43.708333333333336,
+    "events": [
+      {
+        "subject": "new1",
+        "time": 11.682,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "new2",
+        "time": 11.882,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "new1",
+        "time": 13.682,
+        "props": {
+          "y": -65,
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "new2",
+        "time": 13.682,
+        "props": {
+          "y": -65,
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "grass0",
+        "time": 13.682,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass1",
+        "time": 13.727,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass2",
+        "time": 13.772,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass3",
+        "time": 13.817,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass4",
+        "time": 13.862,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass5",
+        "time": 13.907,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass6",
+        "time": 13.952,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass7",
+        "time": 13.997,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass8",
+        "time": 14.042,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass9",
+        "time": 14.087,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass10",
+        "time": 21.642,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass11",
+        "time": 21.686999999999998,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass12",
+        "time": 21.732,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass13",
+        "time": 21.777,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass14",
+        "time": 21.822,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass15",
+        "time": 21.867,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass16",
+        "time": 21.912,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass17",
+        "time": 21.957,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass18",
+        "time": 22.002,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass19",
+        "time": 22.047,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass20",
+        "time": 23.142,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass21",
+        "time": 23.186999999999998,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass22",
+        "time": 23.232,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass23",
+        "time": 23.277,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass24",
+        "time": 23.322,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass25",
+        "time": 23.367,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass26",
+        "time": 23.412,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass27",
+        "time": 23.457,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass28",
+        "time": 23.502,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "grass29",
+        "time": 23.547,
+        "props": {
+          "opacity": 0.12,
+          "y": -20
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 11.682,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 21.642,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 32.466,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s5",
+    "start": 157.83333333333334,
+    "duration": 43.416666666666664,
+    "events": [
+      {
+        "subject": "new1",
+        "time": 11.922,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "new2",
+        "time": 12.122,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "new1",
+        "time": 13.922,
+        "props": {
+          "y": -65,
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "new2",
+        "time": 13.922,
+        "props": {
+          "y": -65,
+          "opacity": 0
+        }
+      },
+      {
+        "subject": "grass0",
+        "time": 13.922,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass1",
+        "time": 13.942,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass2",
+        "time": 13.962,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass3",
+        "time": 13.982000000000001,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass4",
+        "time": 14.002,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass5",
+        "time": 14.022,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass6",
+        "time": 14.042000000000002,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass7",
+        "time": 14.062000000000001,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass8",
+        "time": 14.082,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass9",
+        "time": 14.102,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass10",
+        "time": 13.922,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass11",
+        "time": 13.942,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass12",
+        "time": 13.962,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass13",
+        "time": 13.982000000000001,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass14",
+        "time": 14.002,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass15",
+        "time": 14.022,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass16",
+        "time": 14.042000000000002,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass17",
+        "time": 14.062000000000001,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass18",
+        "time": 14.082,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass19",
+        "time": 14.102,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass20",
+        "time": 13.922,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass21",
+        "time": 13.942,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass22",
+        "time": 13.962,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass23",
+        "time": 13.982000000000001,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass24",
+        "time": 14.002,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass25",
+        "time": 14.022,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass26",
+        "time": 14.042000000000002,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass27",
+        "time": 14.062000000000001,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass28",
+        "time": 14.082,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "grass29",
+        "time": 14.102,
+        "props": {
+          "scale": 1.035,
+          "transformOrigin": "50% 50%",
+          "duration": 0.4,
+          "yoyo": true,
+          "repeat": 1
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 11.922,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 22.458,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 33.45,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s6",
+    "start": 201.25,
+    "duration": 35.666666666666664,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s7",
+    "start": 236.91666666666666,
+    "duration": 55.25,
+    "events": [
+      {
+        "subject": "water",
+        "time": 4.65,
+        "props": {
+          "scaleY": 0,
+          "transformOrigin": "center bottom",
+          "duration": 6
+        }
+      },
+      {
+        "subject": "incoming",
+        "time": 14.114,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "outgoing",
+        "time": 17.114,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "net",
+        "time": 19.114,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "total",
+        "time": 28.594,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 15.114,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 27.594,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 39.522,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s8",
+    "start": 292.16666666666663,
+    "duration": 57.833333333333336,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,21 @@
+# 将 math.example.com 替换为实际域名，并设置有效证书路径。
+server {
+    listen 80;
+    server_name math.example.com;
+    return 301 https://$host$request_uri;
+}
+server {
+    listen 443 ssl;
+    server_name math.example.com;
+    ssl_certificate /etc/letsencrypt/live/math.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/math.example.com/privkey.pem;
+    client_max_body_size 5m;
+    location / {
+        proxy_pass http://127.0.0.1:8766;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_connect_timeout 10s;
+        proxy_read_timeout 60s;
+    }
+}

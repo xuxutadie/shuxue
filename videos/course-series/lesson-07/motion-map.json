@@ -1,0 +1,476 @@
+[
+  {
+    "scene": "s1",
+    "start": 0,
+    "duration": 36.5,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s2",
+    "start": 36.5,
+    "duration": 39.416666666666664,
+    "events": [
+      {
+        "subject": "half0",
+        "time": 10.506,
+        "props": {
+          "x": -450,
+          "y": 180,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "half1",
+        "time": 10.756,
+        "props": {
+          "x": -605,
+          "y": 180,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "half2",
+        "time": 11.006,
+        "props": {
+          "x": -360,
+          "y": 20,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "half3",
+        "time": 11.256,
+        "props": {
+          "x": -515,
+          "y": 20,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 10.506,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 19.866,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 31.338,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s3",
+    "start": 75.91666666666666,
+    "duration": 42.375,
+    "events": [
+      {
+        "subject": "half0",
+        "time": 1.65,
+        "props": {
+          "x": -450,
+          "y": 180,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "half1",
+        "time": 1.9,
+        "props": {
+          "x": -605,
+          "y": 180,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "half2",
+        "time": 2.15,
+        "props": {
+          "x": -360,
+          "y": 20,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "half3",
+        "time": 2.4,
+        "props": {
+          "x": -515,
+          "y": 20,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "unit",
+        "time": 4.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 12.186,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 21.258,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 32.922,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s4",
+    "start": 118.29166666666666,
+    "duration": 39.958333333333336,
+    "events": [
+      {
+        "subject": "half0",
+        "time": 1.65,
+        "props": {
+          "x": -450,
+          "y": 200,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "half1",
+        "time": 1.9,
+        "props": {
+          "x": -605,
+          "y": 200,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "half2",
+        "time": 2.15,
+        "props": {
+          "x": -350,
+          "y": 40,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "half3",
+        "time": 2.4,
+        "props": {
+          "x": -505,
+          "y": 40,
+          "duration": 1.6
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 11.418,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 20.418,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 30.93,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s5",
+    "start": 158.25,
+    "duration": 43.125,
+    "events": [
+      {
+        "subject": "rightpoint",
+        "time": 3.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "dist",
+        "time": 12.834,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "mirrorarrow",
+        "time": 23.69,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 12.834,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 21.69,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 32.178,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s6",
+    "start": 201.375,
+    "duration": 49.666666666666664,
+    "events": [
+      {
+        "subject": "rear0",
+        "time": 15.034,
+        "props": {
+          "x": -220,
+          "y": 80,
+          "opacity": 0.12,
+          "duration": 2
+        }
+      },
+      {
+        "subject": "rear1",
+        "time": 15.034,
+        "props": {
+          "x": -220,
+          "y": 80,
+          "opacity": 0.12,
+          "duration": 2
+        }
+      },
+      {
+        "subject": "view",
+        "time": 16.034,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note0",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note1",
+        "time": 14.034,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note2",
+        "time": 26.178,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      },
+      {
+        "subject": "note3",
+        "time": 37.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  },
+  {
+    "scene": "s7",
+    "start": 251.04166666666666,
+    "duration": 55.458333333333336,
+    "events": [
+      {
+        "subject": "prompt",
+        "time": 1.65,
+        "props": {
+          "opacity": 1,
+          "x": 0,
+          "y": 0,
+          "scaleX": 1,
+          "rotation": 0
+        }
+      }
+    ]
+  }
+]
