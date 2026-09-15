@@ -3,12 +3,18 @@ const { ownedStudent, teacher } = require('./auth');
 const { bank, lessons, correct } = require('./content');
 const { pack } = require('./exams');
 const { separatePracticeVersions } = require('./practice-history');
+const { gzipSync } = require('node:zlib');
+// 课程只在部署更新时变化，按权限分别准备响应，避免重复序列化和传输。
+const contentResponses = new Map();
 function lessonOf(v) { const n = Number(v); if (!Number.isInteger(n) || n < 0 || n >= 12) fail(400, '课程不存在。'); return n; }
 async function profile(pool, user, id) {
   const s = await ownedStudent(pool, user, id);
   const { rows } = await pool.query('SELECT * FROM attempts WHERE student_id=$1 ORDER BY kind', [id]);
   const a = await pool.query('SELECT kind,enabled FROM assignments WHERE student_id=$1', [id]);
-  const p = { ...s.data, id, name: s.name, username: s.username, classId: s.class_id, className: s.class_name, settings: s.settings, exams: {}, drafts: {}, assignments: Object.fromEntries(a.rows.map(r => [r.kind, r.enabled])) };
+  return packProfile(s, rows, a.rows, user);
+}
+function packProfile(s, rows, assignments, user) {
+  const p = { ...s.data, id: s.user_id, name: s.name, username: s.username, classId: s.class_id, className: s.class_name, settings: s.settings, exams: {}, drafts: {}, assignments: Object.fromEntries(assignments.map(r => [r.kind, r.enabled])) };
   Object.assign(p, separatePracticeVersions(s.data));
   for (const row of rows) {
     const packed = pack(row, user.role === 'teacher');
@@ -21,6 +27,25 @@ async function profile(pool, user, id) {
   if (user.role !== 'teacher') { delete p.notes; p.notes = {}; p.history = []; p.practiceHistory = []; }
   return p;
 }
+async function teacherProfiles(pool, user) {
+  // 每批查询都在数据库内限定教师，返回的数据不能跨班级所有者。
+  const students = (await pool.query('SELECT s.*,u.name,u.username,c.teacher_id,c.settings,c.name AS class_name FROM students s JOIN users u ON u.id=s.user_id JOIN classes c ON c.id=s.class_id WHERE c.teacher_id=$1 ORDER BY s.user_id', [user.id])).rows;
+  if (!students.length) return [];
+  const [attempts, assignments] = await Promise.all([
+    pool.query('SELECT a.* FROM attempts a JOIN students s ON s.user_id=a.student_id JOIN classes c ON c.id=s.class_id WHERE c.teacher_id=$1 ORDER BY a.kind', [user.id]),
+    pool.query('SELECT a.student_id,a.kind,a.enabled FROM assignments a JOIN students s ON s.user_id=a.student_id JOIN classes c ON c.id=s.class_id WHERE c.teacher_id=$1', [user.id])
+  ]);
+  const group = rows => {
+    const result = new Map();
+    for (const row of rows) {
+      if (!result.has(row.student_id)) result.set(row.student_id, []);
+      result.get(row.student_id).push(row);
+    }
+    return result;
+  };
+  const examsByStudent = group(attempts.rows), assignmentsByStudent = group(assignments.rows);
+  return students.map(s => packProfile(s, examsByStudent.get(s.user_id) || [], assignmentsByStudent.get(s.user_id) || [], user));
+}
 async function editProfile(pool, req, action) {
   return transaction(pool, async db => {
     const s = await ownedStudent(db, req.user, req.params.id, true);
@@ -30,7 +55,17 @@ async function editProfile(pool, req, action) {
   });
 }
 function setupLearning(app, pool) {
-  app.get('/api/content', (req, res) => res.json({ lessons: lessons(req.user.role === 'teacher'), flow: bank.flow, testFlow: bank.testFlow }));
+  app.get('/api/content', (req, res) => {
+    const teacherContent = req.user.role === 'teacher';
+    if (!contentResponses.has(teacherContent)) {
+      const json = JSON.stringify({ lessons: lessons(teacherContent), flow: bank.flow, testFlow: bank.testFlow });
+      contentResponses.set(teacherContent, { json, gzip: gzipSync(json) });
+    }
+    const content = contentResponses.get(teacherContent);
+    res.type('application/json').vary('Accept-Encoding');
+    if (req.acceptsEncodings('gzip', 'identity') === 'gzip') res.set('Content-Encoding', 'gzip').send(content.gzip);
+    else res.send(content.json);
+  });
   app.get('/api/students/:id', async (req, res) => res.json(await profile(pool, req.user, req.params.id)));
   app.post('/api/students/:id/practice/:lesson/:question', async (req, res) => {
     if (req.user.role !== 'student') fail(403, '教师请在教案中查看答案，练习记录由学生提交。');
@@ -63,4 +98,4 @@ function setupLearning(app, pool) {
     res.json(await editProfile(pool, req, data => { data.games[req.params.type] = { date: new Date().toISOString() }; }));
   });
 }
-module.exports = { setupLearning, profile, lessonOf };
+module.exports = { setupLearning, profile, teacherProfiles, lessonOf };

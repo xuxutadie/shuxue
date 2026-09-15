@@ -143,6 +143,31 @@ test('网站不公开题库、配置和开发文件',async()=>{
  for(const path of ['/data.js','/exams.js','/exam-legacy.js','/server/schema.sql','/.env','/.runtime/教师首次登录-teacher.txt','/package.json'])assert.equal((await fetch(base+path)).status,404,path);
  assert.equal((await fetch(base+'/')).status,200);
 });
+
+test('课程按权限压缩，学生响应不包含教师答案，身份数据禁止共享缓存',async()=>{
+ const plain=await teacher1.request('/api/content','GET',undefined,{'Accept-Encoding':'identity'});
+ const response=await fetch(base+'/api/content',{headers:{Cookie:teacher1.cookie,'Accept-Encoding':'gzip'}});
+ assert.equal(response.status,200);assert.equal(response.headers.get('content-encoding'),'gzip');
+ assert.match(response.headers.get('vary'),/Accept-Encoding/);assert.equal(response.headers.get('cache-control'),'no-store');
+ const compressedBytes=Number(response.headers.get('content-length'));
+ assert.ok(compressedBytes<Buffer.byteLength(JSON.stringify(plain.data))/2);
+ assert.deepEqual(await response.json(),plain.data);
+ const studentContent=await student2.request('/api/content');
+ assert.equal(studentContent.status,200);assert.equal(studentContent.data.lessons[0].videoGuide,undefined);
+ assert.equal(studentContent.data.lessons[0].practice[0].answer,undefined);
+});
+
+test('教师工作台批量读取与单独档案一致，查询数不随人数增长且教师之间隔离',async()=>{
+ const {teacherProfiles,profile}=require('../server/learning');
+ let queries=0;
+ const countingPool={query(...args){queries++;return pool.query(...args);}};
+ const owner={id:ids[0],role:'teacher'};
+ const batch=await teacherProfiles(countingPool,owner);
+ assert.equal(queries,3);assert.ok(batch.length>=2);
+ for(const item of batch)assert.deepEqual(item,await profile(pool,owner,item.id));
+ const other=await teacher2.request('/api/teacher/overview');
+ assert.equal(other.status,200);assert.deepEqual(other.data.students,[]);
+});
 after(async()=>{
  if(server)await new Promise(r=>server.close(r));
  if(pool){

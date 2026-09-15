@@ -39,7 +39,7 @@ async function main(){
  if(!result.rowCount)await pool.query('CREATE DATABASE math_lab');
  await pool.end();
  process.env.DATABASE_URL=process.env.DATABASE_URL.replace('/postgres','/math_lab');
- if(process.argv[2]==='test')execFileSync(process.execPath,['--test','tests/online.test.cjs','tests/preparation.test.cjs','tests/course-videos.test.cjs','tests/teacher-flow.test.cjs'],{cwd:root,env:process.env,stdio:'inherit',windowsHide:true});
+ if(process.argv[2]==='test')execFileSync(process.execPath,['--test','tests/online.test.cjs','tests/preparation.test.cjs','tests/course-videos.test.cjs','tests/teacher-flow.test.cjs','tests/navigation.test.cjs'],{cwd:root,env:process.env,stdio:'inherit',windowsHide:true});
  else if(process.argv[2]==='teacher')execFileSync(process.execPath,['server/create-teacher.js',...process.argv.slice(3)],{cwd:root,env:process.env,stdio:'inherit',windowsHide:true});
  else if(process.argv[2]==='run')execFileSync(process.execPath,process.argv.slice(3),{cwd:root,env:process.env,stdio:'inherit',windowsHide:true});
  else execFileSync(process.execPath,['server/index.js'],{cwd:root,env:process.env,stdio:'inherit',windowsHide:true});

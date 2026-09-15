@@ -3,6 +3,7 @@ let user=null,csrf='',teacher=false,LESSONS=[],FLOW=[],TEST_FLOW=[],overview={cl
 let state={students:[],current:null,dates:{},videos:{}},route='home',lessonId=0,lessonTab='learn',slide=0,playTimer=null;
 let renderSerial=0,examSession=null,saveTimer=null,savePromise=null,examTimer=null,serverOffset=0,importSource=null,importPreview=null;
 const main=document.getElementById('main'),dialog=document.getElementById('dialog');
+const learningData=createLearningDataSource((url)=>api(url));
 const pupil=()=>state.students.find(p=>p.id===state.current);
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const button=(label,action,cls='',attrs='')=>`<button type="button" class="${cls}" data-action="${action}" ${attrs}>${label}</button>`;
@@ -15,14 +16,16 @@ function toast(message){const box=document.getElementById('toast');box.textConte
 function status(text,error=false){const el=document.getElementById('sync-status');el.textContent=text;el.className=error?'save-error':'';}
 async function api(url,options={}){
  const response=await fetch(url,{credentials:'same-origin',...options,headers:{'Content-Type':'application/json','X-CSRF-Token':csrf,...options.headers},...(options.body!==undefined?{body:JSON.stringify(options.body)}:{})});
- const data=await response.json();if(!response.ok){const err=new Error(data.error||'请求失败，请重试。');err.status=response.status;err.data=data;throw err;}return data;
+ const data=await response.json();if(!response.ok){const err=new Error(data.error||'请求失败，请重试。');err.status=response.status;err.data=data;throw err;}
+ if(options.method&&!['GET','HEAD'].includes(options.method.toUpperCase()))learningData.invalidate();
+ return data;
 }
 function modal(html){document.getElementById('dialog-body').innerHTML=html;if(!dialog.open)dialog.showModal();}
 function download(name,value,type='application/json'){const u=URL.createObjectURL(new Blob([value],{type}));const a=document.createElement('a');a.href=u;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(u),1000);}
 const mascot=`<svg viewBox="0 0 400 260" aria-hidden="true"><ellipse cx="215" cy="224" rx="155" ry="17" fill="#d6b646" opacity=".3"/><g transform="rotate(-9 130 142)"><rect x="48" y="77" width="133" height="139" rx="30" fill="#9edcf5" stroke="#393248" stroke-width="3"/><circle cx="90" cy="127" r="6" fill="#393248"/><circle cx="140" cy="127" r="6" fill="#393248"/><path d="M98 151q18 20 36 0" fill="none" stroke="#393248" stroke-width="3" stroke-linecap="round"/><path d="M72 211l-9 18m89-18 10 18" stroke="#393248" stroke-width="5" stroke-linecap="round"/><circle cx="76" cy="148" r="10" fill="#ffaeaa"/><circle cx="154" cy="148" r="10" fill="#ffaeaa"/></g><g transform="rotate(8 274 145)"><path d="M266 45q10-10 20 5l74 143q10 21-13 21H206q-23 0-12-22Z" fill="#ff9274" stroke="#393248" stroke-width="3"/><circle cx="254" cy="141" r="6" fill="#393248"/><circle cx="300" cy="141" r="6" fill="#393248"/><path d="M262 167q13 14 26 0" fill="none" stroke="#393248" stroke-width="3" stroke-linecap="round"/><path d="M231 211l-5 18m89-18 6 18" stroke="#393248" stroke-width="5" stroke-linecap="round"/></g><path d="M205 30l5 15 16 1-12 10 4 16-13-9-13 9 4-16-12-10 16-1Z" fill="#ad94f2" stroke="#393248" stroke-width="2"/><text x="31" y="52" font-size="26" font-weight="bold" fill="#393248">1 + 1 = ?</text><path d="M360 73v22m-11-11h22" stroke="#393248" stroke-width="3"/><circle cx="28" cy="196" r="9" fill="#ad94f2" stroke="#393248" stroke-width="2"/></svg>`;
 function loginView(){document.body.classList.add('auth-page');main.innerHTML=`<section class="login-layout"><div class="login-art"><span class="eyebrow">6 WEEKS · BIG IDEAS</span><h1>让好奇心带路，<br>和数学交个朋友。</h1><p>听懂一个方法，讲出一个道理，<br>再亲手解开一个小谜题。</p>${mascot}</div><form id="login-form" class="login-form"><span class="tag">你的数学探险，从这里开始</span><h2>欢迎来到思维实验室</h2><p class="muted">使用老师发给你的账号登录。教师也从这里进入。</p><div class="field"><label for="login-user">账号</label><input id="login-user" name="username" autocomplete="username" required placeholder="请输入你的账号"></div><div class="field"><label for="login-pass">密码</label><input id="login-pass" name="password" type="password" autocomplete="current-password" required placeholder="请输入密码"></div><p id="form-error" class="form-error" role="alert"></p><button type="submit">进入我的学习空间 →</button><p class="tiny">忘记密码？请联系老师重置。每个人都有自己的学习记录。</p></form></section>`;shell();}
 function shell(){
- const logged=!!user;document.getElementById('logout').hidden=!logged;document.getElementById('account-button').hidden=!logged;
+ const logged=!!user;document.getElementById('logout').hidden=!logged;document.getElementById('account-button').hidden=!logged;document.getElementById('refresh-data').hidden=!logged;
  document.getElementById('identity').textContent=logged?`${teacher?'教师':'学生'} · ${user.name}`:'';
  document.getElementById('role-badge').textContent=teacher?'教师工作台 · 关注每个孩子':'学生学习空间 · 今天也来探索';
  const selector=document.getElementById('student');selector.hidden=!logged||!teacher||!overview.students.length;
@@ -31,10 +34,12 @@ function shell(){
  document.getElementById('nav').innerHTML=nav.map(([id,icon,label])=>`<a href="#${id}" class="${route===id||route==='lesson'&&id==='courses'?'active':''}"><span aria-hidden="true">${icon}</span>${label}</a>`).join('');
  document.getElementById('breadcrumb').textContent=logged?(route==='lesson'?'课堂旅程 / '+(teacher?'教师授课':'学生学习'):nav.find(x=>x[0]===route)?.[2]||'我的学习空间'):'思维实验室 · 数学探险计划';
 }
-async function loadData(){
- const content=await api('/api/content');LESSONS=content.lessons;FLOW=content.flow;TEST_FLOW=content.testFlow;
- if(teacher){overview=await api('/api/teacher/overview');state.students=overview.students;state.current=state.students.some(p=>p.id===state.current)?state.current:state.students[0]?.id;}
- else{const p=await api('/api/students/'+user.id);state.students=[p];state.current=p.id;}
+async function loadData(options={}){
+ const currentUser=user,{content,records}=await learningData.load(currentUser,options);
+ if(user!==currentUser)return;
+ LESSONS=content.lessons;FLOW=content.flow;TEST_FLOW=content.testFlow;
+ if(teacher){overview=records;state.students=overview.students;state.current=state.students.some(p=>p.id===state.current)?state.current:state.students[0]?.id;}
+ else{state.students=[records];state.current=records.id;}
  const p=pupil();state.dates=p?.settings.dates||overview.classes[0]?.settings.dates||{};state.videos=p?.settings.videos||overview.classes[0]?.settings.videos||{};
 }
 function stats(items){return `<div class="stats">${items.map(([label,value,unit])=>`<div class="stat"><small>${label}</small><strong>${value}</strong><span>${unit}</span></div>`).join('')}</div>`;}
@@ -55,7 +60,7 @@ function teacherPage(){return title('班级与教学资源','管理账号、安�
 function topicTable(p){const topics=[...new Set([...Object.keys(p.exams.A?.topics||{}),...Object.keys(p.exams.B?.topics||{})])];if(!topics.length)return '';return `<section class="panel"><h2>知识点表现</h2><p class="tiny">仅依据本次试卷中的题目，帮助选择接下来的复习内容。</p><div class="table-wrap"><table><thead><tr><th>知识点</th><th>前测答对 / 题数</th><th>后测答对 / 题数</th></tr></thead><tbody>${topics.map(t=>`<tr><td>${esc(t)}</td>${['A','B'].map(k=>{const s=p.exams[k]?.topics?.[t];return `<td>${s?`${s.correct} / ${s.total}`:'—'}</td>`;}).join('')}</tr>`).join('')}</tbody></table></div></section>`;}
 function practiceDetails(p){if(!teacher||!Object.keys(p.practice).length)return '';return `<section class="panel"><h2>练习作答明细</h2><div class="table-wrap"><table><thead><tr><th>题目</th><th>首次表现</th><th>最近作答</th><th>尝试次数</th></tr></thead><tbody>${Object.entries(p.practice).map(([key,r])=>{const [l,j]=key.split('-').map(Number);return `<tr><td>第${l+1}课 · 第${j+1}题<small>${LESSONS[l].practice[j].text}</small></td><td>${r.firstCorrect===undefined?'旧版未记录':r.firstCorrect?'正确':'未答对'}</td><td>${esc(r.answer)} · ${r.correct?'正确':'需复习'}</td><td>${r.attempts}<small>${(r.submissions||[]).map(x=>`${esc(x.answer)}（${x.correct?'对':'错'}）`).join(' → ')}</small></td></tr>`;}).join('')}</tbody></table></div></section>`;}
 function passwordView(){return title(user.mustChange?'先给账号换一个新密码':'账号设置',user.mustChange?'首次登录需要修改初始密码，完成后即可开始。':'修改后，其他设备上的旧登录会失效。')+`<form id="password-form" class="panel account-panel"><p>当前账号：<b>${esc(user.username)}</b> · ${teacher?'教师':'学生'}</p><div class="field"><label for="current-password">当前密码</label><input type="password" id="current-password" autocomplete="current-password" required></div><div class="field"><label for="new-password">新密码（至少${teacher?10:6}位）</label><input type="password" id="new-password" autocomplete="new-password" minlength="${teacher?10:6}" maxlength="128" required></div><div class="field"><label for="confirm-password">再次输入新密码</label><input type="password" id="confirm-password" autocomplete="new-password" required></div><p id="form-error" class="form-error" role="alert"></p><button type="submit">保存新密码</button></form>`;}
-async function render(){
+async function render(options={}){
  const serial=++renderSerial;if(!user)return loginView();
  try{
   clearTimeout(saveTimer);if(examSession?.dirty)await saveAnswers();
@@ -63,7 +68,7 @@ async function render(){
   document.body.classList.remove('auth-page');const parts=location.hash.slice(1).split('/');route=parts[0]||'home';
   if(user.mustChange){shell();main.innerHTML=passwordView();return;}
   if(route==='student'&&teacher){state.current=parts[1];route='report';}
-  await loadData();if(serial!==renderSerial)return;shell();
+  await loadData({fresh:options.fresh===true});if(serial!==renderSerial)return;shell();
   if(route==='account')main.innerHTML=passwordView();
   else if(teacher&&!pupil()&&!['home','teacher','courses','lesson','games','game'].includes(route)){main.innerHTML=title('先创建一位学生','创建账号后即可查看课程进度、布置测评并记录课堂表现。')+button('创建学生账号','create-student');}
   else if(route==='home')main.innerHTML=teacher?teacherStarter()+dashboard():home();
@@ -84,7 +89,7 @@ async function render(){
   else if(route==='teacher'&&teacher)main.innerHTML=teacherPage();
   else main.innerHTML=teacher?dashboard():home();
   if(route!=='lesson'||lessonTab!=='teach')projecting=false;document.body.classList.toggle('classroom-projection',projecting);main.focus({preventScroll:true});if(['lesson','home','courses'].includes(route))window.scrollTo?.(0,0);
- }catch(err){if(err.status===401){user=null;csrf='';teacher=false;overview={classes:[],students:[]};state.students=[];state.current=null;loginView();toast('登录已过期，请重新登录。');}else{toast(err.message);if(!main.innerHTML||main.querySelector('.loading'))main.innerHTML=`<section class="panel"><h2>暂时没能加载</h2><p>${esc(err.message)}</p>${button('重新加载','reload')}</section>`;}}
+ }catch(err){if(serial!==renderSerial||err.obsolete)return;if(err.status===401){learningData.reset();user=null;csrf='';teacher=false;overview={classes:[],students:[]};state.students=[];state.current=null;loginView();toast('登录已过期，请重新登录。');}else{toast(err.message);if(!main.innerHTML||main.querySelector('.loading'))main.innerHTML=`<section class="panel"><h2>暂时没能加载</h2><p>${esc(err.message)}</p>${button('重新加载','reload')}</section>`;}}
 }
 async function saveAnswers(){
  if(savePromise){await savePromise;if(examSession?.dirty)return saveAnswers();return;}
@@ -98,7 +103,7 @@ async function startSession(){try{const data=await api('/api/me');user=data.user
 document.addEventListener('submit',async event=>{
  const form=event.target;if(!['login-form','password-form','student-form','class-form','reset-form'].includes(form.id))return;event.preventDefault();const submit=form.querySelector('[type=submit]');submit.disabled=true;
  try{
-  if(form.id==='login-form'){const data=await api('/api/login',{method:'POST',body:{username:document.getElementById('login-user').value,password:document.getElementById('login-pass').value}});user=data.user;csrf=data.csrf;teacher=user.role==='teacher';state.current=null;location.hash='home';await render();}
+  if(form.id==='login-form'){const data=await api('/api/login',{method:'POST',body:{username:document.getElementById('login-user').value,password:document.getElementById('login-pass').value}});learningData.reset();user=data.user;csrf=data.csrf;teacher=user.role==='teacher';state.current=null;location.hash='home';await render();}
   if(form.id==='password-form'){const password=document.getElementById('new-password').value;if(password!==document.getElementById('confirm-password').value)throw new Error('两次新密码不一致。');await api('/api/password',{method:'POST',body:{current:document.getElementById('current-password').value,password}});user.mustChange=false;toast('密码已更新。');location.hash='home';await render();}
   if(form.id==='student-form'){await api('/api/teacher/students',{method:'POST',body:{name:form.elements.name.value,username:form.elements.username.value,password:form.elements.password.value,classId:form.elements.classId.value}});dialog.close();toast('学生账号已创建。请把账号和初始密码交给学生。');await render();}
   if(form.id==='class-form'){await api('/api/teacher/classes',{method:'POST',body:{name:form.elements.name.value}});dialog.close();await render();}
@@ -111,7 +116,7 @@ document.addEventListener('click',async event=>{
  const b=event.target.closest('[data-action]');if(!b)return;const action=b.dataset.action,k=b.dataset.kind,i=Number(b.dataset.id);b.disabled=true;
  try{
   if(action==='finish-save'){await saveClassroomRecord();} if(action==='projection'){projecting=!projecting;document.body.classList.toggle('classroom-projection',projecting);b.textContent=projecting?'退出投屏展示':'投屏展示';}
-  if(action==='connect')await startSession();if(action==='reload')await render();
+  if(action==='connect')await startSession();if(action==='reload')await render({fresh:true});
   if(action==='video-seek'){
    const video=document.getElementById('lesson-video'),time=Number(b.dataset.time);
    if(video&&Number.isFinite(time)&&time>=0){
@@ -167,7 +172,8 @@ document.addEventListener('change',async event=>{
  if(event.target.id==='import-file'){try{const f=event.target.files[0];if(!f||f.size>5*1024*1024)throw new Error('请选择5MB以内的JSON备份。');const data=JSON.parse(await f.text());if(data.version!==1||!Array.isArray(data.students))throw new Error('这不是旧版学习备份。');importSource=data;document.getElementById('import-select').innerHTML=`<div class="field"><label for="import-source">选择来源学生</label><select id="import-source">${data.students.map((p,i)=>`<option value="${i}">${esc(p.name)}</option>`).join('')}</select></div>${button('预览所选档案','import-preview','secondary')}`;document.getElementById('import-result').innerHTML='';}catch(err){toast(err.message);}}
  if(event.target.id==='import-source'){importPreview=null;document.getElementById('import-result').innerHTML='';}
 });
-document.getElementById('logout').addEventListener('click',async()=>{try{await saveAnswers();await api('/api/logout',{method:'POST',body:{}});clearInterval(examTimer);stopPlayer();examSession=null;classroomDrafts.clear();projecting=false;document.body.classList.remove('classroom-projection');user=null;csrf='';overview={classes:[],students:[]};state.students=[];state.current=null;status('');loginView();}catch(err){toast(err.message);}});
+document.getElementById('logout').addEventListener('click',async()=>{try{await saveAnswers();await api('/api/logout',{method:'POST',body:{}});clearInterval(examTimer);stopPlayer();examSession=null;classroomDrafts.clear();projecting=false;document.body.classList.remove('classroom-projection');learningData.reset();renderSerial++;user=null;csrf='';teacher=false;LESSONS=[];overview={classes:[],students:[]};state.students=[];state.current=null;status('');loginView();}catch(err){toast(err.message);}});
+document.getElementById('refresh-data').addEventListener('click',async event=>{const b=event.currentTarget;b.disabled=true;status('正在刷新…');try{await render({fresh:true});status('');}finally{b.disabled=false;}});
 document.getElementById('account-button').addEventListener('click',()=>location.hash='account');
 window.addEventListener('hashchange',render);
 window.addEventListener('beforeunload',e=>{if(examSession?.dirty||classroomDrafts.size){e.preventDefault();e.returnValue='';}});

@@ -2,7 +2,7 @@ const crypto = require('node:crypto');
 const argon2 = require('argon2');
 const { transaction, fail, string } = require('./db');
 const { teacher, ownedStudent, username, passwordValid } = require('./auth');
-const { profile } = require('./learning');
+const { profile, teacherProfiles } = require('./learning');
 const { bank, grade } = require('./content');
 const blank = () => ({ completed: [], practice: {}, talk: {}, notes: {}, games: {}, history: [] });
 async function ownClass(db, user, id) {
@@ -37,10 +37,11 @@ function legacyData(raw) {
 function setupTeacher(app, pool) {
   app.use('/api/teacher', teacher);
   app.get('/api/teacher/overview', async (req, res) => {
-    const classes = (await pool.query('SELECT id,name,settings FROM classes WHERE teacher_id=$1 ORDER BY name', [req.user.id])).rows;
-    const ids = (await pool.query('SELECT s.user_id FROM students s JOIN classes c ON c.id=s.class_id WHERE c.teacher_id=$1 ORDER BY s.user_id', [req.user.id])).rows;
-    const students = []; for (const row of ids) students.push(await profile(pool, req.user, row.user_id));
-    res.json({ classes, students });
+    const [classes, students] = await Promise.all([
+      pool.query('SELECT id,name,settings FROM classes WHERE teacher_id=$1 ORDER BY name', [req.user.id]),
+      teacherProfiles(pool, req.user)
+    ]);
+    res.json({ classes: classes.rows, students });
   });
   app.post('/api/teacher/classes', async (req, res) => {
     const id = crypto.randomUUID(), name = string(req.body.name, 60);
