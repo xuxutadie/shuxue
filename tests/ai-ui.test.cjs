@@ -52,6 +52,22 @@ test('练习页默认当前课程、12课可选，规则醒目且没有自由聊
  assert.doesNotMatch(html, /data-action=|textarea|type="password"/);
 });
 
+test('学生预览显示个人AI记录但始终禁用生成，切换学生后丢弃旧响应', async () => {
+ const h = harness(async url => url.endsWith('/status') ? available : { questions: [question] }), p = h.mount();
+ h.run("var previewStudentId='student-one';");p.form.elements.rules.checked=true;
+ await h.run('loadAiPractice()');
+ assert.equal(p.node('[type="submit"]').disabled,true);
+ assert.match(p.node('[data-ai-questions]').innerHTML,/求总数/);
+ assert.match(p.node('[data-ai-message]').textContent,/不生成新题/);
+ assert.ok(h.calls.every(c=>!c.options.method));
+ let resolveStatus;
+ const delayed=harness(()=>new Promise(resolve=>{resolveStatus=resolve;}));const mounted=delayed.mount();
+ delayed.run("var previewStudentId='student-one';");
+ const loading=delayed.run('loadAiPractice()');
+ delayed.run("previewStudentId='student-two';");resolveStatus(available);await loading;
+ assert.deepEqual(delayed.calls.map(c=>c.url),['/api/ai/status']);
+ assert.equal(mounted.node('[data-ai-questions]').innerHTML,'');
+});
 test('活跃测评时不读取历史，禁用出题', async () => {
  const h = harness(async () => ({ ...available, blocked: true })), p = h.mount();
  await h.run('loadAiPractice()');

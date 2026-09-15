@@ -73,6 +73,11 @@ function setupLearning(app, pool) {
     if (!Number.isInteger(n) || !q) fail(400, '题目不存在。'); const answer = string(req.body.answer, 100);
     // 旧标签页不得把旧题答案提交给新版题目。
     if ((req.body.version || 'v1') !== (q.version || 'v1')) fail(409, '本课练习已更新，请刷新页面后按新题作答；原有作答记录会保留。');
+    if (req.studentPreview) {
+      await ownedStudent(pool, req.user, req.params.id);
+      const matched = correct(answer, q.answer);
+      return res.json({ answer, correct: matched, explain: matched ? q.explain : '', preview: true });
+    }
     res.json(await editProfile(pool, req, data => {
       Object.assign(data, separatePracticeVersions(data));
       const key = `${l}-${n}`, previous = data.practice[key], result = { answer, correct: correct(answer, q.answer), date: new Date().toISOString() };

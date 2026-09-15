@@ -9,7 +9,7 @@ function gameView(type,index){
 function drawGame(){ /* 图形在页面渲染时已经就位，交互由课堂实验统一处理。 */ }
 function gameSuccess(message){
  document.getElementById('game-feedback').textContent=message;
- if(teacher||!pupil())return;
+ if(teacher||!pupil()||(typeof previewStudentId!=='undefined'&&previewStudentId))return;
  api('/api/students/'+pupil().id+'/games/'+({align:'shop',reflection:'area',stacks:'area',stopped:'chase',grid:'area',multiples:'factor',balance:'shop'}[labState.type]||labState.type),{method:'POST',body:{}}).then(()=>{pupil().games[gameState.type]={date:new Date().toISOString()};}).catch(err=>toast('探索记录尚未保存：'+err.message));
 }
 function gameAction(action){

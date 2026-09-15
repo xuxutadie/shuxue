@@ -13,7 +13,7 @@ function setupAuth(app, pool, production) {
   app.use('/api', async (req, res, next) => {
     const token = (req.headers.cookie || '').split(';').map(x => x.trim()).find(x => x.startsWith('math_session='))?.slice(13);
     if (token) {
-      const found = await pool.query('SELECT u.*,s.csrf,s.token_hash FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=$1 AND s.expires_at>now()', [hash(token)]);
+      const found = await pool.query("SELECT u.*,s.csrf,s.token_hash FROM sessions s JOIN users u ON u.id=s.user_id LEFT JOIN students st ON st.user_id=u.id WHERE s.token_hash=$1 AND s.expires_at>now() AND (u.role='teacher' OR (st.user_id IS NOT NULL AND st.data->>'accountDisabled' IS DISTINCT FROM 'true'))", [hash(token)]);
       req.user = found.rows[0];
     }
     next();
@@ -21,6 +21,7 @@ function setupAuth(app, pool, production) {
   // 修改请求只接受同源JSON；登录后的请求另外检查会话内的CSRF令牌。
   app.use('/api', (req, res, next) => {
     if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) return next();
+    if (req.get('X-Student-Preview') && ['/login','/logout','/password'].includes(req.path)) return next(Object.assign(new Error('预览模式不能修改登录身份或密码。'), { status: 403 }));
     const origin = req.headers.origin;
     const expected = process.env.APP_ORIGIN || `${req.protocol}://${req.get('host')}`;
     if (origin && origin !== expected) return next(Object.assign(new Error('请求来源不匹配。'), { status: 403 }));
@@ -37,7 +38,17 @@ function setupAuth(app, pool, production) {
     const u = rows[0];
     if (!u || !await argon2.verify(u.password_hash, req.body.password)) fail(401, '账号或密码不正确。');
     const token = random(), csrf = random();
-    await pool.query("INSERT INTO sessions(token_hash,user_id,csrf,expires_at) VALUES($1,$2,$3,now()+interval '8 hours')", [hash(token), u.id, csrf]);
+    await transaction(pool, async db => {
+      // 与停用、删除共用学生行锁，避免并发登录留下新的有效会话。
+      if (u.role === 'student') {
+        const { rows } = await db.query('SELECT data FROM students WHERE user_id=$1 FOR UPDATE', [u.id]);
+        if (!rows[0]) fail(401, '账号或密码不正确。');
+        if (rows[0].data.accountDisabled === true) fail(403, '账号已停用，请联系老师。');
+        const current = (await db.query('SELECT username,password_hash FROM users WHERE id=$1', [u.id])).rows[0];
+        if (!current || current.username !== account || current.password_hash !== u.password_hash) fail(401, '账号已更新，请使用最新账号和密码重新登录。');
+      }
+      await db.query("INSERT INTO sessions(token_hash,user_id,csrf,expires_at) VALUES($1,$2,$3,now()+interval '8 hours')", [hash(token), u.id, csrf]);
+    });
     res.cookie('math_session', token, cookieOptions).json({ user: safeUser(u), csrf });
   });
   app.post('/api/logout', async (req, res) => { if (req.user) await pool.query('DELETE FROM sessions WHERE token_hash=$1', [req.user.token_hash]); res.clearCookie('math_session', cookieOptions).json({ ok: true }); });

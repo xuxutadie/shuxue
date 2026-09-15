@@ -16,6 +16,7 @@ function createApp(pool, options = {}) {
   app.get('/health', async (req, res) => { await pool.query('SELECT 1'); res.json({ ok: true }); });
   app.use('/api', (req,res,next) => { res.set('Cache-Control','no-store'); next(); });
   setupAuth(app, pool, production);
+  require('./student-preview').setupStudentPreview(app, pool);
   setupLearning(app, pool); setupExams(app, pool); setupTeacher(app, pool);
   setupAiPractice(app, pool, options);
   app.use('/api', (req, res) => res.status(404).json({ error: '接口不存在。' }));

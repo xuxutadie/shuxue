@@ -58,6 +58,41 @@ function setupTeacher(app, pool) {
       await db.query('INSERT INTO students(user_id,class_id) VALUES($1,$2)', [id, req.body.classId]);
     }); res.status(201).json({ id, username: account });
   });
+  app.patch('/api/teacher/students/:id', async (req, res) => {
+    const allowed = ['name', 'username', 'classId', 'accountDisabled'];
+    if (!Object.keys(req.body).length || Object.keys(req.body).some(k => !allowed.includes(k))) fail(400, '请选择要修改的学生资料。');
+    const name = 'name' in req.body ? string(req.body.name, 40) : undefined;
+    const account = 'username' in req.body ? username(req.body.username) : undefined;
+    if ('accountDisabled' in req.body && typeof req.body.accountDisabled !== 'boolean') fail(400, '账号状态不正确。');
+    await transaction(pool, async db => {
+      const s = await ownedStudent(db, req.user, req.params.id, true);
+      if ('classId' in req.body) await ownClass(db, req.user, req.body.classId);
+      const classId = req.body.classId ?? s.class_id;
+      const data = { ...s.data };
+      if ('accountDisabled' in req.body) data.accountDisabled = req.body.accountDisabled;
+      await db.query('UPDATE users SET name=$2,username=$3 WHERE id=$1', [s.user_id, name ?? s.name, account ?? s.username]);
+      await db.query('UPDATE students SET class_id=$2,data=$3 WHERE user_id=$1', [s.user_id, classId, JSON.stringify(data)]);
+      // 修改登录身份、转班或停用时撤销会话，重新登录后载入最新权限和资料。
+      if (data.accountDisabled || (account !== undefined && account !== s.username) || classId !== s.class_id) {
+        await db.query('DELETE FROM sessions WHERE user_id=$1', [s.user_id]);
+      }
+    });
+    res.json({ ok: true });
+  });
+  app.delete('/api/teacher/students/:id', async (req, res) => {
+    await transaction(pool, async db => {
+      const s = await ownedStudent(db, req.user, req.params.id, true);
+      if (req.body.confirmUsername !== s.username) fail(400, '请输入该学生的完整登录账号确认删除。');
+      // 在同一事务中删除关联记录；任何一步失败都会回滚，不留下半份档案。
+      await db.query('DELETE FROM sessions WHERE user_id=$1', [s.user_id]);
+      await db.query('DELETE FROM attempts WHERE student_id=$1', [s.user_id]);
+      await db.query('DELETE FROM assignments WHERE student_id=$1', [s.user_id]);
+      await db.query('DELETE FROM students WHERE user_id=$1', [s.user_id]);
+      // AI 题目、作答和用量已配置外键级联删除。
+      await db.query("DELETE FROM users WHERE id=$1 AND role='student'", [s.user_id]);
+    });
+    res.json({ ok: true });
+  });
   app.post('/api/teacher/students/:id/reset-password', async (req, res) => {
     await ownedStudent(pool, req.user, req.params.id);
     if (!passwordValid(req.body.password, 'student')) fail(400, '初始密码需为6至128个字符。');

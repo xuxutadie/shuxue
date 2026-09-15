@@ -168,6 +168,106 @@ test('教师工作台批量读取与单独档案一致，查询数不随人数�
  const other=await teacher2.request('/api/teacher/overview');
  assert.equal(other.status,200);assert.deepEqual(other.data.students,[]);
 });
+test('学生资料编辑保留成绩、权限隔离、停用恢复及永久删除',async()=>{
+ const created=await teacher1.request('/api/teacher/students','POST',{username:prefix+'manage',name:'管理测试',password,classId});
+ assert.equal(created.status,201);const id=created.data.id;ids.push(id);
+ const path='/api/teacher/students/'+id, client=agent();await login(client,prefix+'manage');
+ await client.request('/api/password','POST',{current:password,password:password+'New'});
+ const targetClass=await teacher1.request('/api/teacher/classes','POST',{name:'转入班级'});
+ const foreignClass=await teacher2.request('/api/teacher/classes','POST',{name:'其他老师的班级'});
+ for(const [method,body] of [['PATCH',{name:'越权修改'}],['PATCH',{accountDisabled:true}],['DELETE',{confirmUsername:prefix+'manage'}]]) {
+  assert.equal((await teacher2.request(path,method,body)).status,404);
+  assert.equal((await client.request(path,method,body)).status,403);
+ }
+ assert.equal((await teacher1.request(path,'PATCH',{name:' ',classId})).status,400);
+ assert.equal((await teacher1.request(path,'PATCH',{role:'teacher'})).status,400);
+ assert.equal((await teacher1.request(path,'PATCH',{accountDisabled:'true'})).status,400);
+ assert.equal((await teacher1.request(path,'PATCH',{classId:foreignClass.data.id,name:'不应保存'})).status,404);
+ assert.equal((await teacher1.request(path,'PATCH',{username:prefix+'s1',name:'不应保存'})).status,409);
+ assert.equal((await teacher1.request('/api/students/'+id)).data.name,'管理测试');
+ await teacher1.request('/api/teacher/assign','POST',{studentId:id,kind:'A',enabled:true});
+ await client.request(`/api/students/${id}/exams/A/start`,'POST',{});
+ await client.request(`/api/students/${id}/exams/A/submit`,'POST',{});
+ await teacher1.request(`/api/students/${id}/lessons/0`,'PUT',{note:'应保留的课堂记录',completed:true});
+ const prior=(await teacher1.request('/api/students/'+id)).data;
+ assert.equal((await teacher1.request(path,'PATCH',{name:'新姓名',username:prefix+'renamed',classId:targetClass.data.id})).status,200);
+ const updated=(await teacher1.request('/api/students/'+id)).data;
+ assert.equal(updated.name,'新姓名');assert.equal(updated.classId,targetClass.data.id);
+ assert.deepEqual(updated.exams,prior.exams);assert.deepEqual(updated.notes,prior.notes);assert.deepEqual(updated.completed,prior.completed);
+ assert.equal((await client.request('/api/me')).status,401);
+ assert.equal((await agent().request('/api/login','POST',{username:prefix+'manage',password:password+'New'})).status,401);
+ assert.equal((await client.request('/api/login','POST',{username:prefix+'renamed',password:password+'New'})).status,200);
+ assert.equal((await teacher1.request(path,'PATCH',{accountDisabled:true})).status,200);
+ assert.equal((await client.request('/api/me')).status,401);
+ assert.equal((await agent().request('/api/login','POST',{username:prefix+'renamed',password:password+'New'})).status,403);
+ const stopped=(await teacher1.request('/api/teacher/overview')).data.students.find(s=>s.id===id);
+ assert.equal(stopped.accountDisabled,true);assert.deepEqual(stopped.exams,prior.exams);
+ assert.equal((await teacher1.request(path,'PATCH',{accountDisabled:false})).status,200);
+ assert.equal((await client.request('/api/login','POST',{username:prefix+'renamed',password:password+'New'})).status,200);
+ // 放入 AI 关联记录，验证永久删除能完整清理外键链。
+ const questionId=crypto.randomUUID();
+ await pool.query('INSERT INTO ai_questions(id,user_id,teacher_id,lesson,difficulty,problem) VALUES($1,$2,$3,0,1,$4)',[questionId,id,ids[0],JSON.stringify({text:'删除测试'})]);
+ await pool.query('INSERT INTO ai_submissions(id,question_id,answer,correct) VALUES($1,$2,$3,false)',[crypto.randomUUID(),questionId,'1']);
+ await pool.query('INSERT INTO ai_usage(user_id,day,used) VALUES($1,CURRENT_DATE,1)',[id]);
+ assert.equal((await teacher1.request(path,'DELETE',{confirmUsername:'错误账号'})).status,400);
+ assert.equal((await client.request('/api/me')).status,200);
+ assert.equal((await teacher1.request(path,'DELETE',{confirmUsername:prefix+'renamed'})).status,200);
+ assert.equal((await client.request('/api/me')).status,401);
+ assert.equal((await agent().request('/api/login','POST',{username:prefix+'renamed',password:password+'New'})).status,401);
+ assert.equal((await teacher1.request('/api/students/'+id)).status,404);
+ for(const [table,key,value] of [['users','id',id],['students','user_id',id],['sessions','user_id',id],['attempts','student_id',id],['assignments','student_id',id],['ai_questions','user_id',id],['ai_usage','user_id',id],['ai_submissions','question_id',questionId]]) {
+  assert.equal((await pool.query(`SELECT 1 FROM ${table} WHERE ${key}=$1`,[value])).rowCount,0,table);
+ }
+ assert.equal((await teacher1.request('/api/me')).status,200);
+ assert.equal((await teacher1.request('/api/students/'+s1)).status,200);
+});
+test('教师学生预览复用学生权限，练习试做和读卷均不写入记录',async()=>{
+ const created=await teacher1.request('/api/teacher/students','POST',{username:prefix+'preview',name:'预览测试',password,classId});
+ const id=created.data.id;ids.push(id);const client=agent();await login(client,prefix+'preview');
+ await client.request('/api/password','POST',{current:password,password:password+'New'});
+ const headers={'X-Student-Preview':id};
+ const preview=(path,method='GET',body)=>teacher1.request(path,method,body,headers);
+ assert.equal((await teacher2.request('/api/content','GET',undefined,headers)).status,404);
+ assert.equal((await client.request('/api/content','GET',undefined,headers)).status,403);
+ assert.equal((await preview('/api/teacher/overview')).status,403);
+ assert.equal((await preview('/api/students/'+s1)).status,404);
+ const material=await preview('/api/content');assert.equal(material.status,200);
+ assert.deepEqual(material.data,(await client.request('/api/content')).data);
+ assert.equal(material.data.lessons[0].practice[0].answer,undefined);assert.equal(material.data.lessons[0].videoGuide,undefined);
+ await teacher1.request(`/api/students/${id}/lessons/0`,'PUT',{note:'仅教师可见',completed:true});
+ assert.deepEqual((await preview('/api/students/'+id)).data,(await client.request('/api/students/'+id)).data);
+ const beforeData=(await pool.query('SELECT data FROM students WHERE user_id=$1',[id])).rows[0].data;
+ const q=bank.lessons[0].practice[0];
+ const check=await preview(`/api/students/${id}/practice/0/0`,'POST',{answer:q.answer,version:q.version||'v1'});
+ assert.equal(check.status,200);assert.equal(check.data.correct,true);assert.equal(check.data.preview,true);
+ assert.equal((await preview(`/api/students/${s1}/practice/0/0`,'POST',{answer:q.answer,version:q.version||'v1'})).status,404);
+ for(const [path,method,body] of [
+  [`/api/students/${id}/lessons/0`,'PUT',{prep:'不可保存'}],
+  [`/api/students/${id}/games/shop`,'POST',{}],
+  [`/api/students/${id}/exams/A/start`,'POST',{}],
+  [`/api/students/${id}/exams/A/submit`,'POST',{}],
+  [`/api/students/${id}/exams/A/answers`,'PUT',{answers:Array(20).fill('1'),revision:0}],
+  ['/api/ai/generate','POST',{lesson:0,difficulty:1,count:1}],
+  ['/api/password','POST',{current:password,password:password+'Changed'}],
+  [`/api/teacher/students/${id}`,'DELETE',{confirmUsername:prefix+'preview'}]
+ ])assert.equal((await preview(path,method,body)).status,403,path);
+ assert.deepEqual((await pool.query('SELECT data FROM students WHERE user_id=$1',[id])).rows[0].data,beforeData);
+ assert.equal((await preview(`/api/students/${id}/exams/A?previewPaper=1`)).status,404);
+ await teacher1.request('/api/teacher/assign','POST',{studentId:id,kind:'A',enabled:true});
+ const paper=await preview(`/api/students/${id}/exams/A?previewPaper=1`);
+ assert.equal(paper.status,200);assert.equal(paper.data.questions.length,20);assert.equal(paper.data.questions[0].answer,undefined);
+ assert.equal((await pool.query('SELECT 1 FROM attempts WHERE student_id=$1',[id])).rowCount,0);
+ await client.request(`/api/students/${id}/exams/A/start`,'POST',{});
+ await pool.query("UPDATE attempts SET deadline=now()-interval '1 second' WHERE student_id=$1",[id]);
+ await preview(`/api/students/${id}/exams/A`);
+ assert.equal((await pool.query('SELECT submitted_at FROM attempts WHERE student_id=$1',[id])).rows[0].submitted_at,null);
+ await client.request(`/api/students/${id}/exams/A/submit`,'POST',{});
+ assert.equal((await preview(`/api/students/${id}/exams/A`)).data.record.correct,undefined);
+ assert.ok((await teacher1.request(`/api/students/${id}/exams/A`)).data.record.correct);
+ await teacher1.request(`/api/students/${id}/exams/A/release`,'POST',{released:true});
+ assert.deepEqual((await preview(`/api/students/${id}/exams/A`)).data.questions,(await client.request(`/api/students/${id}/exams/A`)).data.questions);
+ assert.equal((await teacher1.request('/api/me')).data.user.role,'teacher');
+});
 after(async()=>{
  if(server)await new Promise(r=>server.close(r));
  if(pool){

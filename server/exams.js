@@ -26,6 +26,16 @@ function setupExams(app, pool) {
   app.get('/api/students/:id/exams/:kind', async (req, res) => {
     const kind = kindOf(req.params.kind);
     await ownedStudent(pool, req.user, req.params.id);
+    if (req.studentPreview) {
+      // 预览读卷不启动计时，也不触发到期交卷；保留原卷版本和讲评开放规则。
+      let row = (await pool.query('SELECT * FROM attempts WHERE student_id=$1 AND kind=$2', [req.params.id, kind])).rows[0];
+      if (!row) {
+        const assigned = (await pool.query('SELECT enabled FROM assignments WHERE student_id=$1 AND kind=$2', [req.params.id, kind])).rows[0];
+        if (!assigned?.enabled || req.query.previewPaper !== '1') fail(404, '学生尚未开始这份测评。');
+        row = { kind, version: currentExamVersions[kind], answers: Array(20).fill(''), revision: 0, deadline: new Date(Date.now()+45*60000), released: false };
+      }
+      return res.json({ record: pack(row, false), questions: bank.exams[row.version][kind].map(q => row.submitted_at && row.released ? q : publicQuestion(q)), serverTime: Date.now(), preview: true });
+    }
     const row = await transaction(pool, async db => {
       const { rows } = await db.query('SELECT * FROM attempts WHERE student_id=$1 AND kind=$2 FOR UPDATE', [req.params.id, kind]);
       return rows[0] && !rows[0].submitted_at && new Date(rows[0].deadline) <= new Date() ? finalize(db, rows[0], true) : rows[0];

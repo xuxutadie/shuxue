@@ -6,7 +6,9 @@ const aiPracticeUI = (() => {
  const action = (label, name, extra = '') => `<button type="button" data-ai-action="${name}" ${extra}>${label}</button>`;
  const rules = () => `<aside class="ai-rules" aria-label="AI 练习规则"><span class="ai-sticker">先想一想，再问一步</span><h2>AI 陪你思考，答案由你找到。</h2><ol><li><b>只出新题、只给逐步提示。</b>不会展示标准答案或完整解答。</li><li>每题最多展开 3 级提示；先在草稿纸尝试，再提交自己的答案。</li><li><b>前测、后测作答期间暂停 AI 练习。</b>练习记录不计入测评分数。</li></ol></aside>`;
  const lessonOptions = selected => LESSONS.map((l, i) => `<option value="${i}" ${i === selected ? 'selected' : ''}>第 ${i + 1} 课 · ${e(l.title)}</option>`).join('');
- const isCurrent = root => root && root.isConnected && pages.has(root) && document.getElementById(root.id) === root && pages.get(root).owner === user?.id;
+ const previewing = () => typeof previewStudentId !== 'undefined' && !!previewStudentId;
+ const viewOwner = () => previewing() ? user?.id + ':' + previewStudentId : user?.id;
+ const isCurrent = root => root && root.isConnected && pages.has(root) && document.getElementById(root.id) === root && pages.get(root).owner === viewOwner();
  const message = (root, value, error = false) => {
   if (!isCurrent(root)) return;
   const box = root.querySelector('[data-ai-message]');
@@ -23,12 +25,13 @@ const aiPracticeUI = (() => {
   const s = pages.get(root), status = s.status;
   const allowed = ready(status) && Number(status.remaining) >= Number(root.querySelector('#ai-count')?.value || 1);
   const form = root.querySelector('#ai-generate-form');
-  if (form) form.querySelector('[type="submit"]').disabled = !allowed || s.busy || generating.has(s.owner) || !form.elements.rules.checked;
-  root.querySelectorAll('[data-ai-action="hint"], .ai-answer-form button').forEach(b => { b.disabled = !ready(status) || s.busy || s.readOnly || s.pending.has(b.closest('[data-ai-question]')?.dataset.aiQuestion) || b.dataset.exhausted === 'true'; });
+  if (form) form.querySelector('[type="submit"]').disabled = previewing() || !allowed || s.busy || generating.has(s.owner) || !form.elements.rules.checked;
+  root.querySelectorAll('[data-ai-action="hint"], .ai-answer-form button').forEach(b => { b.disabled = previewing() || !ready(status) || s.busy || s.readOnly || s.pending.has(b.closest('[data-ai-question]')?.dataset.aiQuestion) || b.dataset.exhausted === 'true'; });
  }
  function statusView(root) {
   const s = pages.get(root), v = s.status;
   root.querySelector('[data-ai-status]').innerHTML = v.blocked ? '<b>独立测评进行中</b><span>请先完成前测或后测并交卷，再回来练习。现在无法出题、读取记录、获取提示或检查答案。</span>' : !v.enabled || !v.configured || !v.encryptionReady ? `<b>AI 练习尚未准备好</b><span>${teacher ? '请在教师 AI 设置中保存有效配置并启用。' : '请联系老师开启 AI 引导练习。'}</span>` : `<b>今日还可生成 ${e(v.remaining)} 题</b><span>已使用 ${e(v.used)} / ${e(v.dailyLimit)} 题 · ${teacher ? '教师试用额度' : '个人每日额度'}</span>`;
+  if(previewing())message(root, '学生预览仅查看 AI 状态和已有记录，不生成新题或消耗学生额度。');
   availability(root);
  }
  function questionView(q, index, readOnly = false) {
@@ -52,11 +55,11 @@ const aiPracticeUI = (() => {
    const status = await api('/api/ai/status');
    if (!isCurrent(root) || s.version !== version) return;
    s.status = status; statusView(root);
-   if (status.blocked || !ready(status) && !s.readOnly) { s.questions = []; renderQuestions(root); message(root, ''); return true; }
+   if (status.blocked || !ready(status) && !s.readOnly) { s.questions = []; renderQuestions(root); message(root, previewing() ? '学生预览仅查看 AI 状态和已有记录，不生成新题或消耗学生额度。' : ''); return true; }
    const target = s.readOnly;
    const data = await api(target ? `/api/teacher/students/${encodeURIComponent(target)}/ai-questions` : '/api/ai/questions');
    if (!isCurrent(root) || s.version !== version) return;
-   s.questions = data.questions || []; renderQuestions(root); message(root, ''); return true;
+   s.questions = data.questions || []; renderQuestions(root); message(root, previewing() ? '学生预览仅查看 AI 状态和已有记录，不生成新题或消耗学生额度。' : ''); return true;
   } catch (error) {
    if (isCurrent(root) && s.version === version) { s.status = null; s.questions = []; renderQuestions(root); root.querySelector('[data-ai-status]').textContent = '状态读取未完成，请点击“刷新记录”重试。'; message(root, errorText(error), true); }
    return false;
@@ -65,7 +68,7 @@ const aiPracticeUI = (() => {
  async function loadPractice() {
   const root = document.getElementById('ai-practice-page');
   if (!root) return;
-  pages.set(root, { owner: user?.id, status: null, questions: [], pending: new Set(), readOnly: '', busy: false, version: 0 });
+  pages.set(root, { owner: viewOwner(), status: null, questions: [], pending: new Set(), readOnly: '', busy: false, version: 0 });
   await refresh(root);
  }
  function settingsPage() {
@@ -81,7 +84,7 @@ const aiPracticeUI = (() => {
  async function loadSettings() {
   const root = document.getElementById('ai-settings-page');
   if (!root) return;
-  pages.set(root, { owner: user?.id, busy: true });
+  pages.set(root, { owner: viewOwner(), busy: true });
   try { const data = await api('/api/teacher/ai-settings'); if (!isCurrent(root)) return; applySettings(root, data); root.querySelector('fieldset').disabled = false; message(root, ''); }
   catch (error) { if (isCurrent(root)) root.querySelector('[data-ai-settings-status]').textContent = '设置读取未完成，请点击“重新读取设置”重试。'; message(root, errorText(error), true); }
   finally { if (isCurrent(root)) pages.get(root).busy = false; }
