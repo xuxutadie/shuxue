@@ -30,9 +30,9 @@ function shell(){
  document.getElementById('role-badge').textContent=teacher?'教师工作台 · 关注每个孩子':'学生学习空间 · 今天也来探索';
  const selector=document.getElementById('student');selector.hidden=!logged||!teacher||!overview.students.length;
  selector.innerHTML=overview.students.map(p=>`<option value="${p.id}" ${p.id===state.current?'selected':''}>${esc(p.name)} · ${esc(p.className)}</option>`).join('');
- const nav=teacher?[['home','⌂','班级工作台'],['courses','▤','课程与教案'],['exams','✎','学生测评'],['report','▥','学生成长档案'],['teacher','⚙','班级与资源']]:[['home','⌂','我的探索基地'],['courses','⚑','六周探险地图'],['exams','✎','测评挑战'],['games','◇','思维游乐场'],['practice','✓','练习与错题'],['report','▥','我的成长足迹']];
- document.getElementById('nav').innerHTML=nav.map(([id,icon,label])=>`<a href="#${id}" class="${route===id||route==='lesson'&&id==='courses'?'active':''}"><span aria-hidden="true">${icon}</span>${label}</a>`).join('');
- document.getElementById('breadcrumb').textContent=logged?(route==='lesson'?'课堂旅程 / '+(teacher?'教师授课':'学生学习'):nav.find(x=>x[0]===route)?.[2]||'我的学习空间'):'思维实验室 · 数学探险计划';
+ const nav=teacher?[['home','⌂','班级工作台'],['courses','▤','课程与教案'],['exams','✎','学生测评'],['ai-practice','✦','AI 引导练习'],['report','▥','学生成长档案'],['teacher','⚙','班级与资源']]:[['home','⌂','我的探索基地'],['courses','⚑','六周探险地图'],['exams','✎','测评挑战'],['games','◇','思维游乐场'],['practice','✓','练习与错题'],['ai-practice','✦','AI 引导练习'],['report','▥','我的成长足迹']];
+ document.getElementById('nav').innerHTML=nav.map(([id,icon,label])=>`<a href="#${id}" class="${route===id||route==='lesson'&&id==='courses'||route==='ai-settings'&&id==='ai-practice'?'active':''}"><span aria-hidden="true">${icon}</span>${label}</a>`).join('');
+ document.getElementById('breadcrumb').textContent=logged?(route==='lesson'?'课堂旅程 / '+(teacher?'教师授课':'学生学习'):route==='ai-settings'&&teacher?'AI 引导练习 / 教师设置':nav.find(x=>x[0]===route)?.[2]||'我的学习空间'):'思维实验室 · 数学探险计划';
 }
 async function loadData(options={}){
  const currentUser=user,{content,records}=await learningData.load(currentUser,options);
@@ -70,7 +70,7 @@ async function render(options={}){
   if(route==='student'&&teacher){state.current=parts[1];route='report';}
   await loadData({fresh:options.fresh===true});if(serial!==renderSerial)return;shell();
   if(route==='account')main.innerHTML=passwordView();
-  else if(teacher&&!pupil()&&!['home','teacher','courses','lesson','games','game'].includes(route)){main.innerHTML=title('先创建一位学生','创建账号后即可查看课程进度、布置测评并记录课堂表现。')+button('创建学生账号','create-student');}
+  else if(teacher&&!pupil()&&!['home','teacher','courses','lesson','games','game','ai-practice','ai-settings'].includes(route)){main.innerHTML=title('先创建一位学生','创建账号后即可查看课程进度、布置测评并记录课堂表现。')+button('创建学生账号','create-student');}
   else if(route==='home')main.innerHTML=teacher?teacherStarter()+dashboard():home();
   else if(route==='courses')main.innerHTML=courses();
   else if(route==='lesson'){lessonId=Math.max(0,Math.min(11,Number(parts[1])||0));lessonTab=['learn','talk','game','work',...(teacher?['guide','teach']:[])].includes(parts[2])?parts[2]:'learn';slide=0;teachingStep=Math.max(0,Math.min(6,Number(parts[3])||0));if(lessonTab!=='teach'||teachingStep===6)projecting=false;main.innerHTML=lesson();if(lessonTab==='game')drawGame();}
@@ -84,9 +84,11 @@ async function render(options={}){
   else if(route==='review'&&['A','B'].includes(parts[1]))main.innerHTML=reviewPage(await api(`/api/students/${pupil().id}/exams/${parts[1]}`));
   else if(route==='report')main.innerHTML=report();
   else if(route==='practice')main.innerHTML=practicePage();
+  else if(route==='ai-practice'){main.innerHTML=aiPracticePage();void loadAiPractice();}
+  else if(route==='ai-settings'&&teacher){main.innerHTML=aiSettingsPage();void loadAiSettings();}
   else if(route==='games')main.innerHTML=gamesPage();
   else if(route==='game'&&GAME_META[parts[1]]){main.innerHTML=title(GAME_META[parts[1]][0],GAME_META[parts[1]][1])+gameView(parts[1]);drawGame();}
-  else if(route==='teacher'&&teacher)main.innerHTML=teacherPage();
+  else if(route==='teacher'&&teacher)main.innerHTML=teacherPage()+`<section class="panel"><span class="tag">教师专属配置</span><h2>AI 引导练习</h2><p>保存接口密钥后，所属学生就能生成新题、获取逐步提示。只提供解题引导，不展示标准答案。</p><div class="controls"><a href="#ai-settings">配置 AI 接口 →</a><a href="#ai-practice">试用与查看学生记录 →</a></div></section>`;
   else main.innerHTML=teacher?dashboard():home();
   if(route!=='lesson'||lessonTab!=='teach')projecting=false;document.body.classList.toggle('classroom-projection',projecting);main.focus({preventScroll:true});if(['lesson','home','courses'].includes(route))window.scrollTo?.(0,0);
  }catch(err){if(serial!==renderSerial||err.obsolete)return;if(err.status===401){learningData.reset();user=null;csrf='';teacher=false;overview={classes:[],students:[]};state.students=[];state.current=null;loginView();toast('登录已过期，请重新登录。');}else{toast(err.message);if(!main.innerHTML||main.querySelector('.loading'))main.innerHTML=`<section class="panel"><h2>暂时没能加载</h2><p>${esc(err.message)}</p>${button('重新加载','reload')}</section>`;}}

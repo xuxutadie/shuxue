@@ -11,16 +11,32 @@ function courseVideoPanel(){
 }
 function lessonRow(i){const l=LESSONS[i];return `<div class="lesson-row"><span class="lesson-num">${String(i+1).padStart(2,'0')}</span><div class="grow"><h3>${l.title}</h3><small>${dateOf(i)} · 120分钟 ${pupil()?.completed.includes(i)?'· 已完成':''}</small></div>${courseButton(i)}</div>`;}
 // 所有课堂入口共用完整题干；题目与解题提示分开，先读题再看分析。
-function motherProblem(l){
- const m=l.detail.mother;
- return `<section class="panel mother-problem"><span class="tag">本课母题 · 先完整读题</span><h2>${esc(m.title)}</h2><p class="problem-stem">${esc(m.text)}</p><h3>需要解决的问题</h3><ol class="problem-asks">${m.asks.map(q=>`<li>${esc(q)}</li>`).join('')}</ol><p class="tiny">先在草稿纸上圈出已知条件、标出所求，尝试画图或列式；读完题再进入分析。</p></section>`;
+function motherCards(l){return l.detail.mother.cards||[l.detail.mother];}
+function variantCards(l){return l.detail.variants.flatMap(v=>v.cards||[v]);}
+function questionSolution(q,{open=false,mother=false}={}){
+ return `<details class="${mother?'mother-solution':'variant-solution'} practice-card-solution" ${open?'open':''}><summary>尝试后展开本题答案与步骤</summary><p><b>参考答案：</b>${esc(q.answer)}</p><p><b>解题步骤：</b>${esc(q.explain)}</p></details>`;
+}
+function motherProblem(l,{answers=true}={}){
+ return `<section class="panel mother-problem"><span class="tag">本课母题 · 先完整读题</span><h2>与视频逐题对照</h2><p class="tiny">每题先圈出已知与所求，在草稿纸上尝试，再展开这一题的答案。</p>${motherCards(l).map(m=>`<article class="practice-card mother-card"><h3>${esc(m.title)}</h3><p class="problem-stem">${esc(m.text)}</p><ol class="problem-asks">${m.asks.map(q=>`<li>${esc(q)}</li>`).join('')}</ol>${answers?questionSolution(m,{mother:true}):''}</article>`).join('')}</section>`;
 }
 function motherSolution(l,open=false){
- const m=l.detail.mother;
- return `<details class="mother-solution" ${open?'open':''}><summary>尝试后核对母题的完整答案与理由</summary><p><b>${esc(m.answer)}</b></p><p>${esc(m.explain)}</p></details>`;
+ return motherCards(l).map(m=>`<article class="practice-card"><h3>${esc(m.title)}</h3>${questionSolution(m,{open,mother:true})}</article>`).join('');
 }
-function variantsView(l,{answers=true,guide=false}={}){
- return `<section class="panel lesson-variants"><span class="tag">从母题到变式 · 看条件怎样变化</span><h2>两道完整变式题</h2><p class="tiny">先读新题独立尝试，再比较它与母题的不同。可以用草稿纸作答。</p>${l.detail.variants.map(v=>`<article class="variant-problem"><h3>${esc(v.title)}</h3><p class="problem-stem">${esc(v.text)}</p>${answers?`<details ${guide?'open':''}><summary>做完后看变化、方法与答案</summary><p><b>与母题相比：</b>${esc(v.change)}</p><p><b>参考答案：</b>${esc(v.answer)}</p><p><b>方法怎样调整：</b>${esc(v.explain)}</p></details>`:''}</article>`).join('')}</section>`;
+// 先匹配原文字串，再逐段转义；标红内容绝不作为 HTML 解释。
+function changedStem(text,changed=[]){
+ const parts=[...new Set(changed.filter(x=>typeof x==='string'&&x&&text.includes(x)))].sort((a,b)=>b.length-a.length);
+ let html='',cursor=0;
+ while(cursor<text.length){
+  let next=text.length,match='';
+  for(const part of parts){const at=text.indexOf(part,cursor);if(at>=0&&(at<next||(at===next&&part.length>match.length))){next=at;match=part;}}
+  html+=esc(text.slice(cursor,next));
+  if(!match)break;
+  html+=`<mark class="changed-condition">${esc(match)}</mark>`;cursor=next+match.length;
+ }
+ return html;
+}
+function variantsView(l,{answers=true}={}){
+ return `<section class="panel lesson-variants"><span class="tag">从母题到变式 · 看条件怎样变化</span><h2>完整变式题 · 逐题练习</h2><p class="tiny">红字标出变化的条件或所求。先独立尝试，再展开本题答案与步骤。</p>${variantCards(l).map(v=>`<article class="practice-card variant-problem"><h3>${esc(v.title)}</h3><p class="problem-stem">${changedStem(v.text,v.changed)}</p><p class="condition-change"><b>变化说明：</b>${esc(v.change)}</p>${answers?questionSolution(v):''}</article>`).join('')}</section>`;
 }
 function lesson(){
  const l=LESSONS[lessonId];
@@ -32,13 +48,13 @@ function lesson(){
 function lessonBody(){
  const l=LESSONS[lessonId],d=l.detail;
  if(lessonTab==='game')return motherProblem(l)+`<section class="panel"><h2>先动手，再准备当老师</h2><p>${d.labTask}</p><ol><li>操作前，把预测写在草稿纸上。</li><li>只改变一个条件，用图形和数值验证。</li><li>写下“我改变了什么、发现什么、为什么”。</li></ol></section>`+gameView(l.game,lessonId)+`<section class="panel">${button('带着发现，准备上台 →','lesson-tab','','data-tab="talk"')}</section>`;
- if(lessonTab==='work')return motherProblem(l)+variantsView(l,{answers:false})+`<section class="panel"><h2>独立练习 · 先尝试，再检查</h2><p class="muted">母题与变式用于示范和再练；下方3题用于独立检查，保存到个人练习记录。请收起动画、答案和示范稿，在草稿纸上完成后再提交。</p>${l.practice.map((q,j)=>practiceQuestion(q,lessonId,j)).join('')}</section><section class="panel"><h2>练习结束，再回顾母题与变式</h2><p>先保留自己的解法，再返回知识讲解核对理由。</p>${button('回看本课讲解','lesson-tab','secondary','data-tab="learn"')}</section>`;
+ if(lessonTab==='work')return motherProblem(l)+variantsView(l)+`<section class="panel"><h2>需要更多同类练习？</h2><p>AI 练习只提供解题引导，不直接给答案。先尝试，再按需要请求下一步提示。</p><a href="#ai-practice">AI 引导练习 →</a></section>`+`<section class="panel"><h2>独立练习 · 先尝试，再检查</h2><p class="muted">母题与变式用于示范和再练；下方3题用于独立检查，保存到个人练习记录。请收起动画、答案和示范稿，在草稿纸上完成后再提交。</p>${l.practice.map((q,j)=>practiceQuestion(q,lessonId,j)).join('')}</section><section class="panel"><h2>练习结束，再回顾母题与变式</h2><p>先保留自己的解法，再返回知识讲解核对理由。</p>${button('回看本课讲解','lesson-tab','secondary','data-tab="learn"')}</section>`;
  if(lessonTab==='talk')return talkView();
  if(lessonTab==='guide')return guideView();
  return courseSequencePanel(l)+personalReviewPanel()+motherProblem(l)+courseVideoPanel()+`<section class="panel lesson-intro"><span class="tag">读完母题，再开始分析</span><h2>从题目中找出突破口</h2><p class="lead">${d.hook}</p><h3>对照题干，想一想</h3><ul>${d.check.map(x=>`<li>${x.split('｜')[0]}</li>`).join('')}</ul><p class="muted">先自己说或在草稿纸上写，老师听过以后再进入动画。</p></section>`+
  labView(lessonId)+
  `<div class="grid-two"><section class="panel"><div class="section-head"><h2>跟着例题，一步一步讲明白</h2><span class="tag">可手动翻页</span></div><div class="lesson-stage" id="stage">${stageView()}</div><div class="controls">${button('← 上一步','slide-prev','secondary')}${button('自动播放','slide-play','','id="slide-play"')}${button('下一步 →','slide-next','secondary')}<span id="slide-count" class="muted">${slide+1} / ${l.steps.length}</span></div><p class="tiny">图文步骤便于暂停复盘。 自动翻页每12秒一次，讲解时建议手动翻页。</p></section><section class="panel"><h2>把操作变成一个道理</h2><p>${d.concept}</p><h3>在草稿纸上留下这条路线</h3><p class="board-note">${d.board}</p><h3>特别留意</h3><p>${l.pitfall}</p></section></div>
- <section class="panel"><h2>回到完整母题，逐问检查</h2>${motherSolution(l)}</section>`+variantsView(l)+`<section class="panel"><div class="controls">${button('我来操作验证 →','lesson-tab','','data-tab="game"')}${button('准备小老师讲堂','lesson-tab','secondary','data-tab="talk"')}</div></section>`;
+ <section class="panel"><h2>回到完整母题，逐问检查</h2><p>返回上方母题卡，逐题展开答案，核对每一步对应的条件。</p></section>`+variantsView(l)+`<section class="panel"><div class="controls">${button('我来操作验证 →','lesson-tab','','data-tab="game"')}${button('准备小老师讲堂','lesson-tab','secondary','data-tab="talk"')}</div></section>`;
 }
 function stageView(){const s=LESSONS[lessonId].steps[slide];return `<span class="eyebrow">STEP ${String(slide+1).padStart(2,'0')}</span><h2>${s[0]}</h2><p>${s[1]}</p><div class="formula">${s[2]}</div><p class="tiny">停下来问自己：我能指出图中的对应部分，并解释这一步的理由吗？</p>`;}
 function talkView(){return alignedTalkView()+(lessonTab==='teach'?'':`<section class="panel">${button('收起提示，开始独立练习 →','lesson-tab','','data-tab="work"')}</section>`);}
@@ -61,8 +77,8 @@ function guideView(){
  return `<section class="panel guide-title"><div class="section-head"><h2>第${lessonId+1}课 · 教师教案</h2>${button('打印教案','print','secondary')}</div><p>先呈现完整母题，让学生读题与尝试，再进入下面的教学分析。</p></section>`+personalReviewPanel()+motherProblem(l)+courseVideoPanel()+`<section class="panel guide-page"><p><b>教学目标：</b>${l.goal}</p><p><b>本课递进：</b>${esc(d.sequenceNote||'')}</p><p><b>达成表现：</b>${d.exit}</p><p><b>前置知识：</b>${l.prereq}</p><p><b>材料：</b>白纸、彩笔、投屏或电脑；可用纸片代替动画中的物品。</p><p><b>核心概念：</b>${d.concept}</p><p><b>授课顺序：</b>先讲解与观察动画，再动手验证、准备讲课，最后学生上台与独立练习。共${flow.reduce((s,x)=>s+x[1],0)}分钟。</p>
  <h3>一、开场与前置检查</h3><blockquote>${d.hook}</blockquote>${d.check.map(x=>{const [q,a]=x.split('｜');return `<p><b>问：</b>${q}<br><b>期望回应：</b>${a}</p>`;}).join('')}
  <h3>二、120分钟课堂安排</h3><div class="table-wrap"><table><thead><tr><th>时间 / 环节</th><th>教师怎样做</th><th>学生怎样参与</th><th>观察与检查</th></tr></thead><tbody>${flow.map(([name,minutes])=>{const start=elapsed;elapsed+=minutes;const parts=guideAction(name,l);return `<tr><td><b>${start}～${elapsed}分</b><br>${name}</td>${parts.map(x=>`<td>${x}</td>`).join('')}</tr>`;}).join('')}</tbody></table></div>
- <h3>三、例题逐步讲解（可直接按此授课）</h3>${l.steps.map((s,i)=>`<article class="guide-step"><span class="tag">第${i+1}步</span><h4>${s[0]}</h4><p><b>教师讲述：</b>${s[1]}</p><p class="formula">${s[2]}</p><p><b>停下来让学生做：</b>${['复述条件，并在图上指出已知与所求。','指着变化的部分，解释为什么可以这样处理。','说出算式中每个数对应的量与单位。','用自己的话重讲理由，再核对原条件。'][i]}</p></article>`).join('')}
- ${motherSolution(l,true)}
+ <h3>三、例题逐步讲解（可直接按此授课）</h3>${l.steps.map((s,i)=>`<article class="guide-step"><span class="tag">第${i+1}步</span><h4>${s[0]}</h4><p><b>教师讲述：</b>${s[1]}</p><p class="formula">${s[2]}</p><p><b>停下来让学生做：</b>${['复述条件，并在图上指出已知与所求。','指着变化的部分，解释为什么可以这样处理。','说出算式中每个数对应的量与单位。','用自己的话重讲理由，再核对原条件。'][i%4]}</p></article>`).join('')}
+
  <h3>四、动画怎么用，观察什么</h3><p>${d.labTask}</p><p>建议三轮：第一轮教师示范，先停在初始状态听预测；第二轮让学生只改变一个参数；第三轮让学生一边操作一边说理由。上台讲课可再次展开同一动画。</p>
  <h3>五、小老师讲堂：给支架，不代讲</h3><p><b>本次上台讲解题：</b>${esc(d.talkChallenge||d.mother.text)}</p><p><b>开场示范：</b>${esc(talkSupport(l).opening)}</p><ol>${talkSupport(l).talk.map(x=>`<li>${esc(x)}</li>`).join('')}</ol>${talkSupport(l).questions.map(q=>`<p>追问：${esc(q)}</p>`).join('')}${l.videoGuide?`<p><b>本题参考解法：</b>${esc(l.videoGuide.answer)}</p>`:''}<p>先听学生完整讲解，再选一个追问。卡住时只给一个关键词；仍有困难，先回母题练关键一步。评价不计入测评分数。</p>
  <h3>六、易错点与现场补救</h3><p><b>常见误区：</b>${l.pitfall}</p><p><b>具体处理：</b>${d.repair}</p><p><b>需要支持：</b>先用动画和纸片，只讲清一个关键步骤；教师给一个关键词后让学生续讲。</p><p><b>学有余力：</b>${d.transfer[0]}要求先预测再证明；有时间再尝试另一种解释。</p>
@@ -72,7 +88,7 @@ function guideView(){
  <h3>九、出口检查与下次调整</h3><p>${d.exit}</p><p><b>变式参考：</b>${d.transfer[1]}。${d.transfer[2]}</p>${pupil()?`${recordIdentity()}<label for="lesson-note">课堂记录与下次调整</label><textarea id="lesson-note" placeholder="学生在哪一步需要提示？用什么方式补救？下次用哪道新题确认？">${esc(pupil().notes[lessonId]||'')}</textarea><div class="controls">${button('保存课堂记录','note-save')}</div>`:'<p class="muted">当前为备课预览。选择学生后，可以填写课堂记录。</p>'}<div class="controls">${button('打印学生练习卷','print-practice','secondary')}</div></section>`;
 }
 function practiceQuestion(q,i,j){const key=i+'-'+j,saved=pupil()?.practice[key];if(teacher)return `<div class="question"><p><b>${j+1}.</b> ${q.text}</p>${q.svg||''}<p class="tiny teacher-private">学生在自己的账号提交；教师查看不会产生学生作答记录。</p><details class="teacher-private"><summary>查看本题解析（教师）</summary><div class="answer"><b>参考答案：${esc(q.answer)}</b><br>${esc(q.explain)}</div></details></div>`;return `<div class="question" id="practice-${key}"><label class="qtext" for="p-${key}"><b>${j+1}.</b> ${q.text}</label>${q.svg||''}<input id="p-${key}" aria-label="第${j+1}题答案" value="${esc(saved?.answer||'')}" autocomplete="off"><button class="secondary" data-action="practice-check" data-id="${i}" data-q="${j}">检查答案</button><div class="practice-feedback" role="status">${saved?`<div class="answer ${saved.correct?'':'wrong'}">${saved.correct?'✓ 回答正确':'还需要再想一想'}${saved.correct&&q.explain?'。'+q.explain:''}</div>`:''}</div></div>`}
-function practicePage(){const wrong=[];LESSONS.forEach((l,i)=>l.practice.forEach((q,j)=>{const s=pupil().practice[i+'-'+j];if(s&&!s.correct)wrong.push({q,i,j})}));return title('练习与错题','用一道新题，确认方法真的属于自己。')+`<section class="panel"><h2>需要再练的题 · ${wrong.length} 道</h2>${wrong.length?wrong.map(({q,i,j})=>`<p class="tag">第${i+1}课 · ${q.topic}</p>${practiceQuestion(q,i,j)}`).join(''):'<div class="empty"><strong>暂时没有待复习的错题</strong>完成课程中的独立练习后，这里会出现需要再练的题。</div>'}</section><section class="panel"><h2>选择一节课开始练习</h2>${LESSONS.map((l,i)=>`<div class="lesson-row"><span class="lesson-num">${i+1}</span><div class="grow"><h3>${l.title}</h3><small>${l.practice.length} 道课堂练习</small></div>${button('去练习','work-open','secondary',`data-id="${i}"`)}</div>`).join('')}</section>`}
+function practicePage(){const wrong=[];LESSONS.forEach((l,i)=>l.practice.forEach((q,j)=>{const s=pupil().practice[i+'-'+j];if(s&&!s.correct)wrong.push({q,i,j})}));return title('练习与错题','用一道新题，确认方法真的属于自己。')+`<section class="panel"><h2>AI 引导练习</h2><p>选择课程与难度，先独立尝试。只提供解题引导，不直接给答案。</p><a href="#ai-practice">开始 AI 引导练习 →</a></section>`+`<section class="panel"><h2>需要再练的题 · ${wrong.length} 道</h2>${wrong.length?wrong.map(({q,i,j})=>`<p class="tag">第${i+1}课 · ${q.topic}</p>${practiceQuestion(q,i,j)}`).join(''):'<div class="empty"><strong>暂时没有待复习的错题</strong>完成课程中的独立练习后，这里会出现需要再练的题。</div>'}</section><section class="panel"><h2>选择一节课开始练习</h2>${LESSONS.map((l,i)=>`<div class="lesson-row"><span class="lesson-num">${i+1}</span><div class="grow"><h3>${l.title}</h3><small>${l.practice.length} 道课堂练习</small></div>${button('去练习','work-open','secondary',`data-id="${i}"`)}</div>`).join('')}</section>`}
 function gamesPage(){return title('思维游乐场','先预测，亲手试，再讲出背后的数学。')+`<div class="course-grid">${Object.entries(GAME_META).map(([id,[name,desc]],i)=>`<article class="course"><div class="course-top"><span>探索 ${String(i+1).padStart(2,'0')}</span><span>◇</span></div><div class="course-body"><span class="tag">${pupil()?.games[id]?'已探索':'待探索'}</span><h2 style="margin-top:14px">${name}</h2><p>${desc}</p>${button('进入探索 →','game-open','',`data-game-type="${id}"`)}</div></article>`).join('')}</div>`}
 function stopPlayer(){clearInterval(playTimer);playTimer=null;const b=document.getElementById('slide-play');if(b)b.textContent='自动播放';}
 

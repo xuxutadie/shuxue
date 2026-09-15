@@ -43,7 +43,7 @@ test('教师练习只查解析，学生保留作答入口且不显示正确答�
  assert.match(html,/practice-check/);assert.doesNotMatch(html,/参考答案：|查看本题解析/);
 });
 test('未知单价与重量设置默认折叠，原始订单总量仍可见',()=>{
- const t=sandbox();for(const type of ['shop','align','balance']){
+ const t=sandbox();for(const type of ['shop','pairs','align','balance']){
   const html=t.run(`labView(0,'${type}')`);
   assert.match(html,/<details class="lab-parameter-disclosure">/);
   assert.doesNotMatch(html,/<details class="lab-parameter-disclosure" open/);

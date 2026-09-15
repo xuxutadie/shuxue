@@ -6,7 +6,8 @@ const { setupAuth } = require('./auth');
 const { setupLearning } = require('./learning');
 const { setupExams, expireAttempts } = require('./exams');
 const { setupTeacher } = require('./teacher');
-function createApp(pool) {
+const { setupAiPractice } = require('./ai-practice');
+function createApp(pool, options = {}) {
   const app = express(), production = process.env.NODE_ENV === 'production';
   app.disable('x-powered-by');
   if (process.env.TRUST_PROXY === '1') app.set('trust proxy', 1);
@@ -16,6 +17,7 @@ function createApp(pool) {
   app.use('/api', (req,res,next) => { res.set('Cache-Control','no-store'); next(); });
   setupAuth(app, pool, production);
   setupLearning(app, pool); setupExams(app, pool); setupTeacher(app, pool);
+  setupAiPractice(app, pool, options);
   app.use('/api', (req, res) => res.status(404).json({ error: '接口不存在。' }));
   // 严格限定静态目录；开发文件、完整答案和本地备份不能经网站下载。
   app.use(express.static(path.join(__dirname, '..', 'public'), { dotfiles: 'deny', maxAge: 0 }));

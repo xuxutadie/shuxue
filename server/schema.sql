@@ -31,3 +31,33 @@ CREATE TABLE IF NOT EXISTS attempts (
 CREATE INDEX IF NOT EXISTS attempt_deadline ON attempts(deadline) WHERE submitted_at IS NULL;
 CREATE TABLE IF NOT EXISTS migrations (name text PRIMARY KEY, applied_at timestamptz NOT NULL DEFAULT now());
 INSERT INTO migrations(name) VALUES('001-online') ON CONFLICT DO NOTHING;
+
+-- AI 配置归教师所有；学生记录单独保存，不修改正式练习和测评成绩。
+CREATE TABLE IF NOT EXISTS ai_settings (
+ teacher_id uuid PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+ endpoint text NOT NULL, model text NOT NULL, key_cipher text,
+ enabled boolean NOT NULL DEFAULT false,
+ daily_limit integer NOT NULL DEFAULT 20 CHECK(daily_limit BETWEEN 1 AND 100),
+ updated_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE TABLE IF NOT EXISTS ai_usage (
+ user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE, day date NOT NULL,
+ used integer NOT NULL DEFAULT 0 CHECK(used>=0), pending uuid,
+ pending_until timestamptz, reserved integer NOT NULL DEFAULT 0,
+ PRIMARY KEY(user_id,day)
+);
+CREATE TABLE IF NOT EXISTS ai_questions (
+ id uuid PRIMARY KEY, user_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ teacher_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ lesson integer NOT NULL CHECK(lesson BETWEEN 0 AND 11),
+ difficulty integer NOT NULL CHECK(difficulty BETWEEN 1 AND 3),
+ problem jsonb NOT NULL, hint_count integer NOT NULL DEFAULT 0 CHECK(hint_count BETWEEN 0 AND 3),
+ created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS ai_questions_user_date ON ai_questions(user_id,created_at DESC);
+CREATE TABLE IF NOT EXISTS ai_submissions (
+ id uuid PRIMARY KEY, question_id uuid NOT NULL REFERENCES ai_questions(id) ON DELETE CASCADE,
+ answer text NOT NULL, correct boolean NOT NULL, created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS ai_submissions_question_date ON ai_submissions(question_id,created_at);
+INSERT INTO migrations(name) VALUES('002-guided-practice') ON CONFLICT DO NOTHING;

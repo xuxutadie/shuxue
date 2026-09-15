@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server/index.js",
     "teacher": "node server/create-teacher.js",
-    "test": "node --test tests/online.test.cjs tests/preparation.test.cjs tests/course-videos.test.cjs tests/teacher-flow.test.cjs tests/navigation.test.cjs"
+    "test": "node --test tests/online.test.cjs tests/preparation.test.cjs tests/course-videos.test.cjs tests/teacher-flow.test.cjs tests/navigation.test.cjs tests/practice-alignment.test.cjs tests/ai-practice.test.cjs tests/ai-ui.test.cjs"
   },
   "engines": { "node": ">=22" },
   "dependencies": {

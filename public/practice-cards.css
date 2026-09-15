@@ -1,0 +1,12 @@
+/* 每张固定教学题卡独立阅读、展开；红字同时配文字说明。 */
+.practice-card{margin:20px 0;padding:20px;border:1px solid #dfd9e9;border-radius:14px;background:#fff;}
+.practice-card>h3{margin-top:0;line-height:1.5;}
+.practice-card .problem-stem{white-space:pre-wrap;line-height:1.9;}
+.practice-card .problem-asks{line-height:1.9;}
+.changed-condition{color:#b42318;background:transparent;font-weight:700;text-decoration:underline;text-decoration-color:#ecc8c3;text-underline-offset:4px;}
+.condition-change{padding:12px 14px;border-left:3px solid #bd655b;background:#fff8f5;font-size:.94rem;line-height:1.7;}
+.practice-card-solution{margin-top:16px;padding:12px 16px;border-radius:10px;background:#f6f3fb;}
+.practice-card-solution summary{cursor:pointer;font-weight:600;line-height:1.7;}
+.practice-card-solution p{line-height:1.8;}
+@media(max-width:600px){.practice-card{padding:15px;margin:14px 0;}.practice-card-solution{padding:10px 12px;}}
+@media print{.practice-card{break-inside:avoid;}.changed-condition{color:#9e2018;text-decoration:underline;}.practice-card-solution{background:#fff;}}

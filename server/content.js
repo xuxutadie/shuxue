@@ -17,7 +17,7 @@ bank.lessons = bank.lessons.map((lesson, i) => ({ ...lesson, steps: teaching.det
 const legacyPractice = bank.lessons.map(l => l.practice);
 const revisedLessons = require('./curriculum-revision.json');
 if (revisedLessons.length !== bank.lessons.length) throw new Error('课程修订数量不完整');
-bank.lessons = revisedLessons;
+bank.lessons = require('./practice-alignment').alignPractice(structuredClone(revisedLessons));
 bank.flow = teaching.flow;
 bank.testFlow = teaching.testFlow;
 function normal(v) { let t = String(v ?? '').normalize('NFKC').trim().replace(/\s/g, '').replace(/：/g, ':'); return t.endsWith('色') ? t.slice(0,-1) : t; }

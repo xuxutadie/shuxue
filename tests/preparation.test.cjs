@@ -129,7 +129,7 @@ test('互动模型验证整除边界、面积单位、速度相同和草地不�
     context.args = {type, values, step};
     return vm.runInContext('labModel(args.type,args.values,args.step)', context);
   };
-  assert.equal(model('shop',{pen:5},3).answer,'10');
+  assert.equal(model('shop',{pen:5},3).answer,'20');
   assert.equal(model('balance',{pen:3,multiple:4},3).answer,'3');
   assert.equal(model('cycle',{n:28},27).answer,'绿');
   assert.equal(model('cycle',{n:1},0).answer,'红');
@@ -169,30 +169,30 @@ test('12课都有SVG、开场支架、具体追问与完整备课内容，参数
   assert.equal(svgErrors.length,0,JSON.stringify(svgErrors));
 });
 
-test('每课完整母题先于分析出现，变式题干完整且独立练习不展开解析', async () => {
+test('每课完整母题先于分析出现，练习页的母题与变式可逐题展开且默认折叠', async () => {
   const {context,element}=page();
   for(let i=0;i<12;i++) {
-    const {mother,variants}=bank.lessons[i].detail;
-    assert.ok(mother.text.length>40 && mother.asks.length>0);
+    const {mother,variants}=bank.lessons[i].detail, cards=mother.cards||[mother], variantCards=variants.flatMap(v=>v.cards||[v]);
+    assert.ok(cards.every(m=>m.text.length>15 && m.asks.length>0));
     assert.equal(variants.length,2);
-    for(const v of variants){assert.ok(v.text.length>35 && v.change && v.answer && v.explain);}
+    for(const v of variantCards){assert.ok(v.text.length>35 && v.change && v.answer && v.explain);}
     for(const tab of ['learn','guide','work','talk','game']) {
       context.location.hash=`#lesson/${i}/${tab}`;await vm.runInContext('render()',context);
-      const html=element('main').innerHTML,stem=html.indexOf(mother.text);
-      assert.ok(stem>=0,`${i}/${tab}缺完整母题`);
-      for(const ask of mother.asks)assert.ok(html.includes(ask));
+      const html=element('main').innerHTML,stem=html.indexOf(cards[0].text);
+      for(const m of cards){assert.ok(html.includes(m.text),`${i}/${tab}缺完整母题`);for(const ask of m.asks)assert.ok(html.includes(ask));}
       const later={learn:'从题目中找出突破口',guide:'教学目标：',work:'独立练习 · 先尝试',talk:'从这句话开始',game:'先动手，再准备当老师'}[tab];
       assert.ok((tab==='talk'?html.indexOf(bank.lessons[i].detail.talkChallenge):stem)<html.indexOf(later),`${i}/${tab}必须先读当前题目再分析`);
-      if(['learn','guide','work'].includes(tab))for(const v of variants)assert.ok(html.includes(v.text),`${i}/${tab}缺变式题干`);
+      if(['learn','guide','work'].includes(tab))for(const v of variantCards)assert.ok(html.replace(/<[^>]+>/g,'').includes(v.text),`${i}/${tab}缺变式题干`);
       if(tab==='work') {
-        assert.doesNotMatch(html,/做完后看变化、方法与答案|尝试后核对母题的完整答案与理由/);
+        assert.equal((html.match(/尝试后展开本题答案与步骤/g)||[]).length,cards.length+variantCards.length);
+        assert.doesNotMatch(html,/<details class="(?:mother|variant)-solution[^>]*\sopen/);
         assert.equal((html.match(/class="question"/g)||[]).length,3);
       }
     }
   }
 });
 
-test('学生练习入口同样先展示母题和变式，再提供保存答题的输入框', async () => {
+test('学生练习页母题与变式可展开，三道独立题仍不提前给答案', async () => {
   const {context,element}=page();
   vm.runInContext(`teacher=false;user={id:'student',role:'student',name:'学生',mustChange:false};
     const learner={id:'student',name:'学生',completed:[],practice:{},talk:{},notes:{},games:{},history:[],settings:{dates:{},videos:{}}};
@@ -201,5 +201,9 @@ test('学生练习入口同样先展示母题和变式，再提供保存答题�
   const html=element('main').innerHTML;
   assert.ok(html.indexOf(bank.lessons[0].detail.mother.text)<html.indexOf('id="p-0-0"'));
   assert.equal((html.match(/data-action="practice-check"/g)||[]).length,3);
-  assert.doesNotMatch(html,/参考答案：|方法怎样调整：/);
+  assert.equal((html.match(/尝试后展开本题答案与步骤/g)||[]).length,4);
+  assert.doesNotMatch(html,/<details class="(?:mother|variant)-solution[^>]*\sopen/);
+  const independent=html.slice(html.indexOf('id="practice-0-0"'));
+  assert.doesNotMatch(independent,/参考答案：|解题步骤：|查看本题解析/);
+  for(const question of bank.lessons[0].practice)assert.ok(!independent.includes(question.explain));
 });

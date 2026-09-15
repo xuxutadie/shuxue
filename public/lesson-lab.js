@@ -4,7 +4,8 @@ const LAB_CONFIG = {
   reflection:{name:'镜像等距实验',params:[['distance','原点在镜面左侧几格',3,5,4],['shift','向镜面移动几格',0,2,1]],prompt:'每格边长2厘米。先移动原点，再作镜像；比较两边到镜面的距离。'},
   stacks:{name:'遮挡与观察实验',params:[['front','前摞原来几层',2,5,4],['back','后摞几层',1,5,3],['remove','从前摞上方拿走几层',0,2,2]],prompt:'两摞沿同一条前后方向紧挨着放。先看摆放，再拿走前摞上方积木，最后观察正面轮廓。'},
   stopped:{name:'停留追赶实验',params:[['rest','快者中途停留几分钟',0,4,2]],prompt:'小明每分60米，先走5分；小华每分90米，追4分后停留，再按原速追。慢者全程不停。'},
-  shop:{name:'订单消去实验',params:[['pen','每支笔的价格（元）',1,5,2]],prompt:'先观察两张订单，再逐步消去相同的商品。'},
+  shop:{name:'水瓶茶杯消去实验',params:[['pen','每个茶杯的价格（元）',1,5,4]],prompt:'先观察3水瓶20茶杯与3水瓶16茶杯的两张订单，默认总价134元和118元；再逐步抵消相同费用。'},
+  pairs:{name:'橡皮铅笔配套实验',params:[['pencil','每支铅笔的价格（角）',6,12,8]],prompt:'每套是一块橡皮和一支铅笔，价格固定3元。默认3橡皮5铅笔10.6元，4橡皮4铅笔12元；先配套，再找剩余。'},
   balance:{name:'复制订单实验',params:[['multiple','上单复制倍数',2,4,2],['pen','每支笔的价格（元）',1,5,3]],prompt:'先把整张订单复制，再对齐比较。数量和总价要一起变化。'},
   cycle:{name:'循环列车实验',params:[['n','目标车厢序号',1,40,27]],prompt:'先预测目标颜色，再观察光圈按红、黄、蓝、绿循环。'},
   factor:{name:'零件分组实验',params:[['group','每袋零件数',1,12,6]],prompt:'每次装满一袋，最后剩下的零件能告诉你是否整除。'},
@@ -16,7 +17,7 @@ const LAB_CONFIG = {
   allocation:{name:'三家书店配货',params:[['a','甲店书本数',2,4,2],['b','乙店书本数',2,4,3],['c','丙店书本数',2,4,4]],prompt:'每家2～4本，总共9本。按甲店数量分类，收齐不同的分配方案。'}
 };
 const LESSON_LABS=['shop','align','cycle','factor','multiples','area','grid','stopped','pasture','allocation','cycle','multiples'];
-const LAB_OPTIONS={6:['grid','reflection','stacks'],7:['chase','stopped'],10:['cycle','align','factor','multiples','area','grid','reflection','stacks','chase','stopped','pasture','allocation'],11:['multiples','cycle','align','area','reflection','stacks','chase','stopped','pasture','allocation']};
+const LAB_OPTIONS={0:['shop','pairs','balance'],6:['grid','reflection','stacks'],7:['chase','stopped'],10:['cycle','align','factor','multiples','area','grid','reflection','stacks','chase','stopped','pasture','allocation'],11:['multiples','cycle','align','area','reflection','stacks','chase','stopped','pasture','allocation']};
 const chosenLab={};
 let labState=null,labTimer=null;
 const labNumber=n=>Number(n.toFixed(2));
@@ -77,7 +78,34 @@ function labModel(type,v,step=0,previous=step){
     formula=`先追4分剩180米；停${v.rest}分后差${180+60*v.rest}米；总时间4＋${v.rest}＋${(180+60*v.rest)/30}＝${duration}分`;
     question='从小华首次出发到追上，共经过几分钟？';answer=String(duration);
   }
-  if(type==='shop'||type==='balance'){
+  if(type==='shop'){
+    const cup=v.pen,upper=54+20*cup,lower=54+16*cup;
+    // 一杯一图，16个共同茶杯与4个多出的茶杯分组着色。
+    [20,16].forEach((count,row)=>{
+      const y=48+row*72,dim=step>=2;
+      drawing+=`<g opacity="${dim?.2:1}">${svgText(16,y+22,'3个水瓶',17)}</g>`+svgText(125,y+22,'＋');
+      for(let n=0;n<count;n++)drawing+=`<g opacity="${dim&&n<16?.2:1}"><path d="M${160+n*14} ${y+8}h10l-1 20h-8Z" fill="${n<16?'#9edcf5':'#ff9274'}" stroke="#393248"/></g>`;
+      drawing+=svgText(452,y+22,`＝${row?lower:upper}元`,19)+svgText(160,y+49,`${count}个茶杯`,14);
+    });
+    drawing+=svgText(16,25,step>=2?'抵消共同的3个水瓶和16个茶杯':'与视频例题1相同的两张订单',18);
+    drawing+=svgText(16,220,step>=2?`多4个茶杯 ↔ 多${4*cup}元`:'先找相同部分，再观察多出的茶杯',19);
+    drawing+=svgText(16,253,step>=3?`茶杯${cup}元；水瓶（${lower}－16×${cup}）÷3＝18元`:'商品数量固定，修改茶杯单价会同步改变总价。',16);
+    caption=['观察原始订单，总价134元与118元对应默认单价','上下对齐：每单都有3个水瓶','相同费用抵消，价差只对应4个茶杯','先求茶杯4元，再求水瓶18元；参数变化时按当前数值核验'][step];
+    formula=`（${upper}－${lower}）÷（20－16）＝${cup}元/个；水瓶18元`;
+    question='当前两单的总价相差多少元？';answer=String(4*cup);
+  }
+  if(type==='pairs'){
+    const pencil=v.pencil/10,rubber=3-pencil,total=labNumber(9+2*pencil);
+    drawing=svgText(16,28,'与视频例题2相同：先配成一套',20);
+    drawing+=svgRect(16,45,608,53,'#9edcf5')+svgText(30,78,`4块橡皮＋4支铅笔＝12元 → 4套`,21);
+    drawing+=svgRect(16,112,608,53,'#ffd64f')+svgText(30,145,`3块橡皮＋5支铅笔＝${total}元`,21);
+    if(step>=1)drawing+=svgText(25,198,step>=2?`3套共9元 ＋ 剩下2支铅笔${labNumber(2*pencil)}元`:'每套：1块橡皮＋1支铅笔＝12÷4＝3元',20);
+    if(step>=3)drawing+=svgText(25,242,`铅笔${pencil}元；橡皮3－${pencil}＝${labNumber(rubber)}元`,21);
+    caption=['完整读两种买法','4块橡皮与4支铅笔配成4套，每套3元','第一种买法圈出3套，还剩2支铅笔','先求铅笔，再从一套的价格中扣出橡皮单价'][step];
+    formula=`铅笔：（${total}－3×3）÷2＝${pencil}元；橡皮：3－${pencil}＝${labNumber(rubber)}元`;
+    question='当前一块橡皮的单价是多少元？';answer=String(labNumber(rubber));
+  }
+  if(type==='balance'){
     const multi=type==='balance'?v.multiple:1,book=type==='balance'?4:3.5;
     const p1=type==='balance'?1:3,p2=type==='balance'?multi+1:5;
     const total1=2*book+p1*v.pen,total2=2*multi*book+p2*v.pen;
@@ -170,7 +198,7 @@ function labModel(type,v,step=0,previous=step){
 
 // 对齐对象、复制倍数属于探索条件；未知单价和重量在学生推理后才展开。
 function labControls(type,config){
-  const secret=key=>['shop','balance','align'].includes(type)&&['pen','small'].includes(key);
+  const secret=key=>['shop','pairs','balance','align'].includes(type)&&['pen','pencil','small'].includes(key);
   const render=params=>`<div class="lab-controls">${params.map(([key,label,min,max])=>`<label for="lab-${key}">${label}：<output id="lab-value-${key}">${labState.values[key]}</output><input id="lab-${key}" data-lab-param="${key}" type="range" min="${min}" max="${max}" step="1" value="${labState.values[key]}"></label>`).join('')}</div>`;
   const hidden=config.params.filter(([key])=>secret(key));
   return render(config.params.filter(([key])=>!secret(key)))+(hidden.length?`<details class="lab-parameter-disclosure"><summary>推理完成后，再展开单价或重量设置做变式</summary><p>先根据两组总量求未知量；这里的设置用于验证与拓展。</p>${render(hidden)}</details>`:'');
