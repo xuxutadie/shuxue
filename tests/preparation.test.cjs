@@ -33,7 +33,7 @@ function page() {
     document: { getElementById: element, addEventListener(){}, body: element('body') },
     window: { addEventListener(){} }, location: { hash: '#courses' }
   });
-  for (const file of ['figures.js', 'lesson-lab.js', 'games.js', 'teacher-flow.js', 'views.js', 'data-loader.js', 'exam-analysis.js','app.js']) {
+  for (const file of ['figures.js', 'lesson-lab.js', 'games.js', 'teacher-flow.js', 'views.js', 'data-loader.js', 'exam-analysis.js','practice-workspace.js','app.js']) {
     let source = fs.readFileSync('public/' + file, 'utf8');
     if (file === 'app.js') source = source.replace(/startSession\(\);\s*$/, '');
     vm.runInContext(source, context);
@@ -192,16 +192,16 @@ test('每课完整母题先于分析出现，练习页的母题与变式可逐�
   }
 });
 
-test('学生练习页母题与变式可展开，三道独立题仍不提前给答案', async () => {
+test('学生练习每次只出一道题，移除母题讲解和预先展开的解析', async () => {
   const {context,element}=page();
   vm.runInContext(`teacher=false;user={id:'student',role:'student',name:'学生',mustChange:false};
     const learner={id:'student',name:'学生',completed:[],practice:{},talk:{},notes:{},games:{},history:[],settings:{dates:{},videos:{}}};
     api=async url=>url==='/api/content'?content:learner;`,context);
   context.location.hash='#lesson/0/work';await vm.runInContext('render()',context);
   const html=element('main').innerHTML;
-  assert.ok(html.indexOf(bank.lessons[0].detail.mother.text)<html.indexOf('id="p-0-0"'));
-  assert.equal((html.match(/data-action="practice-check"/g)||[]).length,3);
-  assert.equal((html.match(/尝试后展开本题答案与步骤/g)||[]).length,4);
+  assert.doesNotMatch(html,/mother-problem|lesson-variants|lesson-path|需要更多同类练习/);
+  assert.equal((html.match(/data-action="practice-check"/g)||[]).length,1);
+  assert.equal((html.match(/尝试后展开本题答案与步骤/g)||[]).length,0);
   assert.doesNotMatch(html,/<details class="(?:mother|variant)-solution[^>]*\sopen/);
   const independent=html.slice(html.indexOf('id="practice-0-0"'));
   assert.doesNotMatch(independent,/参考答案：|解题步骤：|查看本题解析/);

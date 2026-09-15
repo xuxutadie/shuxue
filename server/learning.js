@@ -67,6 +67,28 @@ function setupLearning(app, pool) {
     else res.send(content.json);
   });
   app.get('/api/students/:id', async (req, res) => res.json(await profile(pool, req.user, req.params.id)));
+  app.post('/api/students/:id/variants/:lesson/:question',async(req,res)=>{
+    if(req.user.role!=='student')fail(403,'请使用学生账号作答，教师可在学生预览中试做。');
+    const l=lessonOf(req.params.lesson),n=Number(req.params.question);
+    const {variants,matches}=require('./variant-practice');
+    const q=variants(bank.lessons[l],l,true)[n];
+    if(!Number.isInteger(n)||!q)fail(400,'题目不存在。');
+    if(req.body.version!==q.version)fail(409,'变式题已更新，请刷新后再作答。');
+    const answers=req.body.answers;
+    if(!Array.isArray(answers)||answers.length!==q.inputs.length||answers.some(a=>typeof a!=='string'||!a.trim()||a.length>200))fail(400,'请填写每个问题的答案。');
+    const result={answers,correct:answers.every((a,i)=>matches(a,q.inputs[i])),date:new Date().toISOString()};
+    const feedback={explain:result.correct?q.explain:'',answer:result.correct?q.answer:''};
+    if(req.studentPreview){await ownedStudent(pool,req.user,req.params.id);return res.json({...result,...feedback,preview:true});}
+    res.json(await editProfile(pool,req,data=>{
+      data.variantPractice||={};const key=l+'-'+n,previous=data.variantPractice[key];
+      const same=previous?.version===q.version;
+      if(previous&&!same){data.variantHistory||=[];data.variantHistory.push({key,...previous});}
+      data.variantPractice[key]={...result,version:q.version,question:{text:q.text,title:q.title},
+        firstCorrect:same?previous.firstCorrect:result.correct,attempts:same?previous.attempts+1:1,
+        submissions:[...(same?previous.submissions||[]:[]),result].slice(-100)};
+      return {...data.variantPractice[key],...feedback};
+    }));
+  });
   app.post('/api/students/:id/practice/:lesson/:question', async (req, res) => {
     if (req.user.role !== 'student') fail(403, '教师请在教案中查看答案，练习记录由学生提交。');
     const l = lessonOf(req.params.lesson), n = Number(req.params.question), q = bank.lessons[l].practice[n];

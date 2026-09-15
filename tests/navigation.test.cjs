@@ -65,7 +65,7 @@ function page() {
    return { ok: true, json: async () => url === '/api/content' ? material : url === '/api/teacher/overview' ? { classes: [], students: [] } : { ok: true } };
   }, document: { getElementById: element, addEventListener(name, handler){ listeners.set(name, handler); }, body: element('body') },
   window: { addEventListener(){} }, location: { hash: '#courses' } });
- for (const name of ['course-videos.js', 'figures.js', 'lesson-lab.js', 'games.js', 'teacher-flow.js', 'views.js', 'data-loader.js', 'exam-analysis.js','app.js']) {
+ for (const name of ['course-videos.js', 'figures.js', 'lesson-lab.js', 'games.js', 'teacher-flow.js', 'views.js', 'data-loader.js', 'exam-analysis.js','practice-workspace.js','app.js']) {
   vm.runInContext(fs.readFileSync('public/' + name, 'utf8').replace(/^startSession\(\);/m, ''), context);
  }
  const run = code => vm.runInContext(code, context);

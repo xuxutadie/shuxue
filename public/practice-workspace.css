@@ -1,0 +1,2 @@
+.practice-numbers{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0}.practice-numbers button{background:#f0e9ff;padding:10px 15px}.practice-numbers button.active{background:#ffda50}.variant-exercise .field{max-width:620px;margin:16px 0}.variant-exercise select,.variant-exercise input{width:100%}.practice-course-picker{max-width:640px;margin:20px 0}.practice-course-picker label{display:block;font-weight:700;margin-bottom:8px}.practice-course-picker select{width:100%}
+#practice-workspace{scroll-margin-top:110px}.variant-exercise .qtext{font-size:18px;line-height:1.9}

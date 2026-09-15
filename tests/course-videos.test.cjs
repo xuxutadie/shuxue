@@ -6,7 +6,7 @@ const {createApp}=require('../server/index');
 function context(teacher=true){
  const element=()=>({style:{},classList:{add(){},remove(){}},addEventListener(){}});
  const c=vm.createContext({console,URL,setTimeout,clearTimeout,setInterval,clearInterval,location:{origin:'http://127.0.0.1:8766',hash:''},document:{getElementById:element,addEventListener(){},body:element()},window:{addEventListener(){}}});
- for(const file of ['course-videos.js','teacher-flow.js','views.js','data-loader.js','app.js'])vm.runInContext(fs.readFileSync('public/'+file,'utf8').replace(/startSession\(\);\s*$/,''),c);
+ for(const file of ['course-videos.js','teacher-flow.js','views.js','data-loader.js','practice-workspace.js','app.js'])vm.runInContext(fs.readFileSync('public/'+file,'utf8').replace(/startSession\(\);\s*$/,''),c);
  c.materials=lessons(teacher);
  vm.runInContext(`LESSONS=materials;teacher=${teacher};user={id:'reader',name:'试读',role:teacher?'teacher':'student'};state={students:[],current:null,videos:{},dates:{}};`,c);
  return c;

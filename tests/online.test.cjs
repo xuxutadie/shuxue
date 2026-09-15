@@ -34,6 +34,25 @@ test('未登录隔离、强制改密、学生权限和跨教师隔离',async()=>
  assert.equal((await student1.request('/api/students/'+s1+'/lessons/0','PUT',{prep:'我的解释'}, {Origin:'https://evil.invalid'})).status,403);
  const c=await student1.request('/api/content');assert.equal(c.status,200);assert.equal(c.data.lessons.length,12);assert.equal(c.data.lessons[0].practice[0].answer,undefined);
 });
+test('变式独立保存首次与重做结果，校验多问答案、版本、归属并支持无写入预览',async()=>{
+ const material=(await student1.request('/api/content')).data,q=material.lessons[0].variantPractice[0],path=`/api/students/${s1}/variants/0/0`;
+ assert.equal(q.inputs[0].answer,undefined);
+ const before=(await student1.request('/api/students/'+s1)).data;
+ assert.equal((await student1.request(path,'POST',{version:'过期',answers:['18','4']})).status,409);
+ assert.equal((await student1.request(path,'POST',{version:q.version,answers:['18']})).status,400);
+ assert.equal((await student1.request(path,'POST',{version:q.version,answers:['18','']})).status,400);
+ assert.equal((await student2.request(path,'POST',{version:q.version,answers:['18','4']})).status,404);
+ assert.equal((await teacher1.request(path,'POST',{version:q.version,answers:['18','4']})).status,403);
+ let r=await student1.request(path,'POST',{version:q.version,answers:['18','5']});assert.equal(r.status,200);assert.equal(r.data.correct,false);assert.equal(r.data.answer,'');assert.equal(r.data.explain,'');
+ r=await student1.request(path,'POST',{version:q.version,answers:['18','4']});assert.equal(r.data.correct,true);assert.equal(r.data.firstCorrect,false);assert.equal(r.data.attempts,2);
+ const saved=(await teacher1.request('/api/students/'+s1)).data;assert.deepEqual(saved.practice,before.practice);assert.deepEqual(saved.exams,before.exams);assert.equal(saved.variantPractice['0-0'].submissions.length,2);
+ r=await teacher1.request(path,'POST',{version:q.version,answers:['0','0']},{'X-Student-Preview':s1});assert.equal(r.status,200);assert.equal(r.data.preview,true);
+ assert.deepEqual((await teacher1.request('/api/students/'+s1)).data.variantPractice,saved.variantPractice);
+ assert.equal((await teacher2.request(path,'POST',{version:q.version,answers:['18','4']},{'X-Student-Preview':s1})).status,404);
+ const factors=material.lessons[3].variantPractice[1];
+ r=await student1.request(`/api/students/${s1}/variants/3/1`,'POST',{version:factors.version,answers:['12、6、8','3']});assert.equal(r.data.correct,true);
+});
+
 test('独立练习保留首次结果和重做，学生不能改教师评价',async()=>{
  let r=await student1.request(`/api/students/${s1}/practice/0/0`,'POST',{answer:'999'});assert.equal(r.data.correct,false);assert.equal(r.data.firstCorrect,false);
  r=await student1.request(`/api/students/${s1}/practice/0/0`,'POST',{answer:bank.lessons[0].practice[0].answer});assert.equal(r.data.correct,true);assert.equal(r.data.firstCorrect,false);assert.equal(r.data.attempts,2);

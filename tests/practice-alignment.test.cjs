@@ -14,6 +14,37 @@ function ui() {
   return { context, run: code => vm.runInContext(code, context) };
 }
 
+test('26道变式有独立作答字段，学生字段隐藏答案，集合题支持乱序但拒绝遗漏和重复',()=>{
+ const {variants,matches}=require('../server/variant-practice');
+ const material=lessons(false);let count=0;
+ material.forEach((l,i)=>l.variantPractice.forEach((q,j)=>{
+  count++;assert.ok(q.text&&q.version&&q.inputs.length);
+  assert.equal(q.answer,undefined);assert.equal(q.explain,undefined);
+  const full=variants(bank.lessons[i],i,true)[j];
+  full.inputs.forEach((field,k)=>{assert.equal(q.inputs[k].answer,undefined);assert.ok(matches(field.answer,field));assert.ok(!matches('乱填',field));});
+ }));assert.equal(count,26);
+ const field=variants(bank.lessons[3],3,true)[1].inputs[0];
+ assert.ok(matches('１２、8，6',field));assert.ok(!matches('6,8',field));assert.ok(!matches('6,8,12,12',field));
+ assert.equal(variants(bank.lessons[0],0)[0].version,material[0].variantPractice[0].version);
+});
+
+test('学生固定题、变式、AI拔高和错题共用练习空间，按课衔接并隔离预览记录',()=>{
+ const {context,run}=ui();Object.assign(context,{LESSONS:lessons(false),teacher:false,previewStudentId:null,lessonTab:'work',dateOf:()=>'',
+  title:(name,description,extra='')=>`<h1>${name}</h1><p>${description}</p>${extra}`,
+  student:{practice:{},variantPractice:{}},pupil:()=>context.student});
+ for(const f of ['ai-practice.js','practice-workspace.js'])vm.runInContext(fs.readFileSync('public/'+f,'utf8'),context);
+ let html=run('lesson()');
+ assert.match(html,/第 1 \/ 5 题/);assert.equal((html.match(/data-action="practice-check"/g)||[]).length,1);
+ assert.doesNotMatch(html,/mother-problem|variant-solution|课堂路线|参考答案/);
+ html=run("practiceIndex=3;lesson()");assert.match(html,/学校买3个水瓶/);assert.match(html,/changed-condition/);assert.match(html,/水瓶单价/);assert.doesNotMatch(html,/参考答案|解题步骤|变化说明/);
+ html=run("practiceTab='ai';lesson()");assert.match(html,/完成本课练习，再挑战/);assert.doesNotMatch(html,/ai-generate-form/);
+ run("practiceItems(0).forEach(it=>{(it.type==='fixed'?student.practice:student.variantPractice)['0-'+it.j]={version:it.q.version||'v1',correct:false,answer:'0',answers:['0'],attempts:1};})");
+ html=run('lesson()');assert.match(html,/ai-generate-form/);assert.match(html,/value="3" selected/);assert.match(html,/data-course="0"/);assert.match(html,/不会展示标准答案或完整解答/);
+ html=run("practiceTab='wrong';lesson()");assert.equal((html.match(/data-practice-retry/g)||[]).length,5);
+ html=run("startPracticeLesson(1);practiceTab='ai';studentPracticePanel(1)");assert.doesNotMatch(html,/ai-generate-form/);
+ html=run("previewStudentId='preview';studentPracticePanel(1)");assert.match(html,/ai-generate-form/);assert.deepEqual(Object.keys(context.student.variantPractice),['0-0','0-1']);
+});
+
 test('36道独立题原文、答案及版本完全保留，40道旧测评不改', () => {
   assert.deepEqual(bank.lessons.map(l => l.practice), revised.map(l => l.practice));
   const context = vm.createContext({});

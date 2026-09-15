@@ -8,7 +8,7 @@ function setupStudentPreview(app, pool) {
   if (!id) return next();
   if (req.user.role !== 'teacher') fail(403, '只有教师可以预览学生模式。');
   const student = await ownedStudent(pool, req.user, id);
-  const practiceCheck = req.method === 'POST' && /^\/students\/[^/]+\/practice\/\d+\/\d+$/.test(req.path);
+  const practiceCheck = req.method === 'POST' && /^\/students\/[^/]+\/(?:practice|variants)\/\d+\/\d+$/.test(req.path);
   if (!['GET','HEAD'].includes(req.method) && !practiceCheck) fail(403, '当前为学生预览，不会保存学生记录。请返回教师模式进行管理。');
   req.studentPreview = true;
   req.user = { id, role: 'student', name: student.name, username: student.username };

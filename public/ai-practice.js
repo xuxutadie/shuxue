@@ -17,9 +17,10 @@ const aiPracticeUI = (() => {
  // 错误按状态转成固定文案，供应商响应、接口细节及密钥均不展示。
  const errorText = error => ({ 400: '设置或输入不符合要求，请检查后重试。', 401: '登录状态已失效，请重新登录。', 403: '当前不能使用此功能。若正在前后测，请先独立完成并交卷。', 409: '已有出题请求正在处理，请稍后刷新记录。', 429: '今日额度已用完，或操作太频繁，请稍后再试。', 503: 'AI 暂时不可用，请联系老师检查设置。' }[error?.status] || '这次请求没有完成，请稍后重试。');
  const ready = status => !!(status?.enabled && status.configured && status.encryptionReady && !status.blocked);
- function practicePage() {
-  const selected = Number.isInteger(lessonId) && LESSONS[lessonId] ? lessonId : 0;
-  return `<div id="ai-practice-page" class="ai-page">${title('AI 引导练习', '选一道新题，把方法变成自己的本领。', teacher ? '<a class="ai-link" href="#ai-settings">教师 AI 设置 →</a>' : '')}${rules()}<div class="ai-status" data-ai-status role="status">正在读取今日练习状态…</div>${teacher ? `<section class="panel ai-history-selector"><label for="ai-history-owner">查看谁的 AI 练习</label><select id="ai-history-owner"><option value="">我的教师试用记录</option>${overview.students.map(p => `<option value="${e(p.id)}">${e(p.name)} · ${e(p.className)}</option>`).join('')}</select><p class="tiny">教师试用保存在自己的账号；查看学生记录时只读。</p></section>` : ''}<section class="panel ai-generator" data-ai-generator><div class="section-head"><h2>今天，挑战哪一道？</h2><span class="tag">每次 1～3 题</span></div><form id="ai-generate-form"><div class="ai-form-grid"><div><label for="ai-lesson">练习课程</label><select id="ai-lesson" name="lesson">${lessonOptions(selected)}</select></div><div><label for="ai-difficulty">难度</label><select id="ai-difficulty" name="difficulty"><option value="1">1 · 基础热身</option><option value="2">2 · 继续挑战</option><option value="3">3 · 综合思考</option></select></div><div><label for="ai-count">题目数量</label><select id="ai-count" name="count"><option value="1">1 题</option><option value="2">2 题</option><option value="3">3 题</option></select></div></div><label class="ai-check"><input type="checkbox" name="rules" required>我已了解规则，会先独立尝试，不向 AI 索要答案。</label><button type="submit" disabled>生成我的新题 →</button><p class="tiny">出题可能需要约 20 秒。等待时可以切换页面，完成后回来查看记录。</p></form></section><p class="ai-message" data-ai-message role="status" aria-live="polite"></p><section class="panel ai-history"><div class="section-head"><h2>思考记录</h2>${action('刷新记录', 'refresh', 'class="quiet"')}</div><div data-ai-questions><p class="muted">正在准备练习空间…</p></div></section></div>`;
+ function practicePage(options = {}) {
+  const selected = Number.isInteger(options.course) && LESSONS[options.course] ? options.course : Number.isInteger(lessonId) && LESSONS[lessonId] ? lessonId : 0;
+  const heading=options.embedded?'<h2>AI 拔高练习</h2><p>用本课的方法挑战新问题。遇到困难时，AI 只提示下一步。</p>':title('AI 引导练习', '选一道新题，把方法变成自己的本领。', teacher ? '<a class="ai-link" href="#ai-settings">教师 AI 设置 →</a>' : '');
+  return `<div id="ai-practice-page" class="ai-page" ${options.embedded?`data-course="${selected}"`:""}>${heading}${rules()}<div class="ai-status" data-ai-status role="status">正在读取今日练习状态…</div>${teacher ? `<section class="panel ai-history-selector"><label for="ai-history-owner">查看谁的 AI 练习</label><select id="ai-history-owner"><option value="">我的教师试用记录</option>${overview.students.map(p => `<option value="${e(p.id)}">${e(p.name)} · ${e(p.className)}</option>`).join('')}</select><p class="tiny">教师试用保存在自己的账号；查看学生记录时只读。</p></section>` : ''}<section class="panel ai-generator" data-ai-generator><div class="section-head"><h2>今天，挑战哪一道？</h2><span class="tag">每次 1～3 题</span></div><form id="ai-generate-form"><div class="ai-form-grid"><div><label for="ai-lesson">练习课程</label><select id="ai-lesson" name="lesson" ${options.embedded?'disabled':''}>${lessonOptions(selected)}</select></div><div><label for="ai-difficulty">难度</label><select id="ai-difficulty" name="difficulty"><option value="1">1 · 基础热身</option><option value="2">2 · 继续挑战</option><option value="3" ${options.difficulty===3?'selected':''}>3 · 综合思考</option></select></div><div><label for="ai-count">题目数量</label><select id="ai-count" name="count"><option value="1">1 题</option><option value="2">2 题</option><option value="3">3 题</option></select></div></div><label class="ai-check"><input type="checkbox" name="rules" required>我已了解规则，会先独立尝试，不向 AI 索要答案。</label><button type="submit" disabled>生成我的新题 →</button><p class="tiny">出题可能需要约 20 秒。等待时可以切换页面，完成后回来查看记录。</p></form></section><p class="ai-message" data-ai-message role="status" aria-live="polite"></p><section class="panel ai-history"><div class="section-head"><h2>思考记录</h2>${action('刷新记录', 'refresh', 'class="quiet"')}</div><div data-ai-questions><p class="muted">正在准备练习空间…</p></div></section></div>`;
  }
  function availability(root) {
   const s = pages.get(root), status = s.status;
@@ -59,7 +60,7 @@ const aiPracticeUI = (() => {
    const target = s.readOnly;
    const data = await api(target ? `/api/teacher/students/${encodeURIComponent(target)}/ai-questions` : '/api/ai/questions');
    if (!isCurrent(root) || s.version !== version) return;
-   s.questions = data.questions || []; renderQuestions(root); message(root, previewing() ? '学生预览仅查看 AI 状态和已有记录，不生成新题或消耗学生额度。' : ''); return true;
+   s.questions = (data.questions || []).filter(q => root.dataset?.course === undefined || Number(q.lesson) === Number(root.dataset.course)); renderQuestions(root); message(root, previewing() ? '学生预览仅查看 AI 状态和已有记录，不生成新题或消耗学生额度。' : ''); return true;
   } catch (error) {
    if (isCurrent(root) && s.version === version) { s.status = null; s.questions = []; renderQuestions(root); root.querySelector('[data-ai-status]').textContent = '状态读取未完成，请点击“刷新记录”重试。'; message(root, errorText(error), true); }
    return false;
@@ -180,7 +181,7 @@ const aiPracticeUI = (() => {
  });
  return { practicePage, loadPractice, settingsPage, loadSettings };
 })();
-function aiPracticePage() { return aiPracticeUI.practicePage(); }
+function aiPracticePage(options) { return aiPracticeUI.practicePage(options); }
 function loadAiPractice() { return aiPracticeUI.loadPractice(); }
 function aiSettingsPage() { return aiPracticeUI.settingsPage(); }
 function loadAiSettings() { return aiPracticeUI.loadSettings(); }
