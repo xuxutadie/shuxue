@@ -36,6 +36,7 @@ function legacyData(raw) {
 }
 function setupTeacher(app, pool) {
   app.use('/api/teacher', teacher);
+  app.get('/api/teacher/exam-analysis', async(req,res)=>res.json(await require('./exam-analysis').examAnalysis(pool,req.user,req.query)));
   app.get('/api/teacher/overview', async (req, res) => {
     const [classes, students] = await Promise.all([
       pool.query('SELECT id,name,settings FROM classes WHERE teacher_id=$1 ORDER BY name', [req.user.id]),

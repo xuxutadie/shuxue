@@ -268,6 +268,42 @@ test('教师学生预览复用学生权限，练习试做和读卷均不写入�
  assert.deepEqual((await preview(`/api/students/${id}/exams/A`)).data.questions,(await client.request(`/api/students/${id}/exams/A`)).data.questions);
  assert.equal((await teacher1.request('/api/me')).data.user.role,'teacher');
 });
+test('班级错题统计分卷分版本、空题单独计数且不纳入未交卷学生',()=>{
+ const {summarizeExams}=require('../server/exam-analysis');
+ const sample=(id,version,wrong,blanks=[])=>({user_id:id,name:id,username:id,class_name:'测试班',version,submitted_at:new Date(),score:120-wrong.length*6,
+  correct:Array.from({length:20},(_,i)=>!wrong.includes(i+1)),answers:Array.from({length:20},(_,i)=>blanks.includes(i+1)?'  ':'10')});
+ const rows=[sample('one','v3',[1,2],[2]),sample('two','v3',[2,3]),sample('all-correct','v3',[]),sample('old','v2',[1]),{user_id:'pending',submitted_at:null}];
+ const snapshot=JSON.stringify(rows),result=summarizeExams(rows,'A');
+ assert.equal(result.totalStudents,5);assert.equal(result.submittedCount,4);assert.equal(result.pendingCount,1);
+ assert.deepEqual(result.groups.map(g=>g.version),['v3','v2']);
+ const newest=result.groups[0];assert.equal(newest.submittedCount,3);
+ assert.equal(newest.questions[0].number,2);assert.equal(newest.questions[0].wrongCount,2);assert.equal(newest.questions[0].blankCount,1);assert.equal(newest.questions[0].wrongRate,67);
+ assert.deepEqual(newest.questions[0].wrongStudents.map(s=>s.id),['one','two']);
+ assert.deepEqual(newest.students[0].wrongNumbers,[1,2]);assert.deepEqual(newest.students[0].blankNumbers,[2]);
+ assert.deepEqual(newest.students[2].wrongNumbers,[]);
+ assert.equal(result.groups[1].questions[0].text,bank.exams.v2.A[0].text);
+ assert.equal(newest.questions.find(q=>q.number===1).text,bank.exams.v3.A[0].text);
+ assert.equal(JSON.stringify(rows),snapshot);
+ assert.deepEqual(summarizeExams([],'B'),{kind:'B',totalStudents:0,submittedCount:0,pendingCount:0,groups:[]});
+});
+test('错题分析接口只返回所属班级，学生及学生预览不能访问',async()=>{
+ const path='/api/teacher/exam-analysis';
+ assert.equal((await agent().request(path)).status,401);
+ assert.equal((await teacher1.request(path+'?kind=C')).status,400);
+ assert.equal((await teacher2.request(path+'?classId='+classId)).status,404);
+ assert.equal((await teacher1.request(path,'GET',undefined,{'X-Student-Preview':s1})).status,403);
+ const result=await teacher1.request(path+'?kind=A&classId='+classId);assert.equal(result.status,200);
+ const count=await pool.query("SELECT count(*)::int AS total,count(a.submitted_at)::int AS submitted FROM students s LEFT JOIN attempts a ON a.student_id=s.user_id AND a.kind='A' WHERE s.class_id=$1",[classId]);
+ assert.equal(result.data.totalStudents,count.rows[0].total);assert.equal(result.data.submittedCount,count.rows[0].submitted);
+ assert.equal(result.data.pendingCount,count.rows[0].total-count.rows[0].submitted);
+ for(const group of result.data.groups){
+  assert.equal(group.questions.length,20);
+  assert.equal(group.questions[0].wrongStudents.length,group.questions[0].wrongCount);
+  assert.equal(group.submittedCount,group.students.length);
+ }
+ assert.equal((await teacher2.request(path)).data.totalStudents,0);
+ const post=await teacher1.request(path+'?kind=B');assert.equal(post.data.kind,'B');assert.ok(post.data.groups.every(g=>g.version==='v2'));
+});
 after(async()=>{
  if(server)await new Promise(r=>server.close(r));
  if(pool){

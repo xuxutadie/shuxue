@@ -33,7 +33,7 @@ function page() {
     document: { getElementById: element, addEventListener(){}, body: element('body') },
     window: { addEventListener(){} }, location: { hash: '#courses' }
   });
-  for (const file of ['figures.js', 'lesson-lab.js', 'games.js', 'teacher-flow.js', 'views.js', 'data-loader.js', 'app.js']) {
+  for (const file of ['figures.js', 'lesson-lab.js', 'games.js', 'teacher-flow.js', 'views.js', 'data-loader.js', 'exam-analysis.js','app.js']) {
     let source = fs.readFileSync('public/' + file, 'utf8');
     if (file === 'app.js') source = source.replace(/startSession\(\);\s*$/, '');
     vm.runInContext(source, context);
