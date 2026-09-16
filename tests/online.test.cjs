@@ -303,7 +303,19 @@ test('班级错题统计分卷分版本、空题单独计数且不纳入未交�
  assert.equal(result.groups[1].questions[0].text,bank.exams.v2.A[0].text);
  assert.equal(newest.questions.find(q=>q.number===1).text,bank.exams.v3.A[0].text);
  assert.equal(JSON.stringify(rows),snapshot);
- assert.deepEqual(summarizeExams([],'B'),{kind:'B',totalStudents:0,submittedCount:0,pendingCount:0,groups:[]});
+ assert.deepEqual(summarizeExams([],'B'),{kind:'B',totalStudents:0,submittedCount:0,pendingCount:0,students:[],groups:[]});
+});
+
+test('班级学情保留未交卷名册、前后测零分与缺测，并区分未布置和作答状态',()=>{
+ const {summarizeExams}=require('../server/exam-analysis');
+ const rows=[{user_id:'zero',name:'零分学生',submitted_at:new Date(),version:'v3',score:0,answers:Array(20).fill(''),correct:Array(20).fill(false),other_submitted_at:new Date(),other_score:60,other_version:'v2'},
+  {user_id:'not-assigned'},{user_id:'assigned',assigned:true},
+  {user_id:'working',attempt_id:'a',deadline:new Date(Date.now()+60000)},
+  {user_id:'expired',attempt_id:'b',deadline:new Date(Date.now()-60000)}];
+ const data=summarizeExams(rows,'A');assert.equal(data.students.length,5);assert.equal(data.pendingCount,4);
+ assert.deepEqual(data.students.map(p=>p.status),['submitted','unassigned','assigned','in_progress','overdue']);
+ assert.deepEqual(data.students[0].scores,{A:0,B:60});assert.deepEqual(data.students[1].scores,{A:null,B:null});
+ assert.equal(data.groups[0].submittedCount,1);assert.equal(data.groups[0].students[0].wrongNumbers.length,20);
 });
 test('错题分析接口只返回所属班级，学生及学生预览不能访问',async()=>{
  const path='/api/teacher/exam-analysis';
@@ -315,6 +327,8 @@ test('错题分析接口只返回所属班级，学生及学生预览不能访�
  const count=await pool.query("SELECT count(*)::int AS total,count(a.submitted_at)::int AS submitted FROM students s LEFT JOIN attempts a ON a.student_id=s.user_id AND a.kind='A' WHERE s.class_id=$1",[classId]);
  assert.equal(result.data.totalStudents,count.rows[0].total);assert.equal(result.data.submittedCount,count.rows[0].submitted);
  assert.equal(result.data.pendingCount,count.rows[0].total-count.rows[0].submitted);
+ assert.equal(result.data.students.length,result.data.totalStudents);
+ assert.ok(result.data.students.every(p=>p.scores&&p.status&&!('answers' in p)));
  for(const group of result.data.groups){
   assert.equal(group.questions.length,20);
   assert.equal(group.questions[0].wrongStudents.length,group.questions[0].wrongCount);

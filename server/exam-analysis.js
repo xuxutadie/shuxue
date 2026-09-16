@@ -31,6 +31,16 @@ function summarizeExams(rows, kind) {
  }
  const submittedCount=rows.filter(r=>r.submitted_at).length;
  return {kind,totalStudents:rows.length,submittedCount,pendingCount:rows.length-submittedCount,
+  // 面板需要全班名册，不能只列已交卷学生；仅返回展示用的成绩与状态。
+  students:rows.map(row=>{
+   const scores={A:null,B:null},scoreVersions={A:null,B:null};
+   if(row.submitted_at){scores[kind]=row.score;scoreVersions[kind]=row.version;}
+   const other=kind==='A'?'B':'A';
+   if(row.other_submitted_at){scores[other]=row.other_score;scoreVersions[other]=row.other_version;}
+   return {id:row.user_id,name:row.name,username:row.username,className:row.class_name,accountDisabled:row.account_disabled===true,
+    version:row.version||null,scores,scoreVersions,
+    status:row.submitted_at?'submitted':row.attempt_id?(new Date(row.deadline)<=new Date()?'overdue':'in_progress'):row.assigned?'assigned':'unassigned'};
+  }),
   groups:[...groups.values()].sort((a,b)=>Number(b.version===currentExamVersions[kind])-Number(a.version===currentExamVersions[kind])||b.version.localeCompare(a.version))};
 }
 
@@ -43,9 +53,12 @@ async function examAnalysis(pool,user,query){
  }
  // 一次联表读取整班，不逐个请求学生档案，避免拖慢工作台。
  const rows=(await pool.query(`SELECT s.user_id,(s.data->>'accountDisabled'='true') AS account_disabled,u.name,u.username,c.name AS class_name,
-  a.version,a.submitted_at,a.score,a.correct,a.answers
+  a.id AS attempt_id,a.deadline,a.version,a.submitted_at,a.score,a.correct,a.answers,assignment.enabled AS assigned,
+  other.score AS other_score,other.version AS other_version,other.submitted_at AS other_submitted_at
   FROM students s JOIN users u ON u.id=s.user_id JOIN classes c ON c.id=s.class_id
   LEFT JOIN attempts a ON a.student_id=s.user_id AND a.kind=$2
+  LEFT JOIN attempts other ON other.student_id=s.user_id AND other.kind<>$2
+  LEFT JOIN assignments assignment ON assignment.student_id=s.user_id AND assignment.kind=$2
   WHERE c.teacher_id=$1 ${classId?'AND c.id=$3':''} ORDER BY u.name,u.username`,classId?[user.id,kind,classId]:[user.id,kind])).rows;
  return summarizeExams(rows,kind);
 }
