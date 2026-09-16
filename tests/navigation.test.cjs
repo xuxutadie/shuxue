@@ -86,3 +86,14 @@ test('真实页面切换各教学环节不再重复请求；保存后重新读�
  assert.equal(p.calls.filter(x => x.url === '/api/content').length, 1);
  assert.equal(p.calls.filter(x => x.url === '/api/teacher/overview').length, 2);
 });
+
+test('学生测评并入练习页，旧入口兼容，测评与错题不出现课程筛选',async()=>{
+ const p=page();p.context.material={lessons:lessons(false),flow:bank.flow,testFlow:bank.testFlow};
+ p.run("teacher=false;user={id:'student-one',role:'student',name:'学生'};var learner={id:'student-one',name:'学生',completed:[],practice:{},talk:{},notes:{},games:{},history:[],exams:{},drafts:{},assignments:{},settings:{dates:{},videos:{}}};api=async url=>url==='/api/content'?material:learner;");
+ p.context.location.hash='#exams';await p.run('render()');assert.equal(p.context.location.hash,'practice/exams');
+ p.context.location.hash='#practice/exams';await p.run('render()');
+ const html=p.element('main').innerHTML;
+ assert.match(html,/前测 A 卷/);assert.match(html,/后测 B 卷/);assert.equal((html.match(/<h1>/g)||[]).length,1);assert.doesNotMatch(html,/id="practice-course"/);
+ assert.doesNotMatch(p.element('nav').innerHTML,/#exams/);assert.match(p.element('nav').innerHTML,/#practice/);
+ p.context.location.hash='#practice/wrong';await p.run('render()');assert.match(p.element('main').innerHTML,/id="exam-wrong-list"/);assert.doesNotMatch(p.element('main').innerHTML,/id="practice-course"/);
+});

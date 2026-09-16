@@ -28,6 +28,33 @@ test('26道变式有独立作答字段，学生字段隐藏答案，集合题支
  assert.equal(variants(bank.lessons[0],0)[0].version,material[0].variantPractice[0].version);
 });
 
+function wrongUi(){
+ const {context,run}=ui(),root={id:'exam-wrong-list',isConnected:true,innerHTML:''};
+ Object.assign(context,{user:{id:'teacher'},previewStudentId:'student-one',student:{id:'student-one',exams:{A:{},B:{}}},pupil:()=>context.student});
+ context.document.getElementById=()=>root;
+ vm.runInContext(fs.readFileSync('public/practice-workspace.js','utf8'),context);
+ return {context,run,root};
+}
+test('测评错题使用原卷题干与图片，收集错误和空题，讲评未开放不泄漏且不显示零道',()=>{
+ const {context,run}=wrongUi();
+ context.sample={record:{kind:'A',version:'v2',date:'2026-09-01',released:true,correct:[false,true,false],answers:['<旧答案>','正确','']},questions:bank.exams.v2.A.slice(0,3)};
+ const html=run("examWrongSection(sample,'A')");
+ assert.match(html,/2 道错题/);assert.ok(html.includes(bank.exams.v2.A[0].text));assert.ok(!html.includes(bank.exams.v3.A[0].text));
+ assert.ok(html.includes(bank.exams.v2.A[2].svg));assert.match(html,/未作答/);assert.match(html,/&lt;旧答案&gt;/);assert.doesNotMatch(html,/第2题/);
+ context.sample.record.released=false;
+ const locked=run("examWrongSection(sample,'A')");assert.match(locked,/等待老师开放讲评/);assert.doesNotMatch(locked,/0 道|正确答案|第1题/);
+ assert.ok(!locked.includes(context.sample.questions[0].explain));
+});
+test('测评错题部分加载失败可重试，不覆盖成功试卷，换学生后的迟到响应被丢弃',async()=>{
+ const {context,run,root}=wrongUi();
+ context.api=async url=>{if(url.endsWith('/B'))throw Error('断网');return {record:{date:'2026-09-01',released:false}};};
+ await run('loadExamWrongQuestions()');assert.match(root.innerHTML,/前测 A 卷已交卷/);assert.match(root.innerHTML,/后测 B 卷暂时未能加载/);assert.match(root.innerHTML,/data-exam-wrong-retry/);assert.doesNotMatch(root.innerHTML,/0 道/);
+ let finish;context.student.exams={A:{}};context.api=()=>new Promise(resolve=>{finish=resolve;});root.innerHTML='新学生页面';
+ const loading=run('loadExamWrongQuestions()');context.previewStudentId='student-two';finish({record:{date:'2026-09-01',released:false}});await loading;
+ assert.equal(root.innerHTML,'新学生页面');
+ context.student.exams={};await run('loadExamWrongQuestions()');assert.match(root.innerHTML,/还没有已提交的测评/);
+});
+
 test('学生固定题、变式、AI拔高和错题共用练习空间，按课衔接并隔离预览记录',()=>{
  const {context,run}=ui();Object.assign(context,{LESSONS:lessons(false),teacher:false,previewStudentId:null,lessonTab:'work',dateOf:()=>'',
   title:(name,description,extra='')=>`<h1>${name}</h1><p>${description}</p>${extra}`,

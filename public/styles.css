@@ -77,3 +77,6 @@ body{background:var(--paper);font-family:"Microsoft YaHei","PingFang SC",sans-se
 .classroom-projection .teaching-steps{font-size:15px}
 @media(max-width:700px){.starter-grid{grid-template-columns:1fr}.teaching-toolbar{align-items:flex-start;flex-direction:column}.teaching-steps a{font-size:14px}.classroom-projection .problem-stem{font-size:21px}.classroom-projection main{padding:14px!important}}
 @media print{.teacher-starter,.teacher-entry,.teaching-toolbar,.teaching-steps,.teaching-next{display:none!important}}
+
+/* 侧栏按内容保持完整高度，矮窗口允许滚动，避免底部卡片被弹性布局挤扁。 */
+@media(min-width:761px){.sidebar{overflow-y:auto;overflow-x:hidden}.sidebar>*{flex-shrink:0}.side-bottom{margin-top:auto;min-height:205px}.sidebar nav{padding-bottom:20px}}
