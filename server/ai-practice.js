@@ -174,4 +174,4 @@ function setupAiPractice(app, pool, options = {}) {
   res.json({ questions: await history(pool, req.params.id, req.user.id) });
  });
 }
-module.exports = { setupAiPractice, publicQuestion };
+module.exports = { setupAiPractice, publicQuestion, allowed, reserve, refund, limiter, examGuard };

@@ -6,7 +6,11 @@ function database(connectionString = process.env.DATABASE_URL) {
   return new Pool({ connectionString, max: 10, connectionTimeoutMillis: 5000 });
 }
 async function migrate(pool) {
-  await pool.query(fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8'));
+  // 多个实例同时启动时串行建表，避免 IF NOT EXISTS 的系统目录竞争。
+  await transaction(pool, async db => {
+    await db.query('SELECT pg_advisory_xact_lock(726031,1)');
+    await db.query(fs.readFileSync(path.join(__dirname, 'schema.sql'), 'utf8'));
+  });
 }
 async function transaction(pool, action) {
   const client = await pool.connect();

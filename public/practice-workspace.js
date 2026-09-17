@@ -8,14 +8,15 @@ function variantQuestion(q,i,j,number){
  const saved=practiceRecord(i,{q,j,type:'variant'}),key=i+'-'+j;
  return `<div class="question variant-exercise" id="variant-${key}"><span class="tag">变式练习 · 第${number}题</span><p class="qtext">${changedStem(q.text,q.changed)}</p><p class="tiny">填写结果；题目要求的解释、画图或列举过程写在草稿纸上。红字标出改变的条件。</p><form id="variant-form-${key}" data-variant-form data-lesson="${i}" data-question="${j}">${q.inputs.map((f,k)=>`<div class="field"><label for="variant-${key}-${k}">${esc(f.label)}</label>${f.options?`<select id="variant-${key}-${k}" name="answer${k}" required><option value="">请选择</option>${f.options.map(o=>`<option value="${esc(o)}" ${saved?.answers[k]===o?'selected':''}>${esc(o)}</option>`).join('')}</select>`:`<input id="variant-${key}-${k}" name="answer${k}" value="${esc(saved?.answers[k]||'')}" maxlength="200" autocomplete="off" required>`}</div>`).join('')}<button type="submit">检查答案</button><p class="form-error" role="alert"></p></form><div class="variant-feedback" role="status">${saved?`<p class="answer">${saved.correct?'✓ 结果正确，请再检查草稿中的理由。':'还需要再想一想。'}</p>`:''}</div></div>`;
 }
-function practiceTabs(){return `<div class="tabs" role="group" aria-label="练习环节">${[['work','独立练习'],['ai','AI 拔高'],['exams','测评挑战'],['wrong','我的错题']].map(([id,label])=>`<button type="button" class="${practiceTab===id?'active':''}" data-practice-tab="${id}">${label}</button>`).join('')}</div>`;}
+function practiceTabs(){return `<div class="tabs" role="group" aria-label="练习环节">${[['work','独立练习'],['ai','AI 拔高'],['exams','测评挑战'],['homework','老师作业'],['wrong','我的错题']].map(([id,label])=>`<button type="button" class="${practiceTab===id?'active':''}" data-practice-tab="${id}">${label}</button>`).join('')}</div>`;}
 function studentPracticePanel(i){
  practiceCourse=i;const progress=practiceProgress(i),items=practiceItems(i);practiceIndex=Math.max(0,Math.min(practiceIndex,items.length-1));
  let content;
  if(practiceTab==='ai'){
   const canEnter=progress.done===progress.total||!!previewStudentId;
   content=canEnter?aiPracticePage({embedded:true,course:i,difficulty:3}):`<section class="panel"><h2>完成本课练习，再挑战 AI 拔高题</h2><p>已尝试 ${progress.done} / ${progress.total} 题。剩余题目完成后，就能在这里生成本课的新题。</p><button type="button" data-practice-tab="work">继续独立练习</button></section>`;
- }else if(practiceTab==='wrong')content=practiceWrongList();
+ }else if(practiceTab==='homework')content=homeworkUI.page(location.hash.startsWith('#practice/homework/')?location.hash.split('/')[2]:'');
+ else if(practiceTab==='wrong')content=practiceWrongList();
  else if(practiceTab==='exams')content=examsPage(true);
  else{
   const item=items[practiceIndex];

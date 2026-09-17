@@ -21,6 +21,12 @@ async function main() {
  await pool.query('INSERT INTO students(user_id,class_id) VALUES($1,$2) ON CONFLICT DO NOTHING', [people[1], classId]);
  await pool.query("INSERT INTO ai_settings(teacher_id,endpoint,model,key_cipher,enabled,daily_limit) VALUES($1,'https://api.example.com/v1/chat/completions','local-mock-only',$2,true,100) ON CONFLICT(teacher_id) DO UPDATE SET key_cipher=EXCLUDED.key_cipher,enabled=true,daily_limit=100", [people[0], encrypt('not-a-real-api-key')]);
  let seed = 430;
- createApp(pool, { aiRequest: async (config, body) => ({ choices: [{ message: { content: JSON.stringify({ seeds: Array.from({ length: Number(body.messages[1].content.match(/需要(\d)/)[1]) }, () => ++seed) }) } }] }) }).listen(8772, '127.0.0.1', () => console.log('模拟AI浏览器验收已启动：8772；不连接付费接口。'));
+ createApp(pool, { aiRequest: async (config, body) => {
+  const request = body.messages[1].content;
+  const result = request.startsWith('{') ? { questions: Array.from({ length: JSON.parse(request).题数 }, (_, i) => ({
+   text: `计算：4.8×${25+i}＋4.8×${75-i}＝（　）。请填写计算结果。`, answer: '480', unit: '', explain: `两项都含有4.8，用乘法分配律合并：4.8×(${25+i}＋${75-i})＝4.8×100＝480。`
+  })) } : { seeds: Array.from({ length: Number(request.match(/需要(\d)/)[1]) }, () => ++seed) };
+  return { choices: [{ message: { content: JSON.stringify(result) } }] };
+ } }).listen(8772, '127.0.0.1', () => console.log('模拟AI浏览器验收已启动：8772；不连接付费接口。'));
 }
 main().catch(error => { console.error(error.code || error.name); process.exitCode = 1; });

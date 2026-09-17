@@ -19,6 +19,7 @@ function createApp(pool, options = {}) {
   require('./student-preview').setupStudentPreview(app, pool);
   setupLearning(app, pool); setupExams(app, pool); setupTeacher(app, pool);
   setupAiPractice(app, pool, options);
+  require('./homework').setupHomework(app, pool, options);
   app.use('/api', (req, res) => res.status(404).json({ error: '接口不存在。' }));
   // 严格限定静态目录；开发文件、完整答案和本地备份不能经网站下载。
   app.use(express.static(path.join(__dirname, '..', 'public'), { dotfiles: 'deny', maxAge: 0 }));

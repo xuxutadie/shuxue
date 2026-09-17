@@ -61,3 +61,21 @@ CREATE TABLE IF NOT EXISTS ai_submissions (
 );
 CREATE INDEX IF NOT EXISTS ai_submissions_question_date ON ai_submissions(question_id,created_at);
 INSERT INTO migrations(name) VALUES('002-guided-practice') ON CONFLICT DO NOTHING;
+
+-- 变式作业独立于正式测评：发布后题目冻结，学生记录随账号级联清理。
+CREATE TABLE IF NOT EXISTS homework (
+ id uuid PRIMARY KEY, teacher_id uuid NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+ title text NOT NULL, source jsonb NOT NULL, questions jsonb NOT NULL DEFAULT '[]',
+ recipient_selection uuid[] NOT NULL DEFAULT '{}', due_at timestamptz,
+ status text NOT NULL DEFAULT 'draft' CHECK(status IN ('draft','published')),
+ revision integer NOT NULL DEFAULT 0, created_at timestamptz NOT NULL DEFAULT now(), published_at timestamptz
+);
+CREATE INDEX IF NOT EXISTS homework_teacher_date ON homework(teacher_id,created_at DESC);
+CREATE TABLE IF NOT EXISTS homework_students (
+ homework_id uuid NOT NULL REFERENCES homework(id) ON DELETE CASCADE,
+ student_id uuid NOT NULL REFERENCES students(user_id) ON DELETE CASCADE,
+ original_correct boolean, records jsonb NOT NULL DEFAULT '{}', completed_at timestamptz,
+ PRIMARY KEY(homework_id,student_id)
+);
+CREATE INDEX IF NOT EXISTS homework_students_student ON homework_students(student_id);
+INSERT INTO migrations(name) VALUES('003-variant-homework') ON CONFLICT DO NOTHING;

@@ -65,7 +65,7 @@ function page() {
    return { ok: true, json: async () => url === '/api/content' ? material : url === '/api/teacher/overview' ? { classes: [], students: [] } : { ok: true } };
   }, document: { getElementById: element, addEventListener(name, handler){ listeners.set(name, handler); }, body: element('body') },
   window: { addEventListener(){} }, location: { hash: '#courses' } });
- for (const name of ['course-videos.js', 'figures.js', 'lesson-lab.js', 'games.js', 'teacher-flow.js', 'views.js', 'data-loader.js', 'class-dashboard.js','exam-analysis.js','practice-workspace.js','app.js']) {
+ for (const name of ['course-videos.js', 'figures.js', 'lesson-lab.js', 'games.js', 'teacher-flow.js', 'views.js', 'data-loader.js', 'class-dashboard.js','exam-analysis.js','practice-workspace.js','homework-text.js','homework.js','app.js']) {
   vm.runInContext(fs.readFileSync('public/' + name, 'utf8').replace(/^startSession\(\);/m, ''), context);
  }
  const run = code => vm.runInContext(code, context);
@@ -96,4 +96,28 @@ test('学生测评并入练习页，旧入口兼容，测评与错题不出现�
  assert.match(html,/前测 A 卷/);assert.match(html,/后测 B 卷/);assert.equal((html.match(/<h1>/g)||[]).length,1);assert.doesNotMatch(html,/id="practice-course"/);
  assert.doesNotMatch(p.element('nav').innerHTML,/#exams/);assert.match(p.element('nav').innerHTML,/#practice/);
  p.context.location.hash='#practice/wrong';await p.run('render()');assert.match(p.element('main').innerHTML,/id="exam-wrong-list"/);assert.doesNotMatch(p.element('main').innerHTML,/id="practice-course"/);
+});
+
+test('教师切换学生后使用与学生直接登录相同的页面外观，只额外显示返回教师端',()=>{
+ const p=page();
+ p.run(`var learner={id:'student-one',username:'xiaoming',name:'小明',className:'五年级思维班',completed:[],practice:{},talk:{},notes:{},games:{},history:[],exams:{},drafts:{},assignments:{},settings:{dates:{},videos:{}}};
+   route='home';state.students=[learner];state.current=learner.id;overview={classes:[],students:[learner]};`);
+ const view=()=>JSON.parse(p.run(`JSON.stringify({
+   nav:document.getElementById('nav').innerHTML,
+   role:document.getElementById('role-badge').textContent,
+   identity:document.getElementById('identity').textContent,
+   selectorHidden:document.getElementById('student').hidden,
+   refreshHidden:document.getElementById('refresh-data').hidden,
+   accountHidden:document.getElementById('account-button').hidden,
+   logoutHidden:document.getElementById('logout').hidden,
+   bannerHidden:document.getElementById('student-preview-banner').hidden
+ })`));
+ p.run(`user={id:learner.id,username:learner.username,role:'student',name:learner.name,mustChange:false};teacher=false;previewStudentId=null;shell();`);
+ const studentView=view(),studentAccount=p.run('passwordView()');
+ p.run(`user={id:'teacher-one',username:'teacher',role:'teacher',name:'老师',mustChange:false};teacher=false;previewStudentId=learner.id;shell();`);
+ assert.deepEqual(view(),studentView);
+ assert.equal(p.element('student-preview-toggle').hidden,false);
+ assert.equal(p.element('student-preview-toggle').textContent,'返回教师端');
+ assert.equal(p.element('student-preview-banner').innerHTML,'');
+ assert.equal(p.run('passwordView()'),studentAccount);
 });
