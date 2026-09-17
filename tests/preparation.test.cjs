@@ -207,3 +207,54 @@ test('学生练习每次只出一道题，移除母题讲解和预先展开的�
   assert.doesNotMatch(independent,/参考答案：|解题步骤：|查看本题解析/);
   for(const question of bank.lessons[0].practice)assert.ok(!independent.includes(question.explain));
 });
+
+test('第二课知识讲解先完成三道递增复习题，其他课程不出现该环节', async () => {
+  const {context,element}=page();
+  vm.runInContext(`teacher=false;user={id:'student',role:'student',name:'学生',mustChange:false};
+    const learner={id:'student',name:'学生',completed:[],practice:{},talk:{},notes:{},games:{},history:[],settings:{dates:{},videos:{}}};
+    api=async url=>url==='/api/content'?content:learner;`,context);
+
+  context.location.hash='#lesson/1/learn';await vm.runInContext('render()',context);
+  const lessonTwo=element('main').innerHTML;
+  assert.match(lessonTwo,/上节课回顾 · 3题热身/);
+  assert.match(lessonTwo,/第 1 \/ 3 题 · 基础计算/);
+  assert.match(lessonTwo,/3盒彩笔和2把尺子共28元/);
+  assert.ok(lessonTwo.indexOf('上节课回顾 · 3题热身')<lessonTwo.indexOf('这节课往前走一步'));
+  assert.doesNotMatch(lessonTwo,/课前回顾参考答案|参考答案：4元|每把尺子4元/);
+
+  for(const lesson of [0,2]){
+    context.location.hash=`#lesson/${lesson}/learn`;await vm.runInContext('render()',context);
+    assert.doesNotMatch(element('main').innerHTML,/上节课回顾 · 3题热身/);
+  }
+});
+
+test('课前回顾检查答案但学生反馈不泄露标准答案', () => {
+  const {context}=page();
+  assert.equal(vm.runInContext("lessonWarmupCheck(0,'4元','')",context).status,'correct');
+  const firstWrong=vm.runInContext("lessonWarmupCheck(0,'5','')",context);
+  assert.equal(firstWrong.status,'wrong');
+  assert.match(firstWrong.message,/哪一种物品数量完全相同/);
+  assert.doesNotMatch(firstWrong.message,/4元|答案/);
+
+  assert.equal(vm.runInContext("lessonWarmupCheck(1,'yes','')",context).status,'incomplete');
+  assert.equal(vm.runInContext("lessonWarmupCheck(1,'yes','对应数量和总价分别相减')",context).status,'correct');
+  const thirdWrong=vm.runInContext("lessonWarmupCheck(2,'35','')",context);
+  assert.equal(thirdWrong.status,'wrong');
+  assert.doesNotMatch(thirdWrong.message,/40元|答案/);
+
+  vm.runInContext('lessonId=1',context);
+  const finished=vm.runInContext('lessonWarmupPanel(3)',context);
+  assert.match(finished,/三题热身完成/);
+  assert.match(finished,/如果既不能直接消去/);
+  assert.doesNotMatch(finished,/参考答案|4元|40元/);
+});
+
+test('第二课教师教案单独提供课前回顾答案和讲解', async () => {
+  const {context,element}=page();
+  context.location.hash='#lesson/1/guide';await vm.runInContext('render()',context);
+  const html=element('main').innerHTML;
+  assert.match(html,/课前回顾参考答案/);
+  assert.match(html,/每把尺子4元/);
+  assert.match(html,/1张成人票和1张儿童票共40元/);
+  assert.ok(html.indexOf('课前回顾参考答案')<html.indexOf('本课母题'));
+});

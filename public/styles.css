@@ -50,6 +50,13 @@ body{background:var(--paper);font-family:"Microsoft YaHei","PingFang SC",sans-se
 .video-teacher-guide{margin-top:20px;padding:16px;border-radius:16px;background:#fff0c1}
 @media(max-width:600px){.course-video .section-head{align-items:flex-start;flex-direction:column}.course-video video{border-radius:12px}.chapter-buttons{gap:8px}.chapter-buttons button{width:100%}}
 @media print{.course-video video,.video-help,.video-chapters{display:none}.course-video{break-inside:avoid}}
+/* 第二课课前回顾：逐题解锁，错误时只显示方向提示。 */
+.lesson-warmup{background:linear-gradient(135deg,#fff4b8,#ffe8f1 48%,#e7f7ff);border:2px solid var(--outline);box-shadow:5px 5px 0 #9f83e3;margin-bottom:24px}
+.lesson-warmup h2{margin:12px 0 0}.warmup-progress{padding:8px 13px;border:2px solid var(--outline);border-radius:999px;background:#fff;font-weight:800;white-space:nowrap}
+.warmup-card{margin-top:22px;padding:22px;border:1.5px solid var(--outline);border-radius:18px;background:#fffdf8}.warmup-card h3{margin-top:0}.warmup-fields{display:grid;gap:10px;max-width:720px;margin:20px 0}.warmup-fields input,.warmup-fields select,.warmup-fields textarea{width:100%;background:white}.warmup-fields textarea{min-height:88px}.warmup-feedback{padding:12px 15px;border-radius:12px;background:#e9f6ff}.warmup-feedback.is-hint{background:#fff0c9;color:#6c4a12}.lesson-warmup.is-complete{background:linear-gradient(135deg,#dcf8e7,#e6f4ff,#efe6ff)}
+.warmup-guide{background:#f4efff;border:2px solid #604b91}.warmup-guide>.guide-step{background:white}.warmup-guide .guide-step h3{margin-top:0;padding-top:0;border:0}
+@media(max-width:600px){.lesson-warmup .section-head{align-items:flex-start;gap:12px}.warmup-card{padding:16px}.warmup-progress{font-size:12px}}
+@media print{.lesson-warmup button,.lesson-warmup input,.lesson-warmup select,.lesson-warmup textarea{display:none}.warmup-guide{break-inside:auto}.warmup-guide .guide-step{break-inside:avoid}}
 /* 新教师引导与授课视图：投屏时减少干扰，教师记录始终留在教师视图。 */
 .teacher-starter{background:#eee7ff;border:2px solid #393248}
 .starter-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}

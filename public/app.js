@@ -178,6 +178,13 @@ document.addEventListener('click',async event=>{
   if(action==='teacher-open')location.hash='teacher';if(action==='exams-open')location.hash='exams';if(action==='view-student')location.hash='student/'+b.dataset.student;
   if(action==='slide-prev'||action==='slide-next'){stopPlayer();slide=Math.max(0,Math.min(LESSONS[lessonId].steps.length-1,slide+(action==='slide-next'?1:-1)));document.getElementById('stage').innerHTML=stageView();document.getElementById('slide-count').textContent=`${slide+1} / ${LESSONS[lessonId].steps.length}`;}
   if(action==='slide-play'){if(playTimer)stopPlayer();else{b.textContent='暂停播放';playTimer=setInterval(()=>{slide=(slide+1)%LESSONS[lessonId].steps.length;document.getElementById('stage').innerHTML=stageView();document.getElementById('slide-count').textContent=`${slide+1} / ${LESSONS[lessonId].steps.length}`;},12000);}}
+  if(action==='warmup-check'){
+   const q=Number(b.dataset.q),answer=document.getElementById('warmup-answer-'+q)?.value||'',reason=document.getElementById('warmup-reason-'+q)?.value||'',result=lessonWarmupCheck(q,answer,reason),feedback=document.getElementById('warmup-feedback');
+   if(result.status==='correct'){
+    const next=Math.min(LESSON_TWO_WARMUP.length,q+1),panel=document.getElementById('lesson-warmup');if(panel)panel.outerHTML=lessonWarmupPanel(next);
+    toast(next===LESSON_TWO_WARMUP.length?'三题热身完成，可以开始第二课。':'答对了，继续下一题。');
+   }else if(feedback){feedback.textContent=result.message;feedback.className=`warmup-feedback ${result.status==='wrong'?'is-hint':''}`;}
+  }
   if(action==='complete'){await api(`/api/students/${pupil().id}/lessons/${lessonId}`,{method:'PUT',body:{completed:!pupil().completed.includes(lessonId)}});await render();}
   if(action==='talk-save'){const body=teacher?{level:document.getElementById('talk-level').value}:{prep:document.getElementById('talk-notes').value};await api(`/api/students/${pupil().id}/lessons/${lessonId}`,{method:'PUT',body});if(teacher){pupil().talk[lessonId]={...pupil().talk[lessonId],...body};}toast(teacher?`${pupil().name}的讲课评价已保存。`:'讲课准备已保存。');}
   if(action==='note-save'){await api(`/api/students/${pupil().id}/lessons/${lessonId}`,{method:'PUT',body:{note:document.getElementById('lesson-note').value}});toast(`${pupil().name}的课堂记录已保存。`);}

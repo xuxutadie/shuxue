@@ -46,6 +46,36 @@ function lesson(){
  `${teacher?`<section class="panel teacher-entry">${teachingLink()}<p>备课看详细资料，课堂按步骤推进。${pupil()?'上方完成按钮只记录当前所选学生。':'当前是备课预览。'}</p>${recordIdentity()}</section>`:''}<div class="notice lesson-path">课堂路线：老师讲解并操作动画 → 学生动手验证 → 小老师上台讲 → 收起提示独立练习${[0,10].includes(lessonId)?'<br><b>本课先完成45分钟独立测评并交卷，再开始下面的教学环节。</b>':''}</div>
  <div class="tabs" role="group" aria-label="课堂环节">${[['learn','① 知识讲解'],['game','② 互动验证'],['talk','③ 小老师讲堂'],['work','④ 独立练习'],...(teacher?[['guide','教师教案']]:[])].map(([id,label])=>button(label,'lesson-tab',lessonTab===id?'active':'',`data-tab="${id}"`)).join('')}</div><div id="lesson-body">${lessonBody()}</div>`;
 }
+
+// 第二课先复习第一课。学生只会看到当前题与思路提示，标准答案只进入教师教案。
+const LESSON_TWO_WARMUP=[
+ {level:'基础计算',question:'同样的盒彩笔和尺子单价不变。3盒彩笔和2把尺子共28元，3盒彩笔和5把尺子共40元。每把尺子多少元？',kind:'number',correct:'4',hint:'先比较两次购买中，哪一种物品数量完全相同。'},
+ {level:'判断说明',question:'2个文具盒和3支钢笔共31元，4个文具盒和5支钢笔共57元。小明将两组条件对应相减，写成“2个文具盒和2支钢笔共26元”。他的这一步正确吗？请说明理由。',kind:'reason',correct:'yes',hint:'把第二组里每一种物品的数量和总价，都分别减去第一组，检查剩下的量是否仍然对应。'},
+ {level:'整体探究',question:'2张成人票和3张儿童票共96元，3张成人票和2张儿童票共104元。不分别计算两种票的单价，求1张成人票和1张儿童票共多少元。',kind:'number',correct:'40',hint:'试着把两组条件合在一起，看一共组成了几组“1张成人票＋1张儿童票”。'}
+];
+function lessonWarmupCheck(index,answer,reason=''){
+ const item=LESSON_TWO_WARMUP[index];
+ if(!item)return {status:'incomplete',message:'请从当前题开始。'};
+ const value=String(answer||'').trim();
+ if(!value)return {status:'incomplete',message:'先写下你的判断或计算结果。'};
+ if(item.kind==='reason'){
+  if(value!==item.correct)return {status:'wrong',message:item.hint};
+  if(String(reason||'').trim().length<4)return {status:'incomplete',message:'再用一句话写出你的理由，然后检查。'};
+  return {status:'correct',message:'判断和理由已经完成，可以进入下一题。'};
+ }
+ const normalized=value.replace(/[元克张把盒支本个\s]/g,'');
+ return normalized===item.correct?{status:'correct',message:'回答正确，可以进入下一题。'}:{status:'wrong',message:item.hint};
+}
+function lessonWarmupPanel(step=0){
+ if(lessonId!==1)return '';
+ if(step>=LESSON_TWO_WARMUP.length)return `<section class="panel lesson-warmup is-complete" id="lesson-warmup"><span class="tag">三题热身完成</span><h2>第一课的方法已经准备好了</h2><p>如果既不能直接消去，也不适合直接求整体，该怎么办？带着这个问题进入第二课。</p></section>`;
+ const item=LESSON_TWO_WARMUP[step],field=item.kind==='reason'?`<label for="warmup-answer-${step}">先判断</label><select id="warmup-answer-${step}"><option value="">请选择</option><option value="yes">正确</option><option value="no">不正确</option></select><label for="warmup-reason-${step}">再用一句话说明理由</label><textarea id="warmup-reason-${step}" rows="3" placeholder="我这样判断是因为……"></textarea>`:`<label for="warmup-answer-${step}">写下结果</label><input id="warmup-answer-${step}" inputmode="decimal" autocomplete="off" placeholder="可以填写单位">`;
+ return `<section class="panel lesson-warmup" id="lesson-warmup"><div class="section-head"><div><span class="tag">上节课回顾 · 3题热身</span><h2>先唤醒第一课的方法</h2></div><span class="warmup-progress">已完成 ${step} / 3</span></div><article class="warmup-card"><h3>第 ${step+1} / 3 题 · ${item.level}</h3><p class="problem-stem">${item.question}</p><div class="warmup-fields">${field}</div><div class="controls">${button('检查并继续','warmup-check','',`data-q="${step}"`)}</div><p class="warmup-feedback" id="warmup-feedback" role="status">先在草稿纸上完成，再检查。</p></article><p class="tiny">答错时只会获得思路提示，不会直接显示标准答案。</p></section>`;
+}
+function lessonWarmupGuide(){
+ if(lessonId!==1)return '';
+ return `<section class="panel warmup-guide teacher-private"><span class="tag">第二课专用 · 教师可见</span><h2>课前回顾参考答案</h2><p>学生端逐题作答，只给方向提示。建议每题先留出独立思考时间，再根据学生表达追问。</p><article class="guide-step"><h3>第1题 · 基础计算</h3><p>${LESSON_TWO_WARMUP[0].question}</p><p><b>答案：</b>每把尺子4元。</p><p>两组都含3盒彩笔，相减后得到3把尺子共12元，所以每把尺子4元。</p></article><article class="guide-step"><h3>第2题 · 判断说明</h3><p>${LESSON_TWO_WARMUP[1].question}</p><p><b>答案：</b>这一步正确。</p><p>两组条件对应相减后，物品数量与总价同时相减，得到的整体关系仍然成立；但仅凭这一条关系还不能分别求出两种单价。</p></article><article class="guide-step"><h3>第3题 · 整体探究</h3><p>${LESSON_TWO_WARMUP[2].question}</p><p><b>答案：</b>1张成人票和1张儿童票共40元。</p><p>两组条件相加得到5张成人票和5张儿童票共200元，也就是5组相同组合共200元，所以每组40元。</p></article></section>`;
+}
 function lessonBody(){
  const l=LESSONS[lessonId],d=l.detail;
  if(!teacher&&lessonTab==='work')return studentPracticePanel(lessonId);
@@ -53,7 +83,7 @@ function lessonBody(){
  if(lessonTab==='work')return motherProblem(l)+variantsView(l)+`<section class="panel"><h2>需要更多同类练习？</h2><p>AI 练习只提供解题引导，不直接给答案。先尝试，再按需要请求下一步提示。</p><a href="#ai-practice">AI 引导练习 →</a></section>`+`<section class="panel"><h2>独立练习 · 先尝试，再检查</h2><p class="muted">母题与变式用于示范和再练；下方3题用于独立检查，保存到个人练习记录。请收起动画、答案和示范稿，在草稿纸上完成后再提交。</p>${l.practice.map((q,j)=>practiceQuestion(q,lessonId,j)).join('')}</section><section class="panel"><h2>练习结束，再回顾母题与变式</h2><p>先保留自己的解法，再返回知识讲解核对理由。</p>${button('回看本课讲解','lesson-tab','secondary','data-tab="learn"')}</section>`;
  if(lessonTab==='talk')return talkView();
  if(lessonTab==='guide')return guideView();
- return courseSequencePanel(l)+personalReviewPanel()+motherProblem(l)+courseVideoPanel()+`<section class="panel lesson-intro"><span class="tag">读完母题，再开始分析</span><h2>从题目中找出突破口</h2><p class="lead">${d.hook}</p><h3>对照题干，想一想</h3><ul>${d.check.map(x=>`<li>${x.split('｜')[0]}</li>`).join('')}</ul><p class="muted">先自己说或在草稿纸上写，老师听过以后再进入动画。</p></section>`+
+ return lessonWarmupPanel()+courseSequencePanel(l)+personalReviewPanel()+motherProblem(l)+courseVideoPanel()+`<section class="panel lesson-intro"><span class="tag">读完母题，再开始分析</span><h2>从题目中找出突破口</h2><p class="lead">${d.hook}</p><h3>对照题干，想一想</h3><ul>${d.check.map(x=>`<li>${x.split('｜')[0]}</li>`).join('')}</ul><p class="muted">先自己说或在草稿纸上写，老师听过以后再进入动画。</p></section>`+
  labView(lessonId)+
  `<div class="grid-two"><section class="panel"><div class="section-head"><h2>跟着例题，一步一步讲明白</h2><span class="tag">可手动翻页</span></div><div class="lesson-stage" id="stage">${stageView()}</div><div class="controls">${button('← 上一步','slide-prev','secondary')}${button('自动播放','slide-play','','id="slide-play"')}${button('下一步 →','slide-next','secondary')}<span id="slide-count" class="muted">${slide+1} / ${l.steps.length}</span></div><p class="tiny">图文步骤便于暂停复盘。 自动翻页每12秒一次，讲解时建议手动翻页。</p></section><section class="panel"><h2>把操作变成一个道理</h2><p>${d.concept}</p><h3>在草稿纸上留下这条路线</h3><p class="board-note">${d.board}</p><h3>特别留意</h3><p>${l.pitfall}</p></section></div>
  <section class="panel"><h2>回到完整母题，逐问检查</h2><p>返回上方母题卡，逐题展开答案，核对每一步对应的条件。</p></section>`+(teacher?variantsView(l):'')+`<section class="panel"><div class="controls">${button('我来操作验证 →','lesson-tab','','data-tab="game"')}${button('准备小老师讲堂','lesson-tab','secondary','data-tab="talk"')}</div></section>`;
@@ -76,7 +106,7 @@ function guideAction(name,l){
 function guideView(){
  const l=LESSONS[lessonId],d=l.detail,flow=[0,10].includes(lessonId)?TEST_FLOW:FLOW;
  let elapsed=0;
- return `<section class="panel guide-title"><div class="section-head"><h2>第${lessonId+1}课 · 教师教案</h2>${button('打印教案','print','secondary')}</div><p>先呈现完整母题，让学生读题与尝试，再进入下面的教学分析。</p></section>`+personalReviewPanel()+motherProblem(l)+courseVideoPanel()+`<section class="panel guide-page"><p><b>教学目标：</b>${l.goal}</p><p><b>本课递进：</b>${esc(d.sequenceNote||'')}</p><p><b>达成表现：</b>${d.exit}</p><p><b>前置知识：</b>${l.prereq}</p><p><b>材料：</b>白纸、彩笔、投屏或电脑；可用纸片代替动画中的物品。</p><p><b>核心概念：</b>${d.concept}</p><p><b>授课顺序：</b>先讲解与观察动画，再动手验证、准备讲课，最后学生上台与独立练习。共${flow.reduce((s,x)=>s+x[1],0)}分钟。</p>
+ return `<section class="panel guide-title"><div class="section-head"><h2>第${lessonId+1}课 · 教师教案</h2>${button('打印教案','print','secondary')}</div><p>先完成上节课回顾，再呈现完整母题，让学生读题与尝试。</p></section>`+lessonWarmupGuide()+personalReviewPanel()+motherProblem(l)+courseVideoPanel()+`<section class="panel guide-page"><p><b>教学目标：</b>${l.goal}</p><p><b>本课递进：</b>${esc(d.sequenceNote||'')}</p><p><b>达成表现：</b>${d.exit}</p><p><b>前置知识：</b>${l.prereq}</p><p><b>材料：</b>白纸、彩笔、投屏或电脑；可用纸片代替动画中的物品。</p><p><b>核心概念：</b>${d.concept}</p><p><b>授课顺序：</b>先讲解与观察动画，再动手验证、准备讲课，最后学生上台与独立练习。共${flow.reduce((s,x)=>s+x[1],0)}分钟。</p>
  <h3>一、开场与前置检查</h3><blockquote>${d.hook}</blockquote>${d.check.map(x=>{const [q,a]=x.split('｜');return `<p><b>问：</b>${q}<br><b>期望回应：</b>${a}</p>`;}).join('')}
  <h3>二、120分钟课堂安排</h3><div class="table-wrap"><table><thead><tr><th>时间 / 环节</th><th>教师怎样做</th><th>学生怎样参与</th><th>观察与检查</th></tr></thead><tbody>${flow.map(([name,minutes])=>{const start=elapsed;elapsed+=minutes;const parts=guideAction(name,l);return `<tr><td><b>${start}～${elapsed}分</b><br>${name}</td>${parts.map(x=>`<td>${x}</td>`).join('')}</tr>`;}).join('')}</tbody></table></div>
  <h3>三、例题逐步讲解（可直接按此授课）</h3>${l.steps.map((s,i)=>`<article class="guide-step"><span class="tag">第${i+1}步</span><h4>${s[0]}</h4><p><b>教师讲述：</b>${s[1]}</p><p class="formula">${s[2]}</p><p><b>停下来让学生做：</b>${['复述条件，并在图上指出已知与所求。','指着变化的部分，解释为什么可以这样处理。','说出算式中每个数对应的量与单位。','用自己的话重讲理由，再核对原条件。'][i%4]}</p></article>`).join('')}
