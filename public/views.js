@@ -47,34 +47,37 @@ function lesson(){
  <div class="tabs" role="group" aria-label="课堂环节">${[['learn','① 知识讲解'],['game','② 互动验证'],['talk','③ 小老师讲堂'],['work','④ 独立练习'],...(teacher?[['guide','教师教案']]:[])].map(([id,label])=>button(label,'lesson-tab',lessonTab===id?'active':'',`data-tab="${id}"`)).join('')}</div><div id="lesson-body">${lessonBody()}</div>`;
 }
 
-// 第二课先复习第一课。学生只会看到当前题与思路提示，标准答案只进入教师教案。
-const LESSON_TWO_WARMUP=[
- {level:'基础计算',question:'同样的盒彩笔和尺子单价不变。3盒彩笔和2把尺子共28元，3盒彩笔和5把尺子共40元。每把尺子多少元？',kind:'number',correct:'4',hint:'先比较两次购买中，哪一种物品数量完全相同。'},
- {level:'判断说明',question:'2个文具盒和3支钢笔共31元，4个文具盒和5支钢笔共57元。小明将两组条件对应相减，写成“2个文具盒和2支钢笔共26元”。他的这一步正确吗？请说明理由。',kind:'reason',correct:'yes',hint:'把第二组里每一种物品的数量和总价，都分别减去第一组，检查剩下的量是否仍然对应。'},
- {level:'整体探究',question:'2张成人票和3张儿童票共96元，3张成人票和2张儿童票共104元。不分别计算两种票的单价，求1张成人票和1张儿童票共多少元。',kind:'number',correct:'40',hint:'试着把两组条件合在一起，看一共组成了几组“1张成人票＋1张儿童票”。'}
-];
-function lessonWarmupCheck(index,answer,reason=''){
- const item=LESSON_TWO_WARMUP[index];
- if(!item)return {status:'incomplete',message:'请从当前题开始。'};
- const value=String(answer||'').trim();
- if(!value)return {status:'incomplete',message:'先写下你的判断或计算结果。'};
- if(item.kind==='reason'){
-  if(value!==item.correct)return {status:'wrong',message:item.hint};
-  if(String(reason||'').trim().length<4)return {status:'incomplete',message:'再用一句话写出你的理由，然后检查。'};
-  return {status:'correct',message:'判断和理由已经完成，可以进入下一题。'};
- }
- const normalized=value.replace(/[元克张把盒支本个\s]/g,'');
- return normalized===item.correct?{status:'correct',message:'回答正确，可以进入下一题。'}:{status:'wrong',message:item.hint};
-}
-function lessonWarmupPanel(step=0){
+// 第二课先复习第一课。题目来自登录后的课程接口，学生端不会收到标准答案。
+function lessonWarmupPanel(){
  if(lessonId!==1)return '';
- if(step>=LESSON_TWO_WARMUP.length)return `<section class="panel lesson-warmup is-complete" id="lesson-warmup"><span class="tag">三题热身完成</span><h2>第一课的方法已经准备好了</h2><p>如果既不能直接消去，也不适合直接求整体，该怎么办？带着这个问题进入第二课。</p></section>`;
- const item=LESSON_TWO_WARMUP[step],field=item.kind==='reason'?`<label for="warmup-answer-${step}">先判断</label><select id="warmup-answer-${step}"><option value="">请选择</option><option value="yes">正确</option><option value="no">不正确</option></select><label for="warmup-reason-${step}">再用一句话说明理由</label><textarea id="warmup-reason-${step}" rows="3" placeholder="我这样判断是因为……"></textarea>`:`<label for="warmup-answer-${step}">写下结果</label><input id="warmup-answer-${step}" inputmode="decimal" autocomplete="off" placeholder="可以填写单位">`;
- return `<section class="panel lesson-warmup" id="lesson-warmup"><div class="section-head"><div><span class="tag">上节课回顾 · 3题热身</span><h2>先唤醒第一课的方法</h2></div><span class="warmup-progress">已完成 ${step} / 3</span></div><article class="warmup-card"><h3>第 ${step+1} / 3 题 · ${item.level}</h3><p class="problem-stem">${item.question}</p><div class="warmup-fields">${field}</div><div class="controls">${button('检查并继续','warmup-check','',`data-q="${step}"`)}</div><p class="warmup-feedback" id="warmup-feedback" role="status">先在草稿纸上完成，再检查。</p></article><p class="tiny">答错时只会获得思路提示，不会直接显示标准答案。</p></section>`;
+ if(teacher)return warmupRecordPanel();
+ const warmup=LESSONS[1]?.warmup,record=pupil()?.warmups?.[1];
+ if(!warmup||record?.version===warmup.version&&record.completed)return '';
+ const step=warmup.questions.findIndex((_,index)=>!record?.questions?.[index]?.correct);
+ if(step<0)return '';
+ const item=warmup.questions[step],finished=Object.values(record?.questions||{}).filter(q=>q.correct).length;
+ const field=item.kind==='reason'?`<label for="warmup-answer-${step}">先判断</label><select id="warmup-answer-${step}"><option value="">请选择</option><option value="yes">正确</option><option value="no">不正确</option></select><label for="warmup-reason-${step}">再用一句话说明理由</label><textarea id="warmup-reason-${step}" rows="3" placeholder="我这样判断是因为……"></textarea>`:`<label for="warmup-answer-${step}">写下结果</label><input id="warmup-answer-${step}" inputmode="decimal" autocomplete="off" placeholder="可以填写单位">`;
+ return `<section class="panel lesson-warmup" id="lesson-warmup"><div class="section-head"><div><span class="tag">上节课回顾 · 3题热身</span><h2>先唤醒第一课的方法</h2></div><span class="warmup-progress">已完成 ${finished} / ${warmup.questions.length}</span></div><article class="warmup-card"><h3>第 ${step+1} / ${warmup.questions.length} 题 · ${esc(item.level)}</h3><p class="problem-stem">${esc(item.question)}</p><div class="warmup-fields">${field}</div><div class="controls">${button('检查并继续','warmup-check','',`data-q="${step}"`)}</div><p class="warmup-feedback" id="warmup-feedback" role="status">先在草稿纸上完成，再检查。</p></article><p class="tiny">答错时只会获得思路提示，不会直接显示标准答案；作答次数会帮助老师调整教学。</p></section>`;
+}
+function warmupRecordPanel(student=pupil()){
+ if(!teacher||!student)return '';
+ const warmup=LESSONS[1]?.warmup,record=student.warmups?.[1];
+ if(!warmup)return '';
+ if(!record||record.version!==warmup.version)return `<section class="panel warmup-record teacher-private"><h2>${esc(student.name)}的回顾记录</h2><div class="empty">尚未开始第二课的上节课回顾。</div></section>`;
+ const rows=warmup.questions.map((question,index)=>{
+  const saved=record.questions?.[index],submissions=saved?.submissions||[];
+  const history=submissions.length?submissions.map(item=>`${esc(item.answer)}（${item.correct?'正确':'未答对'}）${item.reason?`<small>理由：${esc(item.reason)}</small>`:''}`).join(' → '):'尚未作答';
+  return `<tr><td>${index+1}. ${esc(question.level)}<small>${esc(question.question)}</small></td><td>共${saved?.attempts||0}次</td><td>${history}</td></tr>`;
+ }).join('');
+ return `<section class="panel warmup-record teacher-private"><div class="section-head"><div><span class="tag">第二课课前回顾</span><h2>${esc(student.name)}的回顾记录</h2></div><b>${record.completed?'已完成':'进行中'}</b></div><div class="table-wrap"><table><thead><tr><th>题目</th><th>作答次数</th><th>每次作答</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 function lessonWarmupGuide(){
  if(lessonId!==1)return '';
- return `<section class="panel warmup-guide teacher-private"><span class="tag">第二课专用 · 教师可见</span><h2>课前回顾参考答案</h2><p>学生端逐题作答，只给方向提示。建议每题先留出独立思考时间，再根据学生表达追问。</p><article class="guide-step"><h3>第1题 · 基础计算</h3><p>${LESSON_TWO_WARMUP[0].question}</p><p><b>答案：</b>每把尺子4元。</p><p>两组都含3盒彩笔，相减后得到3把尺子共12元，所以每把尺子4元。</p></article><article class="guide-step"><h3>第2题 · 判断说明</h3><p>${LESSON_TWO_WARMUP[1].question}</p><p><b>答案：</b>这一步正确。</p><p>两组条件对应相减后，物品数量与总价同时相减，得到的整体关系仍然成立；但仅凭这一条关系还不能分别求出两种单价。</p></article><article class="guide-step"><h3>第3题 · 整体探究</h3><p>${LESSON_TWO_WARMUP[2].question}</p><p><b>答案：</b>1张成人票和1张儿童票共40元。</p><p>两组条件相加得到5张成人票和5张儿童票共200元，也就是5组相同组合共200元，所以每组40元。</p></article></section>`;
+ const warmup=LESSONS[1]?.warmup;
+ if(!warmup)return '';
+ const answerText=['每把尺子4元','这一步正确','1张成人票和1张儿童票共40元'];
+ const answers=warmup.questions.map((question,index)=>`<article class="guide-step"><h3>第${index+1}题 · ${esc(question.level)}</h3><p>${esc(question.question)}</p><p><b>答案：</b>${answerText[index]}</p><p>${esc(question.explain)}</p></article>`).join('');
+ return `<section class="panel warmup-guide teacher-private"><span class="tag">第二课专用 · 教师可见</span><h2>课前回顾参考答案</h2><p>学生端逐题作答，只给方向提示。建议每题先留出独立思考时间，再根据学生表达追问。</p>${answers}</section>${warmupRecordPanel()}`;
 }
 function lessonBody(){
  const l=LESSONS[lessonId],d=l.detail;
@@ -121,7 +124,7 @@ function guideView(){
 }
 function practiceQuestion(q,i,j){const key=i+'-'+j,saved=pupil()?.practice[key];if(teacher)return `<div class="question"><p><b>${j+1}.</b> ${q.text}</p>${q.svg||''}<p class="tiny teacher-private">学生在自己的账号提交；教师查看不会产生学生作答记录。</p><details class="teacher-private"><summary>查看本题解析（教师）</summary><div class="answer"><b>参考答案：${esc(q.answer)}</b><br>${esc(q.explain)}</div></details></div>`;return `<div class="question" id="practice-${key}"><label class="qtext" for="p-${key}"><b>${j+1}.</b> ${q.text}</label>${q.svg||''}<input id="p-${key}" aria-label="第${j+1}题答案" value="${esc(saved?.answer||'')}" autocomplete="off"><button class="secondary" data-action="practice-check" data-id="${i}" data-q="${j}">检查答案</button><div class="practice-feedback" role="status">${saved?`<div class="answer ${saved.correct?'':'wrong'}">${saved.correct?'✓ 回答正确':'还需要再想一想'}${saved.correct&&q.explain?'。'+q.explain:''}</div>`:''}</div></div>`}
 function practicePage(){if(teacher)return title('学生练习记录','查看当前所选学生的作答情况。')+practiceDetails(pupil())+variantPracticeDetails(pupil());return title('练习与错题','独立练习、AI 拔高、测评与错题，都在这里。')+(['work','ai'].includes(practiceTab)?`<section class="panel practice-course-picker"><label for="practice-course">选择练习课程</label><select id="practice-course">${LESSONS.map((l,i)=>`<option value="${i}" ${i===practiceCourse?'selected':''}>第${i+1}课 · ${esc(l.title)}</option>`).join('')}</select></section>`:'')+studentPracticePanel(practiceCourse);}
-function gamesPage(){return title('思维游乐场','先预测，亲手试，再讲出背后的数学。')+`<div class="course-grid">${Object.entries(GAME_META).map(([id,[name,desc]],i)=>`<article class="course"><div class="course-top"><span>探索 ${String(i+1).padStart(2,'0')}</span><span>◇</span></div><div class="course-body"><span class="tag">${pupil()?.games[id]?'已探索':'待探索'}</span><h2 style="margin-top:14px">${name}</h2><p>${desc}</p>${button('进入探索 →','game-open','',`data-game-type="${id}"`)}</div></article>`).join('')}</div>`}
+function gamesPage(){return title('思维游乐场','先预测，亲手试，再讲出背后的数学。')+gameWorldEntry()+`<div class="course-grid">${Object.entries(GAME_META).map(([id,[name,desc]],i)=>`<article class="course"><div class="course-top"><span>探索 ${String(i+1).padStart(2,'0')}</span><span>◇</span></div><div class="course-body"><span class="tag">${pupil()?.games[id]?'已探索':'待探索'}</span><h2 style="margin-top:14px">${name}</h2><p>${desc}</p>${button('进入探索 →','game-open','',`data-game-type="${id}"`)}</div></article>`).join('')}</div>`}
 function stopPlayer(){clearInterval(playTimer);playTimer=null;const b=document.getElementById('slide-play');if(b)b.textContent='自动播放';}
 
 function courseSequencePanel(l){return l.detail.sequenceNote?`<section class="panel"><span class="tag">这节课往前走一步</span><p>${esc(l.detail.sequenceNote)}</p><p class="tiny">示范与再练帮助理解；独立新题检验迁移。可以打草稿，不要求全程心算。</p></section>`:'';}

@@ -33,7 +33,7 @@ function page() {
     document: { getElementById: element, addEventListener(){}, body: element('body') },
     window: { addEventListener(){} }, location: { hash: '#courses' }
   });
-  for (const file of ['figures.js', 'lesson-lab.js', 'games.js', 'teacher-flow.js', 'views.js', 'data-loader.js', 'class-dashboard.js','exam-analysis.js','practice-workspace.js','homework-text.js','homework.js','app.js']) {
+  for (const file of ['figures.js', 'lesson-lab.js', 'factor-game.js', 'games.js', 'teacher-flow.js', 'views.js', 'data-loader.js', 'class-dashboard.js','exam-analysis.js','practice-workspace.js','homework-text.js','homework.js','app.js']) {
     let source = fs.readFileSync('public/' + file, 'utf8');
     if (file === 'app.js') source = source.replace(/startSession\(\);\s*$/, '');
     vm.runInContext(source, context);
@@ -228,33 +228,26 @@ test('第二课知识讲解先完成三道递增复习题，其他课程不出�
   }
 });
 
-test('课前回顾检查答案但学生反馈不泄露标准答案', () => {
-  const {context}=page();
-  assert.equal(vm.runInContext("lessonWarmupCheck(0,'4元','')",context).status,'correct');
-  const firstWrong=vm.runInContext("lessonWarmupCheck(0,'5','')",context);
-  assert.equal(firstWrong.status,'wrong');
-  assert.match(firstWrong.message,/哪一种物品数量完全相同/);
-  assert.doesNotMatch(firstWrong.message,/4元|答案/);
-
-  assert.equal(vm.runInContext("lessonWarmupCheck(1,'yes','')",context).status,'incomplete');
-  assert.equal(vm.runInContext("lessonWarmupCheck(1,'yes','对应数量和总价分别相减')",context).status,'correct');
-  const thirdWrong=vm.runInContext("lessonWarmupCheck(2,'35','')",context);
-  assert.equal(thirdWrong.status,'wrong');
-  assert.doesNotMatch(thirdWrong.message,/40元|答案/);
-
-  vm.runInContext('lessonId=1',context);
-  const finished=vm.runInContext('lessonWarmupPanel(3)',context);
-  assert.match(finished,/三题热身完成/);
-  assert.match(finished,/如果既不能直接消去/);
-  assert.doesNotMatch(finished,/参考答案|4元|40元/);
+test('课前回顾按已保存进度继续，全部完成后刷新不再显示', async () => {
+  const {context,element}=page();
+  vm.runInContext(`teacher=false;user={id:'student',role:'student',name:'学生',mustChange:false};
+    const learner={id:'student',name:'学生',completed:[],practice:{},warmups:{1:{version:'v1',completed:false,questions:{0:{correct:true,attempts:2,submissions:[]}}}},talk:{},notes:{},games:{},history:[],settings:{dates:{},videos:{}}};
+    api=async url=>url==='/api/content'?content:learner;`,context);
+  context.location.hash='#lesson/1/learn';await vm.runInContext('render()',context);
+  assert.match(element('main').innerHTML,/第 2 \/ 3 题 · 判断说明/);
+  vm.runInContext(`learner.warmups[1]={version:'v1',completed:true,questions:{}}`,context);
+  await vm.runInContext('render()',context);
+  assert.doesNotMatch(element('main').innerHTML,/上节课回顾 · 3题热身|warmup-check/);
 });
 
 test('第二课教师教案单独提供课前回顾答案和讲解', async () => {
   const {context,element}=page();
+  vm.runInContext(`const selected={id:'student',name:'小明',completed:[],practice:{},warmups:{1:{version:'v1',completed:true,completedAt:'2026-09-17T00:00:00.000Z',questions:{0:{attempts:2,submissions:[{answer:'5',correct:false},{answer:'4元',correct:true}]},1:{attempts:1,submissions:[{answer:'yes',reason:'对应数量和总价分别相减',correct:true}]},2:{attempts:1,submissions:[{answer:'40元',correct:true}]}}}},talk:{},notes:{},games:{},history:[],settings:{dates:{},videos:{}}};api=async url=>url==='/api/content'?content:{classes:[],students:[selected]};`,context);
   context.location.hash='#lesson/1/guide';await vm.runInContext('render()',context);
   const html=element('main').innerHTML;
   assert.match(html,/课前回顾参考答案/);
   assert.match(html,/每把尺子4元/);
   assert.match(html,/1张成人票和1张儿童票共40元/);
+  assert.match(html,/小明的回顾记录/);assert.match(html,/共2次/);assert.match(html,/5（未答对）.*4元（正确）/s);
   assert.ok(html.indexOf('课前回顾参考答案')<html.indexOf('本课母题'));
 });

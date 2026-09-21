@@ -18,6 +18,7 @@ function createApp(pool, options = {}) {
   setupAuth(app, pool, production);
   require('./student-preview').setupStudentPreview(app, pool);
   setupLearning(app, pool); setupExams(app, pool); setupTeacher(app, pool);
+  require('./world3d/routes.cjs').setupWorld3d(app,pool);
   setupAiPractice(app, pool, options);
   require('./homework').setupHomework(app, pool, options);
   app.use('/api', (req, res) => res.status(404).json({ error: '接口不存在。' }));

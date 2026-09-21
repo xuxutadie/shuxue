@@ -18,6 +18,8 @@ const legacyPractice = bank.lessons.map(l => l.practice);
 const revisedLessons = require('./curriculum-revision.json');
 if (revisedLessons.length !== bank.lessons.length) throw new Error('课程修订数量不完整');
 bank.lessons = require('./practice-alignment').alignPractice(structuredClone(revisedLessons));
+// 服务端内部题库保留完整课前回顾，按身份输出时再移除学生不可见的答案与解析。
+bank.lessons[1].warmup = require('./lesson-warmup').lessonWarmup(true);
 bank.flow = teaching.flow;
 bank.testFlow = teaching.testFlow;
 function normal(v) { let t = String(v ?? '').normalize('NFKC').trim().replace(/\s/g, '').replace(/：/g, ':'); return t.endsWith('色') ? t.slice(0,-1) : t; }
@@ -34,5 +36,14 @@ function grade(kind, version, answers) {
 function publicQuestion(q) { const { answer, explain, ...safe } = q; return safe; }
 // 视频末尾题的教师解法只随教师接口返回，不能放进公共媒体清单。
 const videoGuides = require('./video-guides.json');
-function lessons(teacher) { return bank.lessons.map((l,i) => ({ ...l, variantPractice:require('./variant-practice').variants(l,i,teacher), ...(teacher&&videoGuides[i]?{videoGuide:videoGuides[i]}:{}), practice: l.practice.map(q => teacher ? q : publicQuestion(q)) })); }
+function lessons(teacher) {
+  const { lessonWarmup } = require('./lesson-warmup');
+  return bank.lessons.map((l,i) => ({
+    ...l,
+    variantPractice: require('./variant-practice').variants(l,i,teacher),
+    ...(i === 1 ? { warmup: lessonWarmup(teacher) } : {}),
+    ...(teacher&&videoGuides[i]?{videoGuide:videoGuides[i]}:{}),
+    practice: l.practice.map(q => teacher ? q : publicQuestion(q))
+  }));
+}
 module.exports = { bank, correct, grade, publicQuestion, lessons, legacyPractice, currentExamVersions };

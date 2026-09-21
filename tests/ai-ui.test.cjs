@@ -122,6 +122,11 @@ test('出题等待中连击只发一次，课程难度和数量为受限数字�
  assert.equal(p.node('[type="submit"]').disabled, false);
 });
 
+test('学生能明确选择竞赛拔高难度', () => {
+ const h=harness(async()=>available);
+ assert.match(h.run('aiPracticePage()'),/3 · 竞赛拔高/);
+});
+
 test('教师设置不回显服务器的密钥；保存留空时不覆盖已有密钥', async () => {
  const settings = { endpoint: 'https://example.com/v1', model: 'math', dailyLimit: 10, enabled: true, encryptionReady: true, configured: true, apiKey: '绝不回显的密钥' };
  const h = harness(async () => settings, true), p = h.mount('settings');

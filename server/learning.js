@@ -16,6 +16,8 @@ async function profile(pool, user, id) {
 function packProfile(s, rows, assignments, user) {
   const p = { ...s.data, id: s.user_id, name: s.name, username: s.username, classId: s.class_id, className: s.class_name, settings: s.settings, exams: {}, drafts: {}, assignments: Object.fromEntries(assignments.map(r => [r.kind, r.enabled])) };
   Object.assign(p, separatePracticeVersions(s.data));
+  // 游戏详细记录从独立接口读取，避免每次打开课堂都传输游戏历史。
+  delete p.world3d;
   for (const row of rows) {
     const packed = pack(row, user.role === 'teacher');
     if (row.submitted_at && (user.role === 'teacher' || row.released)) {
@@ -67,6 +69,41 @@ function setupLearning(app, pool) {
     else res.send(content.json);
   });
   app.get('/api/students/:id', async (req, res) => res.json(await profile(pool, req.user, req.params.id)));
+  app.post('/api/students/:id/warmups/:lesson/:question', async (req, res) => {
+    if (req.user.role !== 'student') fail(403, '请使用学生账号作答，教师可在学生预览中试做。');
+    const l = lessonOf(req.params.lesson), n = Number(req.params.question);
+    const warmup = require('./lesson-warmup');
+    const question = warmup.questions[n];
+    if (l !== 1 || !Number.isInteger(n) || !question) fail(400, '回顾题不存在。');
+    if (req.body.version !== warmup.VERSION) fail(409, '回顾题已更新，请刷新后再作答。');
+    const answer = string(req.body.answer, 100);
+    const reason = string(req.body.reason || '', 500, true);
+    if (question.kind === 'reason' && reason.length < 4) fail(400, '请先用一句话说明判断理由。');
+    const correct = warmup.matches(n, answer);
+    if (req.studentPreview) {
+      await ownedStudent(pool, req.user, req.params.id);
+      return res.json({ correct, attempts: 1, completed: false, preview: true });
+    }
+    res.json(await editProfile(pool, req, data => {
+      data.warmups ||= {};
+      let record = data.warmups[l];
+      if (!record || record.version !== warmup.VERSION) {
+        record = { version: warmup.VERSION, completed: false, questions: {} };
+        data.warmups[l] = record;
+      }
+      const previous = record.questions[n] || { correct: false, attempts: 0, submissions: [] };
+      if (previous.correct) fail(409, '这道回顾题已经完成，请刷新页面继续。');
+      const submission = { answer, reason, correct, date: new Date().toISOString() };
+      record.questions[n] = {
+        correct,
+        attempts: previous.attempts + 1,
+        submissions: [...(previous.submissions || []), submission].slice(-100)
+      };
+      record.completed = warmup.questions.every((_, index) => record.questions[index]?.correct);
+      if (record.completed && !record.completedAt) record.completedAt = submission.date;
+      return { correct, attempts: record.questions[n].attempts, completed: record.completed, warmup: record };
+    }));
+  });
   app.post('/api/students/:id/variants/:lesson/:question',async(req,res)=>{
     if(req.user.role!=='student')fail(403,'请使用学生账号作答，教师可在学生预览中试做。');
     const l=lessonOf(req.params.lesson),n=Number(req.params.question);

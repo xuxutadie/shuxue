@@ -61,6 +61,32 @@ test('独立练习保留首次结果和重做，学生不能改教师评价',asy
  r=await student1.request('/api/students/'+s1);assert.equal(r.data.talk[0].level,'独立讲清');assert.deepEqual(r.data.notes,{});
 });
 
+test('第二课回顾保存每次作答，完成后刷新隐藏并允许教师查看',async()=>{
+ const material=(await student1.request('/api/content')).data,warmup=material.lessons[1].warmup;
+ assert.equal(warmup.version,'v1');assert.equal(warmup.questions.length,3);
+ for(const q of warmup.questions){assert.equal(q.answer,undefined);assert.equal(q.correct,undefined);}
+ const path=n=>`/api/students/${s1}/warmups/1/${n}`;
+ let r=await student1.request(path(0),'POST',{version:'v1',answer:'5',reason:''});
+ assert.equal(r.status,200);assert.equal(r.data.correct,false);assert.equal(r.data.attempts,1);assert.equal(r.data.completed,false);assert.equal(r.data.answer,undefined);
+ r=await student1.request(path(0),'POST',{version:'v1',answer:'4元',reason:''});
+ assert.equal(r.data.correct,true);assert.equal(r.data.attempts,2);assert.equal(r.data.completed,false);
+ r=await student1.request(path(1),'POST',{version:'v1',answer:'yes',reason:'对应数量和总价分别相减'});assert.equal(r.data.correct,true);
+ r=await student1.request(path(2),'POST',{version:'v1',answer:'40元',reason:''});assert.equal(r.data.correct,true);assert.equal(r.data.completed,true);
+
+ const student=(await student1.request('/api/students/'+s1)).data,record=student.warmups['1'];
+ assert.equal(record.completed,true);assert.equal(record.questions['0'].attempts,2);
+ assert.deepEqual(record.questions['0'].submissions.map(x=>[x.answer,x.correct]),[['5',false],['4元',true]]);
+ const seen=(await teacher1.request('/api/teacher/overview')).data.students.find(p=>p.id===s1).warmups['1'];
+ assert.equal(seen.questions['0'].attempts,2);assert.equal(seen.questions['1'].submissions[0].reason,'对应数量和总价分别相减');
+ assert.equal((await teacher2.request('/api/students/'+s1)).status,404);
+
+ const before=(await teacher1.request('/api/students/'+s2)).data;
+ r=await teacher1.request(`/api/students/${s2}/warmups/1/0`,'POST',{version:'v1',answer:'4',reason:''},{'X-Student-Preview':s2});
+ assert.equal(r.status,200);assert.equal(r.data.correct,true);assert.equal(r.data.preview,true);
+ assert.deepEqual((await teacher1.request('/api/students/'+s2)).data.warmups,before.warmups);
+ assert.equal((await student1.request(`/api/students/${s1}/warmups/0/0`,'POST',{version:'v1',answer:'4'})).status,400);
+});
+
 test('换题后旧成绩保留原题，新题从首次作答重新统计并拒收旧页面',async()=>{
  const old={answer:'旧题答案',correct:true,firstCorrect:false,attempts:3,submissions:[{answer:'旧题答案',correct:true}]};
  await pool.query("UPDATE students SET data=jsonb_set(data,'{practice,1-0}',$2::jsonb) WHERE user_id=$1",[s1,JSON.stringify(old)]);

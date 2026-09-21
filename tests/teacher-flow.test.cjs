@@ -8,7 +8,7 @@ function sandbox(isTeacher=true){
  const nodes=new Map();
  const element=id=>{if(!nodes.has(id))nodes.set(id,{value:'',checked:false,textContent:'',innerHTML:'',hidden:false,style:{},classList:{add(){},remove(){},toggle(){}},addEventListener(){},focus(){},querySelector(){return null;}});return nodes.get(id);};
  const context=vm.createContext({console,URL,setTimeout,clearTimeout,setInterval,clearInterval,document:{getElementById:element,addEventListener(){},body:element('body')},window:{addEventListener(){}},location:{hash:''}});
- for(const file of ['course-videos.js','figures.js','lesson-lab.js','games.js','teacher-flow.js','views.js','data-loader.js','exam-analysis.js','practice-workspace.js','app.js'])vm.runInContext(fs.readFileSync('public/'+file,'utf8').replace(/startSession\(\);\s*$/,''),context);
+ for(const file of ['course-videos.js','figures.js','lesson-lab.js','factor-game.js','games.js','teacher-flow.js','views.js','data-loader.js','exam-analysis.js','practice-workspace.js','app.js'])vm.runInContext(fs.readFileSync('public/'+file,'utf8').replace(/startSession\(\);\s*$/,''),context);
  context.materials={lessons:lessons(isTeacher),flow:bank.flow,testFlow:bank.testFlow};
  vm.runInContext(`teacher=${isTeacher};user={id:'teacher-one',name:'老师',role:teacher?'teacher':'student'};LESSONS=materials.lessons;FLOW=materials.flow;TEST_FLOW=materials.testFlow;
  const first={id:'first',name:'学生甲',completed:[],talk:{},notes:{},practice:{},games:{},exams:{},drafts:{},assignments:{},history:[],settings:{dates:{},videos:{}}};

@@ -143,17 +143,28 @@ test('全部模板多组参数均有完整题干和三级无结果提示，数�
  for (let lesson = 0; lesson < 12; lesson++) for (let difficulty = 1; difficulty <= 3; difficulty++) for (let seed = 1; seed <= 80; seed++) {
   const p = buildProblem(lesson, difficulty, seed);
   assert.ok(p.text.length > 30 && p.text.includes('？'), `第${lesson+1}课题干应有条件和明确提问`); assert.equal(p.hints.length, 3); assert.ok(p.answer.length); assert.equal(matchesAnswer(p.answer + p.unit, p), true);
-  assert.equal(p.hints.some(h => /[0-9=＝]/.test(h)), false);
+  // 提示可以引用题干中的已知数量，但不能直接给出等式、答案或结果。
+  assert.equal(p.hints.some(h => /[=＝]|答案(?:是|为)|结果(?:是|为)/.test(h)), false);
   const q = publicQuestion({ id: 'id', lesson, difficulty, problem: p, hint_count: 0 }); assert.equal(q.answer, undefined); assert.deepEqual(q.hints, []);
-  if (lesson === 0) { const n = p.text.match(/\d+(?:\.\d+)?/g).map(Number); const expected=difficulty===3?(n[2]*n[4]-n[5]*n[1])/(n[0]*n[4]-n[3]*n[1]):(n[2]*(n[3]/n[0])-n[5])/(n[1]*(n[3]/n[0])-n[4]); assert.ok(Math.abs(Number(p.answer)-expected)<1e-9); }
+  if (lesson === 0) { const n = p.text.match(/\d+(?:\.\d+)?/g).map(Number); if(difficulty===3){const [a1,b1,t1,a2,b2,t2,targetA,targetB]=n,den=a1*b2-a2*b1,x=(t1*b2-t2*b1)/den,y=(a1*t2-a2*t1)/den;assert.ok(Math.abs(Number(p.answer)-(targetA*x+targetB*y))<1e-9);}else{const expected=(n[2]*(n[3]/n[0])-n[5])/(n[1]*(n[3]/n[0])-n[4]);assert.ok(Math.abs(Number(p.answer)-expected)<1e-9);} }
   if (lesson === 1) { const n=p.text.match(/\d+/g).map(Number), big=(3*n[5]-2*n[2])/5, small=(3*n[2]-2*n[5])/5; assert.equal(Number(p.answer), difficulty===1?big:difficulty===2?4*(big+small):5*big+4*small); }
-  if ([2,10].includes(lesson)) { const colors=p.text.match(/按(.+?)的顺序/)[1].split('、'), target=Number(p.text.match(/第(\d+)面彩旗是什么/)[1]); assert.equal(p.answer,colors[(target-1)%colors.length]); }
-  if (lesson === 3) { const [total,low,high]=p.text.match(/\d+/g).map(Number); assert.equal(Number(p.answer),Array.from({length:high-low+1},(_,i)=>low+i).filter(n=>total%n===0).length); }
-  if (lesson === 4) { const [a,b]=p.text.match(/\d+/g).map(Number);let interval=1;while(interval%a||interval%b)interval++;assert.equal(Number(p.answer),difficulty===1?interval:Number(p.text.match(/直到第(\d+)秒/)[1])/interval); }
-  if (lesson === 5) { const n = p.text.match(/\d+/g).map(Number); assert.equal(Number(p.answer), n[0] * n[1] - n[2] ** 2); }
-  if (lesson === 6) { const n=p.text.match(/\d+/g).map(Number); if(difficulty===1)assert.equal(Number(p.answer),(n[0]+n[1]/2)*n[2]**2);if(difficulty===2)assert.equal(Number(p.answer),n[0]-n[2]);if(difficulty===3){const front=p.text.match(/前排各列分别堆([\d、]+)层/)[1].split('、').map(Number),back=p.text.match(/后排对应各列分别堆([\d、]+)层/)[1].split('、').map(Number);let area=0;for(let col=0;col<3;col++)for(let level=1;level<=4;level++)if(front[col]>=level||back[col]>=level)area++;assert.equal(Number(p.answer),area);}}
-  if (lesson === 7) { const n = p.text.match(/\d+/g).map(Number); const [slow, lead, fast, chase, rest = 0] = n; assert.equal(Number(p.answer), (slow * lead + fast * rest) / (fast - slow)); if (difficulty > 1) assert.ok(slow * lead > (fast - slow) * chase); }
-  if (lesson === 8) { const n = p.text.match(/\d+/g).map(Number); const [c1, d1, c2, d2, target] = n, growth = (c1*d1-c2*d2)/(d1-d2), initial = (c1-growth)*d1; assert.notEqual(target, c1); assert.notEqual(target, c2); assert.equal(Number(p.answer), initial/(target-growth)); }
-  if (lesson === 9) {const n=p.text.match(/\d+/g).map(Number);if(difficulty===1)assert.equal(Number(p.answer),4*n[0]-n[1]-n[2]-n[3]);else{let count=0;for(let a=n[1];a<=n[2];a++)for(let b=n[1];b<=n[2];b++)for(let c=n[1];c<=n[2];c++)if(a+b+c===n[0])count++;assert.equal(Number(p.answer),count);}}
+  if ([2,10].includes(lesson)) { const colors=p.text.match(/按(.+?)的顺序/)[1].split('、');if(difficulty===3){const [,start,end]=p.text.match(/从第(\d+)面到第(\d+)面/),target=p.text.match(/多少面(.+?)彩旗/)[1];let count=0;for(let i=Number(start);i<=Number(end);i++)if(colors[(i-1)%colors.length]===target)count++;assert.equal(Number(p.answer),count);}else{const target=Number(p.text.match(/第(\d+)面彩旗是什么/)[1]);assert.equal(p.answer,colors[(target-1)%colors.length]);} }
+  if (lesson === 3) { const n=p.text.match(/\d+/g).map(Number),[total,low,high]=n;let values=Array.from({length:high-low+1},(_,i)=>low+i).filter(value=>total%value===0);if(difficulty===3){const [bagLow,bagHigh]=n.slice(3);values=values.filter(value=>total/value>=bagLow&&total/value<=bagHigh);}assert.equal(Number(p.answer),values.length); }
+  if (lesson === 4) { const n=p.text.match(/\d+/g).map(Number),divisor=(x,y)=>y?divisor(y,x%y):x,lcm=(x,y)=>x*y/divisor(x,y),interval=difficulty===3?lcm(lcm(n[0],n[1]),n[2]):lcm(n[0],n[1]);if(difficulty===1)assert.equal(Number(p.answer),interval);else if(difficulty===2)assert.equal(Number(p.answer),Number(p.text.match(/直到第(\d+)秒/)[1])/interval);else{const [,start,end]=p.text.match(/从第(\d+)秒开始观察，到第(\d+)秒/);assert.equal(Number(p.answer),Math.floor(Number(end)/interval)-Math.floor((Number(start)-1)/interval));} }
+  if (lesson === 5) { const n=p.text.match(/\d+/g).map(Number);if(difficulty===1)assert.equal(Number(p.answer),n[0]*n[1]-n[2]**2);if(difficulty===2)assert.equal(Number(p.answer),n[0]*n[1]-n[2]*n[3]);if(difficulty===3)assert.equal(Number(p.answer),n[0]*n[1]-n[2]**2-n[3]*n[4]); }
+  if (lesson === 6) { const n=p.text.match(/\d+/g).map(Number); if(difficulty===1)assert.equal(Number(p.answer),(n[0]+n[1]/2)*n[2]**2);if(difficulty===2)assert.equal(Number(p.answer),n[0]-n[2]);if(difficulty===3){const side=Number(p.text.match(/棱长(\d+)厘米/)[1]),rows=['前','中','后'].map(name=>p.text.match(new RegExp(name+'排各列高([\\d、]+)层'))[1].split('、').map(Number));const cells=[0,1,2,3].reduce((sum,col)=>sum+Math.max(...rows.map(row=>row[col])),0);assert.equal(Number(p.answer),cells*side**2);}}
+  if (lesson === 7) { const n=p.text.match(/\d+/g).map(Number);if(difficulty===3){const [slow,lead,fast,chase,rest,secondFast]=n,remaining=slow*lead-(fast-slow)*chase+slow*rest;assert.equal(Number(p.answer),chase+rest+remaining/(secondFast-slow));}else{const [slow,lead,fast,chase,rest=0]=n;assert.equal(Number(p.answer),(slow*lead+fast*rest)/(fast-slow));if(difficulty===2)assert.ok(slow*lead>(fast-slow)*chase);} }
+  if (lesson === 8) { const n=p.text.match(/\d+/g).map(Number),[c1,d1,c2,d2,target]=n,growth=(c1*d1-c2*d2)/(d1-d2),initial=(c1-growth)*d1;assert.notEqual(target,c1);assert.notEqual(target,c2);if(difficulty===3){const before=n[5],increase=n[6];assert.equal(Number(p.answer),before+(initial-(target-growth)*before)/(target-growth-increase));}else assert.equal(Number(p.answer),initial/(target-growth)); }
+  if (lesson === 9) {const n=p.text.match(/\d+/g).map(Number);if(difficulty===1)assert.equal(Number(p.answer),4*n[0]-n[1]-n[2]-n[3]);else{let count=0;for(let a=n[1];a<=n[2];a++)for(let b=n[1];b<=n[2];b++)for(let c=n[1];c<=n[2];c++)if(a+b+c===n[0]&&(difficulty===2||a===b||a===c||b===c))count++;assert.equal(Number(p.answer),count);}}
+ }
+});
+
+test('难度3逐课使用竞赛拔高结构，不与难度2只换数字', () => {
+ const markers=['综合求值','整体求值','区间计数','双重范围','三项同步','复合缺角','三排遮挡','分段变速追赶','生长变化','限制枚举','周期纠错','混合选法'];
+ for(let lesson=0;lesson<12;lesson++)for(let seed=1;seed<=30;seed++){
+  const medium=buildProblem(lesson,2,seed),advanced=buildProblem(lesson,3,seed);
+  assert.notEqual(advanced.text,medium.text,`第${lesson+1}课难度3不能只是难度2的同题换数`);
+  assert.match(advanced.topic,new RegExp(markers[lesson]),`第${lesson+1}课需要明确的拔高结构`);
+  assert.ok(advanced.text.length>=medium.text.length*.8,`第${lesson+1}课拔高题不能退化成更简单的短题`);
  }
 });
