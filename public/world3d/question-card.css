@@ -13,3 +13,17 @@ header.question-card-header{position:static;height:auto;min-height:60px;font-siz
 @keyframes confetti-fall{0%{transform:translateY(-20px) rotate(0);opacity:1}85%{opacity:1}100%{transform:translateY(650px) rotate(var(--turn));opacity:0}}@keyframes trophy-pop{0%{transform:scale(.4) rotate(-15deg);opacity:0}65%{transform:scale(1.12) rotate(6deg)}100%{transform:scale(1);opacity:1}}
 @media(max-width:600px){.game-completion{padding:20px}.game-completion h1{font-size:26px}.completion-cup{width:110px;height:104px}}
 @media(prefers-reduced-motion:reduce){.completion-confetti{display:none}.completion-cup{animation:none}}
+
+/* 地图占满可用窗口，工具和摇杆浮在画面上，不再挤压场景高度。 */
+.world3d-shell.is-expanded,body.answering .world3d-shell,body.answering .world3d-shell.is-expanded{position:fixed;inset:0;width:100%;height:100dvh;margin:0;border:0;border-radius:0;box-shadow:none;z-index:100}
+.world3d-shell.is-expanded #town-viewport,body.answering #town-viewport{position:absolute;inset:0;width:100%;height:100%;min-height:0}
+.world3d-shell.is-expanded .world3d-toolbar{position:absolute;inset:0 0 auto;z-index:5;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;background:transparent;pointer-events:none}
+.world3d-shell.is-expanded .world3d-toolbar>strong{padding:8px 12px;background:#fffcf1e8;border-radius:12px;font-size:14px}
+.world3d-shell.is-expanded .world3d-toolbar>div{pointer-events:auto;flex-wrap:wrap;justify-content:flex-end}
+.world3d-shell.is-expanded .world3d-toolbar button{background:#fffcf1}
+.world3d-shell.is-expanded .world3d-controls{position:absolute;inset:auto 0 0;z-index:5;background:transparent;padding:12px 20px calc(12px + env(safe-area-inset-bottom));pointer-events:none}
+.world3d-shell.is-expanded .world3d-controls>*{pointer-events:auto}.world3d-shell.is-expanded .world3d-controls>div:nth-child(2){flex:0 1 auto;background:#fffcf1df;border-radius:12px;padding:10px 14px}.world3d-shell.is-expanded .world3d-controls>button{margin-left:auto;width:auto}
+.world3d-shell.is-expanded .world3d-label{bottom:140px}.world3d-shell.is-expanded .town-dialogue{z-index:9;top:90px;max-height:calc(100dvh - 110px)}
+@media(max-width:600px){.world3d-shell.is-expanded .world3d-toolbar{padding:calc(8px + env(safe-area-inset-top)) 8px 8px;gap:8px}.world3d-shell.is-expanded .world3d-toolbar>strong{font-size:12px}.world3d-shell.is-expanded .world3d-toolbar>div{gap:6px}.world3d-shell.is-expanded .world3d-toolbar button{padding:6px 8px;font-size:12px}.world3d-shell.is-expanded .world3d-controls{padding:12px 12px calc(12px + env(safe-area-inset-bottom));flex-wrap:nowrap}.world3d-shell.is-expanded .world3d-controls>div:nth-child(2){display:none}.world3d-shell.is-expanded .town-dialogue{top:145px;max-height:calc(100dvh - 165px)}}
+
+body.world-expanded>.game-header,body.world-expanded>.game-nav,body.world-expanded>.mode-note,body.world-expanded main#app>:not(.world3d-shell):not(dialog){display:none}

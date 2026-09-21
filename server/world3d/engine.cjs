@@ -8,9 +8,9 @@ function initial(){return {version:1,records:{},runs:{},active:null,repairs:{}};
 function campaign(s,demo=false){
  const passed=q=>!!s.records[q.id]?.passed;
  const first={total:firstQuestions.length,correct:firstQuestions.filter(passed).length};
- first.unlocked=demo||first.correct===first.total;
+ first.unlocked=first.correct===first.total;
  const repaired=i=>!!s.repairs[i]?.passed||campCourses[i].questions.every(passed);
- const missions=campCourses.map((c,i)=>({id:c.id,title:gameTitles[i],total:c.questions.length,correct:c.questions.filter(passed).length,repaired:repaired(i),unlocked:demo||first.unlocked&&campCourses.slice(0,i).every((_,j)=>repaired(j))}));
+ const missions=campCourses.map((c,i)=>({id:c.id,title:gameTitles[i],total:c.questions.length,correct:c.questions.filter(passed).length,repaired:repaired(i),unlocked:first.unlocked&&campCourses.slice(0,i).every((_,j)=>repaired(j))}));
  return {first,missions,complete:first.unlocked&&missions.every(m=>m.repaired)};
 }
 function rowsForPlan(s){
@@ -57,6 +57,8 @@ function start(s,courseId,demo=false){
 function runAction(s,body){
  const r=s.runs[s.active];
  if(!r||r.id!==body.runId||r.revision!==body.revision)fail(409,'另一页面已更新进度，请先载入最新记录。');
+ // 旧版本教师试玩可能留下提前开启的营地任务，继续作答也必须核对解锁条件。
+ if(s.active.startsWith('camp-')&&!campaign(s).missions.find(m=>m.id===s.active)?.unlocked)fail(403,'请先完成小镇题目和前面的关卡。');
  if(!['draft','hint','submit','reveal','next','retry','transfer'].includes(body.action))fail(400,'未知的答题操作。');
  const q=questions.get(r.qids[r.index]);
  if(body.action==='transfer'){

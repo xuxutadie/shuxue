@@ -13,16 +13,25 @@ export function mountWorld(root,data,onTalk){
     route=[];destination=null;resetInput();yaw=Math.PI;pitch=.55;distance=18;
     const box=root.querySelector('#town-dialogue');shell.append(box);box.hidden=false;
     const first=data.campaign?.first;
-    box.innerHTML=`<button class="outline mini dialogue-close" data-close-dialogue>关闭对话</button><span class="pill">山谷通道</span><h2>${config.camp?'返回好奇心小镇':gateOpen()?'通往星光营地的路已开放':'远方就是星光营地'}</h2><p>${config.camp?'沿原路回到小镇，继续拜访朋友。':gateOpen()?'你已完成第一关，可以出发探索营地了。':`这里只能远眺。第一关全部 ${first?.total||48} 道题答对后才能通行，当前已答对 ${first?.correct||0} 道。`}</p>${config.camp||gateOpen()?'<button data-cross-gate>穿过山谷通道 →</button>':'<button disabled>通道尚未开放</button>'}`;
+    box.innerHTML=`<button class="outline mini dialogue-close" data-close-dialogue>关闭对话</button><span class="pill">山谷通道</span><h2>${config.camp?'返回好奇心小镇':gateOpen()?'通往星光营地的路已开放':'远方就是星光营地'}</h2><p>${config.camp?'沿原路回到小镇，继续拜访朋友。':gateOpen()?'你已完成第一关，可以出发探索营地了。':`这里只能远眺。第一关全部 ${first?.total||48} 道题答对后才能通行，当前已答对 ${first?.correct||0} 道，还差 ${Math.max(0,(first?.total||48)-(first?.correct||0))} 道。`}</p>${config.camp||gateOpen()?'<button data-cross-gate>穿过山谷通道 →</button>':'<button disabled>通道尚未开放</button>'}`;
   }
   const viewport=root.querySelector('#town-viewport'),status=root.querySelector('#town-position'),loading=root.querySelector('#town-loading');
   let disposed=false,frame=0,renderer,scene,hero,mixer,walk,observer;
   let position={x:-4,z:4},yaw=.18,pitch=.85,distance=20,route=[],destination=null,drag=null,stick={x:0,z:0};
   if(nextArrival===region){position={x:0,z:11.5};nextArrival=null;}
   const keys=new Set(),listeners=[],owned=[];const shell=root.querySelector('.world3d-shell');let expanded=false,previousOverflow='';
-  function expand(){expanded=!expanded;shell.classList.toggle('is-expanded',expanded);const button=root.querySelector('[data-camera-full]');button.textContent=expanded?'退出沉浸':'沉浸模式';button.setAttribute('aria-pressed',String(expanded));if(expanded){previousOverflow=document.body.style.overflow;document.body.style.overflow='hidden';}else document.body.style.overflow=previousOverflow;}
+  function expand(){expanded=!expanded;shell.classList.toggle('is-expanded',expanded);document.body.classList.toggle('world-expanded',expanded);const button=root.querySelector('[data-camera-full]');button.textContent=expanded?'显示菜单':'返回全屏游戏';button.setAttribute('aria-pressed',String(expanded));if(expanded){previousOverflow=document.body.style.overflow;document.body.style.overflow='hidden';}else{document.body.style.overflow=previousOverflow;if(document.fullscreenElement)void document.exitFullscreen().catch(()=>{});}}
   const on=(target,type,fn,opts)=>{target.addEventListener(type,fn,opts);listeners.push(()=>target.removeEventListener(type,fn,opts));};
   const say=message=>{if(!disposed&&status.textContent!==message)status.textContent=message;};
+  // 默认铺满网页；真正隐藏浏览器栏的全屏需由孩子点击按钮触发。
+  expand();
+  if(document.fullscreenEnabled){
+    const fullButton=document.createElement('button');fullButton.className='outline mini';fullButton.type='button';
+    const syncFullscreen=()=>{fullButton.textContent=document.fullscreenElement?'退出全屏':'全屏显示';fullButton.setAttribute('aria-pressed',String(!!document.fullscreenElement));};
+    root.querySelector('.world3d-toolbar>div').append(fullButton);syncFullscreen();
+    on(document,'fullscreenchange',syncFullscreen);
+    on(fullButton,'click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else{if(!expanded)expand();await document.documentElement.requestFullscreen();}}catch{say('当前浏览器未允许全屏，游戏已铺满窗口。');}});
+  }
   const nearest=()=>stations.findIndex(([x,z],i)=>Math.hypot(position.x-x,position.z-(z+(i<3?4:-4)))<2.3);
   function disposeModel(object){object.traverse(o=>{o.geometry?.dispose();if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material]){m.map?.dispose();m.dispose();}});}
   function resetInput(){keys.clear();stick={x:0,z:0};drag=null;}
@@ -99,5 +108,5 @@ export function mountWorld(root,data,onTalk){
     }
     frame=requestAnimationFrame(animate);
   }catch{fail();}
-  return ()=>{if(expanded){document.body.style.overflow=previousOverflow;expanded=false;}disposed=true;cancelAnimationFrame(frame);resetInput();observer?.disconnect();listeners.forEach(remove=>remove());mixer?.stopAllAction();owned.forEach(disposeModel);renderer?.dispose();renderer?.domElement.remove();};
+  return ()=>{document.body.classList.remove('world-expanded');if(expanded){document.body.style.overflow=previousOverflow;expanded=false;}disposed=true;cancelAnimationFrame(frame);resetInput();observer?.disconnect();listeners.forEach(remove=>remove());mixer?.stopAllAction();owned.forEach(disposeModel);renderer?.dispose();renderer?.domElement.remove();};
 }

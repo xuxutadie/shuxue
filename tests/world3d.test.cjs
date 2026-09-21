@@ -174,6 +174,22 @@ test('隔天复习包含提示后答对的题，当天题目不提前进入复�
  assert.equal(engine.view(s).world.dueCount,1);
  engine.start(s,'review-due');assert.equal(engine.view(s).run.question.id,q.id);
 });
+test('教师与学生同样在48题全对后开放山谷，历史提前开启任务不能绕过',()=>{
+ const s=engine.initial();
+ for(const q of firstQuestions.slice(0,47))s.records[q.id]={passed:true};
+ for(const demo of [false,true]){
+  assert.equal(engine.campaign(s,demo).first.unlocked,false);
+  assert.throws(()=>engine.start(s,campCourses[0].id,demo),{status:403});
+ }
+ const last=firstQuestions.at(-1);s.records[last.id]={passed:false};assert.equal(engine.campaign(s,true).first.unlocked,false);
+ s.records[last.id].passed=true;assert.equal(engine.campaign(s,true).first.unlocked,true);
+ engine.start(s,campCourses[0].id,true);const r=s.runs[s.active];
+ s.records[last.id].passed=false;
+ assert.throws(()=>engine.runAction(s,{runId:r.id,revision:r.revision,action:'hint'}),{status:403});
+ const scope=vm.createContext({});vm.runInContext(fs.readFileSync('public/world3d/expedition.js','utf8')+'\nthis.render=ThinkingExpedition.html;',scope);
+ const html=scope.render({campaign:engine.campaign(s,true)});assert.match(html,/还差 1 道/);assert.ok(!html.includes('id="town-viewport"'));
+});
+
 test('完成摸底开放小镇，48道全对开放营地；重复练习不虚增进度',()=>{
  const s=engine.initial();finish(s,'diagnostic');assert.equal(engine.view(s).world.diagnosticDone,true);
  assert.equal(engine.campaign(s).first.unlocked,false);
@@ -229,7 +245,9 @@ test('账号权限、教师只读与独立试玩、跨学生隔离和持久化',
  r=await clients[2](url+'/run',{runId:run.id,revision:run.version,action:'submit',answer:'1000',note:'先凑成两个500',seconds:30});assert.equal(r.status,200);assert.equal(r.data.run.result.correct,true);
  const viewed=await clients[0](url);assert.equal(viewed.data.readonly,true);assert.equal(viewed.data.report.questions[0].count,1);
  assert.equal((await clients[2](url)).data.run.result.correct,true);
- const demo=await clients[0]('/api/world3d/demo');assert.ok(demo.data.world.campaign.missions.every(m=>m.unlocked));assert.equal(demo.data.report.questions.length,0);
+ const demo=await clients[0]('/api/world3d/demo');assert.ok(demo.data.world.campaign.missions.every(m=>!m.unlocked));assert.equal(demo.data.report.questions.length,0);
+ assert.equal((await clients[0]('/api/world3d/demo/start',{courseId:campCourses[0].id})).status,403);
+ assert.equal((await clients[0]('/api/world3d/demo/camp',{mission:0,config:{pieces:[0,2,3]},seconds:20,attemptId:crypto.randomUUID()})).status,403);
  await clients[0]('/api/world3d/demo/start',{courseId:'diagnostic'});
  assert.equal((await clients[1]('/api/world3d/demo')).data.run,null);
  const raw=(await pool.query('SELECT data FROM students WHERE user_id=$1',[ids[2]])).rows[0].data;

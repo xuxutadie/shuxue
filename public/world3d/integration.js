@@ -43,6 +43,7 @@ function dispose(){GameDictation.cancel();QuestionCard.close();GameCompletion.cl
 function showQuestion(options={}){GameDictation.cancel();QuestionCard.render(app,practiceHTML(),{onClose:()=>void act('close-card'),...options});}
 function paint(){
  route=location.hash.slice(1)||'world';
+ if(route==='practice'&&practice?.run.courseId.startsWith('camp-')&&!data.world.campaign.first.unlocked){route='expedition';history.replaceState(null,'','#expedition');}
  document.querySelectorAll('.game-nav a').forEach(a=>{if(a.hash==='#'+route)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
  if(route==='practice'&&practice){
   const desired=practice.run.courseId.startsWith('camp-')?'camp':'town';
