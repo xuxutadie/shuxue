@@ -45,6 +45,16 @@ test('答题时降低配乐，隐藏和离开页面停止声音，静音偏好�
  const muted=audioHarness({music:false,effects:false});await muted.scope.audio.unlock();assert.equal(muted.contexts(),0);await muted.click('music');assert.equal(muted.contexts(),1);assert.equal(muted.timers.size,1);
 });
 const storyBoards=[{places:{0:0,1:1,2:0,3:1},work:{first:'500',second:'2'}},{size:4,work:{first:'100',second:'4'}},{places:Object.fromEntries(Array.from({length:20},(_,i)=>[i,Math.min(i,19-i)])),work:{first:'21',second:'10'}},{arranged:true,work:{first:'1',second:'100'}}];
+test('角色设置兼容旧档案，只改变外观，不重置关卡、积分或答题版本',()=>{
+ const s=engine.initial();assert.equal(engine.view(s).world.character,'boy');
+ engine.start(s,'story-bakery');storyAction(s,'submit',{answer:'1000',bakery:storyBoards[0]});
+ const original=structuredClone(s);
+ assert.deepEqual(engine.selectCharacter(s,'girl'),{character:'girl'});
+ assert.equal(engine.view(s).world.character,'girl');assert.equal(engine.view(JSON.parse(JSON.stringify(s))).world.character,'girl');
+ const {character,...rest}=s;assert.deepEqual(rest,original);
+ for(const invalid of ['other','../assets','',null,{},['girl']])assert.throws(()=>engine.selectCharacter(s,invalid),{status:400});
+ assert.equal(s.character,'girl');engine.selectCharacter(s,'boy');assert.equal(engine.view(s).world.character,'boy');
+});
 function storyAction(s,action,extra={}){const r=engine.view(s).run;return engine.runAction(s,{runId:r.id,revision:r.version,action,...extra});}
 
 test('最后一题答对后自动结算，答错、只读、非末题和查看解析不自动结算',async()=>{
@@ -233,6 +243,22 @@ before(async()=>{
  server=createApp(pool).listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));base='http://127.0.0.1:'+server.address().port;
 });
 after(async()=>{if(server){server.closeAllConnections();await new Promise(r=>server.close(r));}if(pool){try{await pool.query('DELETE FROM attempts WHERE student_id=ANY($1::uuid[])',[ids]);await pool.query('DELETE FROM sessions WHERE user_id=ANY($1::uuid[])',[ids]);await pool.query('DELETE FROM students WHERE user_id=ANY($1::uuid[])',[ids]);if(classId)await pool.query('DELETE FROM classes WHERE id=$1',[classId]);await pool.query('DELETE FROM users WHERE id=ANY($1::uuid[])',[ids]);}finally{await pool.end();}}});
+test('游乐设施扣款经过账号权限与数据库行锁，并发和重试只消费一次',async()=>{
+ const url='/api/world3d/'+ids[2],body={rideId:'wheel',requestId:crypto.randomUUID(),expectedSpent:0};
+ assert.equal((await clients[0](url+'/playground',body)).status,403);
+ assert.equal((await clients[3](url+'/playground',body)).status,404);
+ assert.equal((await clients[2](url+'/playground',body)).status,400);
+ const saved=(await pool.query('SELECT data FROM students WHERE user_id=$1',[ids[2]])).rows[0].data;
+ try{
+  const seeded=structuredClone(saved);seeded.world3d=engine.initial();seeded.world3d.adventure={chapters:{bakery:{rewards:{boxes:20}}}};
+  await pool.query('UPDATE students SET data=$2 WHERE user_id=$1',[ids[2],JSON.stringify(seeded)]);
+  const replies=await Promise.all([clients[2](url+'/playground',body),clients[2](url+'/playground',body)]);
+  assert.deepEqual(replies.map(r=>r.status),[200,200]);assert.ok(replies.every(r=>r.data.balance===0));
+  const loaded=(await clients[2](url)).data;assert.equal(loaded.world.playground.spent,20);assert.equal(loaded.world.adventure.points,0);
+  assert.equal((await clients[2](url+'/playground',{...body,requestId:crypto.randomUUID(),expectedSpent:20})).status,400);
+ }finally{await pool.query('UPDATE students SET data=$2 WHERE user_id=$1',[ids[2],JSON.stringify(saved)]);}
+});
+
 test('账号权限、教师只读与独立试玩、跨学生隔离和持久化',async()=>{
  const url='/api/world3d/'+ids[2];
  assert.equal((await clients[3](url)).status,404);assert.equal((await clients[1](url)).status,404);
@@ -265,6 +291,47 @@ test('账号权限、教师只读与独立试玩、跨学生隔离和持久化',
  await pool.query("INSERT INTO attempts(id,student_id,kind,version,answers,deadline) VALUES($1,$2,'A','v2',$3,now()+interval '45 minutes')",[crypto.randomUUID(),ids[3],JSON.stringify(Array(20).fill(''))]);
  assert.equal((await clients[3]('/api/world3d/'+ids[3])).status,403);
  assert.equal((await clients[3]('/api/world3d/'+ids[3]+'/start',{courseId:'diagnostic'})).status,403);
+});
+
+test('女生选择按学生账号保存，教师预览不可更换，教师试玩相互隔离',async()=>{
+ const url='/api/world3d/'+ids[2];
+ const previous=(await clients[2](url)).data;
+ assert.equal((await clients[3](url+'/character',{character:'girl'})).status,404);
+ assert.equal((await clients[0](url+'/character',{character:'girl'})).status,403);
+ assert.equal((await clients[0](url+'/character',{character:'girl'},{'X-Student-Preview':ids[2]})).status,403);
+ assert.equal((await clients[2](url+'/character',{character:'missing'})).status,400);
+ assert.equal((await clients[2](url+'/character',{character:'girl'})).status,200);
+ const updated=(await clients[2](url)).data;
+ assert.equal(updated.world.character,'girl');assert.deepEqual(updated.run,previous.run);
+ assert.deepEqual(updated.report,previous.report);assert.deepEqual(updated.world.adventure,previous.world.adventure);
+ assert.equal((await clients[0](url)).data.world.character,'girl');
+ assert.equal((await clients[0]('/api/world3d/'+ids[3])).data.world.character,'boy');
+ assert.equal((await clients[2]('/api/world3d/demo/character',{character:'girl'})).status,403);
+ assert.equal((await clients[0]('/api/world3d/demo/character',{character:'girl'})).status,200);
+ assert.equal((await clients[0]('/api/world3d/demo')).data.world.character,'girl');
+ assert.equal((await clients[1]('/api/world3d/demo')).data.world.character,'boy');
+});
+test('家园布置按学生与角色隔离，校验样式和版本，不改变学习进度',async()=>{
+ const url='/api/world3d/'+ids[2],before=(await clients[2](url)).data;
+ assert.equal(before.world.homes.boy.wall,'sky');assert.equal(before.world.homes.girl.wall,'lavender');
+ const settings={character:'girl',wall:'mint',rug:'stars',ornament:'crystal',revision:0};
+ assert.equal((await clients[3](url+'/home',settings)).status,404);
+ assert.equal((await clients[0](url+'/home',settings)).status,403);
+ assert.equal((await clients[0](url+'/home',settings,{'X-Student-Preview':ids[2]})).status,403);
+ for(const invalid of [{...settings,character:'other'},{...settings,wall:'<script>'},{...settings,rug:'other'},{...settings,ornament:'other'}])assert.equal((await clients[2](url+'/home',invalid)).status,400);
+ assert.equal((await clients[2](url+'/home',settings)).status,200);
+ assert.equal((await clients[2](url+'/home',settings)).status,409);
+ const after=(await clients[2](url)).data;
+ assert.deepEqual(after.world.homes.girl,{wall:'mint',rug:'stars',ornament:'crystal',revision:1});
+ assert.deepEqual(after.world.homes.boy,before.world.homes.boy);
+ for(const key of ['run','report'])assert.deepEqual(after[key],before[key]);
+ assert.deepEqual(after.world.adventure,before.world.adventure);assert.deepEqual(after.world.campaign,before.world.campaign);
+ assert.deepEqual((await clients[0](url)).data.world.homes,after.world.homes);
+ assert.equal((await clients[0]('/api/world3d/'+ids[3])).data.world.homes.girl.revision,0);
+ assert.equal((await clients[0]('/api/world3d/demo/home',settings)).status,200);
+ assert.equal((await clients[1]('/api/world3d/demo')).data.world.homes.girl.revision,0);
+ assert.equal((await clients[2](url+'/home',{...settings,character:'boy',wall:'cream'})).status,200);
+ assert.equal((await clients[2](url)).data.world.homes.girl.wall,'mint');
 });
 test('游戏页面和模型由本站提供，普通首页不加载3D库',async()=>{
  const html=await(await fetch(base+'/')).text();assert.ok(!html.includes('three.module'));

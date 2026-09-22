@@ -31,10 +31,12 @@ export function createHeroActions(hero, clips, {canSit=()=>false}={}) {
   return {
     get phase(){return phase;},
     get running(){return running;},
-    get speed(){return running?3.2:2.4;},
+    get speed(){return running?3.6:2.9;},
     get sitting(){return phase==='SitDown'||phase==='Seated';},
     get busy(){return single.has(phase);},
     get canMove(){return !blocked&&!['SitDown','Seated','StandUp'].includes(phase);},
+    // 从游乐设施安全退出时立即恢复站姿，避免把半空坐姿带回地面。
+    resetToIdle(){mixer.stopAllAction();active=null;standRequested=false;blocked=false;play('Idle');active.stopFading().setEffectiveWeight(1);mixer.update(0);},
     request(command) {
       if(blocked)return false;
       if(command==='stand'){
@@ -59,7 +61,8 @@ export function createHeroActions(hero, clips, {canSit=()=>false}={}) {
       if(!blocked&&wantsMove&&phase==='Seated')play('StandUp');
       if(['Idle','Walk','Run'].includes(phase)) {
         play(!blocked&&moving?(running?'Run':'Walk'):'Idle');
-        if(moving&&!blocked)active.setEffectiveTimeScale(Math.max(.35,Math.min(1,pace)));
+        // 走路提速时同步提高步频，避免只移动得快、脚下却在滑行。
+        if(moving&&!blocked)active.setEffectiveTimeScale(Math.max(.35,Math.min(1,pace))*(running?1.15:2.9/2.4));
       }
       // 答题时完成落地或起坐，不把人物冻结在空中。
       mixer.update(Math.min(Math.max(dt,0),.05));

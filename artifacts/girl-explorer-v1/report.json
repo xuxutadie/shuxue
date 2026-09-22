@@ -1,0 +1,17 @@
+{
+  "sourceBytes": 83836580,
+  "assetBytes": 4183188,
+  "triangles": 50000,
+  "vertices": 24808,
+  "bones": 22,
+  "unweightedVertices": 0,
+  "animations": [
+    "Idle",
+    "Walk",
+    "Run",
+    "Jump",
+    "SitDown",
+    "StandUp"
+  ],
+  "legRatio": 0.9233782658642367
+}

@@ -77,16 +77,21 @@ def sole_height(side, pitch):
     rotation = Quaternion((1, 0, 0), -pitch)
     return -min((rotation @ p).z for p in soles[side])+.002
 
-def body(height, forward=0, lean=0, twist=0):
+def body(height, forward=0, lean=0, twist=0, roll=0, sway=0):
     reset()
     poses = {'Root': rig.data.bones['Root'].matrix_local.copy()}
     rest = rig.data.bones['Hips']
-    put('Hips', Vector((0, forward, height))*SCALE,
-        Quaternion((0, 0, 1), twist) @ rest.matrix_local.to_quaternion(), poses)
+    put('Hips', Vector((sway, forward, height))*SCALE,
+        Quaternion((0, 0, 1), twist) @ Quaternion((0, 1, 0), roll) @ rest.matrix_local.to_quaternion(), poses)
     point('Spine', (0, -lean, 1), poses)
     point('Chest', (0, -lean*.6, 1), poses)
     point('Neck', (0, 0, 1), poses)
     point('Head', (0, 0, 1), poses)
+    if twist or roll:
+        # 胸肩与骨盆反向转动，头部稳定；避免整块躯干像木板一样摆动。
+        for name, turn, tilt, incline in [('Spine', -.45, -.4, lean), ('Chest', -1.15, -.7, lean*.7), ('Neck', -.18, -.1, 0), ('Head', -.08, 0, 0)]:
+            rotation = Quaternion((0,0,1), twist*turn) @ Quaternion((0,1,0), roll*tilt) @ Quaternion((1,0,0), math.atan(incline))
+            put(name, head_at(name, poses), rotation @ rig.data.bones[name].matrix_local.to_quaternion(), poses)
     for side in ['L', 'R']: follow('Shoulder.'+side, poses)
     return poses
 
@@ -98,26 +103,34 @@ def arm(side, swing, bend, poses):
 
 def run(t):
     phase = t*math.tau
-    poses = body(.475+.018*math.cos(phase*2), -.018, .13, .025*math.sin(phase))
+    # 支撑中段略下沉、蹬地后升起，重心随左右脚交替转移。
+    poses = body(.462-.017*math.cos(2*phase-1.9), -.024, .18+.025*math.sin(2*phase),
+                 .07*math.sin(phase+.2), .035*math.cos(phase-.3), .009*math.cos(phase-.3))
     for side, sign, offset in [('L', 1, 0), ('R', -1, .5)]:
         step = (t+offset) % 1
-        stance = .38
+        stance = .36
         if step < stance:
             u = step/stance
             y = -.20+.40*u
-            pitch = .14-.62*smooth(u)
+            pitch = .12-.70*smooth(u)
             lift = 0
         else:
             u = (step-stance)/(1-stance)
             # 支撑和摆动在交界处保持相同速度，不在落地时突然折返。
             tangent = .40/stance*(1-stance)
             y = .20+tangent*u+(-.40-tangent)*smooth(u)
-            pitch = -.48+.62*smooth(u)
-            lift = .13*math.sin(math.pi*u)**2
+            pitch = -.58+.70*smooth(u)
+            # 后摆先收小腿，再伸腿落地，摆动最高点略早于中点。
+            lift = .16*math.sin(math.pi*u)**2*(1+.3*math.cos(math.pi*u))
         z = sole_height(side, pitch)+lift
-        leg(side, (sign*.062, y, z), pitch, poses)
+        leg(side, (sign*.067, y, z), pitch, poses)
         # 与同侧腿反向摆臂：左腿向前时右臂向前。
-        arm(side, .62*math.cos(step*math.tau), 1.0, poses)
+        cycle=step*math.tau
+        swing=.62*math.cos(cycle-.16)
+        bend=1.05+.22*math.sin(cycle-.4)
+        arm(side, swing, bend, poses)
+        # 手腕稍晚于前臂到位，手肘不再全程锁死成同一个角度。
+        point('Hand.'+side, (sign*.04, math.sin(swing-bend-.09*math.sin(cycle-.65)), -math.cos(swing-bend-.09*math.sin(cycle-.65))), poses)
 
 def jump(t):
     # 整个起跳、腾空、落地都烘焙到骨盆；游戏不会额外叠加高度。
@@ -132,10 +145,11 @@ def jump(t):
         u = (t-.8)/.2
         crouch, lift, tuck = .055*math.sin(math.pi*u)**2, 0, 0
     poses = body(.533-crouch+lift, 0, .14*(crouch/.075))
+    spread=math.sin(math.pi*t)**2
     for side, sign in [('L', 1), ('R', -1)]:
-        leg(side, (.067*sign, .009+tuck*.3, sole_height(side, 0)+lift+tuck), 0, poses)
+        # 腾空时双脚自然分开，略微前后错开；落地缓冲后恢复站姿。
+        leg(side, ((.067+.026*spread)*sign, .009+tuck*.3+sign*.022*spread, sole_height(side, 0)+lift+tuck), 0, poses)
         # 起跳时向两侧展开手臂，落地后自然收回；肘部保留轻微弯曲。
-        spread=math.sin(math.pi*t)**2
         angle=.12+1.18*spread
         point('UpperArm.'+side, (sign*math.sin(angle), -.12*spread, -math.cos(angle)), poses)
         point('Forearm.'+side, (sign*math.sin(angle*.9), -.22*spread, -math.cos(angle*.9)), poses)
@@ -157,7 +171,7 @@ def sitting(t):
 # 只新增命名动作，原 Walk 和 Idle 完整保留。
 for track in rig.animation_data.nla_tracks: track.mute = True
 rig.animation_data.action = None
-for name, frames, pose in [('Run', 37, run), ('Jump', 73, jump),
+for name, frames, pose in [('Run', 40, run), ('Jump', 73, jump),
                            ('SitDown', 61, sitting), ('StandUp', 61, lambda t: sitting(1-t))]:
     act = bpy.data.actions.new(name)
     act.use_fake_user = True

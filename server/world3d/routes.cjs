@@ -24,6 +24,9 @@ function setupWorld3d(app,pool){
   });
  }
  app.get('/api/world3d/:id',async(req,res)=>res.json(await access(req,false,(s,opts)=>engine.view(s,opts))));
+ app.post('/api/world3d/:id/character',async(req,res)=>res.json(await access(req,true,s=>engine.selectCharacter(s,req.body.character))));
+ app.post('/api/world3d/:id/home',async(req,res)=>res.json(await access(req,true,s=>require('./home.cjs').decorate(s,req.body))));
+ app.post('/api/world3d/:id/playground',async(req,res)=>res.json(await access(req,true,(s,opts)=>require('./playground.cjs').purchase(s,req.body,opts))));
  app.post('/api/world3d/:id/start',async(req,res)=>res.json(await access(req,true,(s,opts)=>{engine.start(s,req.body.courseId,opts.demo);return engine.view(s,opts);})));
  app.post('/api/world3d/:id/run',async(req,res)=>res.json(await access(req,true,(s,opts)=>({...engine.runAction(s,req.body),...engine.view(s,opts)}))));
  app.post('/api/world3d/:id/camp',async(req,res)=>res.json(await access(req,true,(s,opts)=>({...engine.submitGame(s,req.body,opts.demo),state:engine.view(s,opts)}))));

@@ -5,6 +5,10 @@ const {judgeCampGame,gameTitles,gameTopics}=require('./camp-games.cjs');
 const {townCourses,campCourses,courses,questions,firstQuestions,isAnswer}=require('./content.cjs');
 const adventure=require('./adventure.cjs');
 function initial(){return {version:1,records:{},runs:{},active:null,repairs:{}};}
+function selectCharacter(s,id){
+ if(!['boy','girl'].includes(id))fail(400,'请选择男生或女生探险家。');
+ s.character=id;return {character:id};
+}
 function campaign(s,demo=false){
  const passed=q=>!!s.records[q.id]?.passed;
  const first={total:firstQuestions.length,correct:firstQuestions.filter(passed).length};
@@ -31,9 +35,12 @@ function publicRun(s){
 }
 function view(s,{demo=false,readonly=false,name='探索家'}={}){
  const rows=rowsForPlan(s),world=worldPlan(townCourses,rows,!!s.runs[s.active]);
+ world.character=s.character==='girl'?'girl':'boy';
+ world.homes=require('./home.cjs').view(s);
  if(demo)world.diagnosticDone=true;
  world.campaign=campaign(s,demo);
  world.adventure=adventure.view(s);
+ world.playground=require('./playground.cjs').wallet(s,{demo});
  if(!world.adventure.done)world.tasks=[{kind:'course',courseId:adventure.chapter.courseId,title:'帮助米米准备救援口粮',reason:'完成四项准备，获得口粮箱与下一站的线索。'}];
  return {world,run:publicRun(s),name,demo,readonly,courses:courses.map(c=>({id:c.id,title:c.title,description:c.description,count:c.questions.length,unlocked:!c.id.startsWith('camp-')||world.campaign.missions.find(m=>m.id===c.id)?.unlocked})),
   report:{questions:Object.entries(s.records).map(([qid,r])=>({qid,title:questions.get(qid)?.title,count:r.count,passed:r.passed,firstCorrect:r.first.correct,firstHints:r.first.hints,last:r.last,history:r.history})),repairs:Object.entries(s.repairs).map(([index,r])=>({title:gameTitles[index],passed:r.passed,count:r.count,history:r.history}))}};
@@ -106,4 +113,4 @@ function submitGame(s,body,demo=false){
  record.count++;record.passed ||= result.correct;
  record.history=[...record.history,{id:body.attemptId,payload,...result,seconds:Math.round(body.seconds),created:new Date().toISOString()}].slice(-30);s.repairs[i]=record;return result;
 }
-module.exports={initial,campaign,view,start,runAction,submitGame};
+module.exports={initial,campaign,view,start,runAction,submitGame,selectCharacter};

@@ -55,9 +55,27 @@ function reportHTML(){
  return ThinkingAdventure.bag(data.world.adventure)+`<h1>${esc(data.name)}的游戏足迹</h1><p>已探索 ${rows.length} 道不同题目；${rows.filter(r=>r.passed).length} 道曾答对。游戏记录不计入课堂测评分数。</p><div class="card game-report"><table><thead><tr><th>题目</th><th>作答次数</th><th>第一次</th><th>通关</th><th>最近作答与思路</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.title)}</td><td>${r.count}</td><td>${r.firstCorrect?r.firstHints?'提示后答对':'独立答对':'待巩固'}</td><td>${r.passed?'✓':'尚未答对'}</td><td><details><summary>展开记录</summary>${r.history.map(a=>`<p>${esc(a.created.slice(0,16).replace('T',' '))} · ${esc(a.answer||'未填写')} · ${a.revealed?'学习解析':a.correct?'答对':'未答对'}<br>思路：${esc(a.note||'未填写')}${a.workLabels?'<br>观察：'+a.workLabels.labels.map((label,i)=>esc(label)+'：'+esc(a.work?.[['first','second'][i]]||'未填')).join('；')+(a.workLabels.extra?'；'+esc(a.workLabels.extra)+'：'+esc(a.work?.extra||'未填'):''):''}</p>`).join('')}</details></td></tr>`).join('')||'<tr><td colspan="5">完成一题后，这里就会留下足迹。</td></tr>'}</tbody></table></div><h2>营地修复记录</h2><div class="game-tasks">${data.report.repairs.map(r=>`<article class="card"><h3>${esc(r.title)}</h3><p>${r.passed?'已修复':'还在尝试'} · 共验证 ${r.count} 次</p><details><summary>查看最近方案</summary>${r.history.map(a=>`<p>${esc(a.description)}<br>${esc(a.feedback)}</p>`).join('')}</details></article>`).join('')||'<p>开始修复营地后显示。</p>'}</div>`;
 }
 let sceneKind=null;
-function dispose(){GameDictation.cancel();QuestionCard.close();GameCompletion.close();ThinkingTown.dispose();ThinkingExpedition.dispose();sceneKind=null;}
+async function saveCharacter(character){
+ if(data.readonly)throw Error('查看学生记录时不能更换角色。');
+ const out=await request('/character',{character});
+ data.world.character=out.character;return out.character;
+}
+async function saveHome(character,settings){
+ if(data.readonly)throw Error('查看学生记录时不能更改家园。');
+ const out=await request('/home',{character,...settings});data.world.homes[character]=out.home;return out.home;
+}
+async function payRide(payload){
+ if(data.readonly)throw Error('查看学生记录时不能消费星光，请使用教师试玩。');
+ const out=await request('/playground',payload);
+ data.world.playground=out;
+ if(!data.demo)data.world.adventure.points=out.balance;
+ return out;
+}
+function sceneOptions(){return {submitGame,saveCharacter,saveHome,payRide,readonly:data.readonly};}
+function dispose(){GameDictation.cancel();QuestionCard.close();GameCompletion.close();ThinkingTown.dispose();ThinkingExpedition.dispose();ThinkingHome.dispose();sceneKind=null;}
 function showQuestion(options={}){GameDictation.cancel();QuestionCard.render(app,practiceHTML(),{onClose:()=>void act('close-card'),...options});}
 function paint(){
+ const previousRoute=route;
  route=location.hash.slice(1)||'world';
  if(route==='practice'&&practice?.run.courseId.startsWith('camp-')&&!data.world.campaign.first.unlocked){route='expedition';history.replaceState(null,'','#expedition');}
  document.querySelectorAll('.game-nav a').forEach(a=>{if(a.hash==='#'+route)a.setAttribute('aria-current','page');else a.removeAttribute('aria-current');});
@@ -66,7 +84,7 @@ function paint(){
   // 作答和操作台更新只刷新卡片，保留正在运行的场景与镜头。
   if(sceneKind!==desired||!app.querySelector('#town-viewport')){
    dispose();app.innerHTML=desired==='camp'?ThinkingExpedition.html(data.world):ThinkingTown.html(data.world,data.name);
-   if(desired==='camp')ThinkingExpedition.mount(app,data.world,{submitGame});else ThinkingTown.mount(app,data.world);
+   if(desired==='camp')ThinkingExpedition.mount(app,data.world,sceneOptions());else ThinkingTown.mount(app,data.world,sceneOptions());
    sceneKind=desired;
   }
   showQuestion({feedback:!!practice.run.result});return;
@@ -76,8 +94,9 @@ function paint(){
  else if(route==='practice')app.innerHTML=practiceHTML();
  else if(route==='courses')app.innerHTML=coursesHTML();
  else if(route==='report')app.innerHTML=reportHTML();
- else if(route==='expedition'){app.innerHTML=ThinkingExpedition.html(data.world);ThinkingExpedition.mount(app,data.world,{submitGame});sceneKind='camp';}
- else {app.innerHTML=ThinkingTown.html(data.world,data.name);ThinkingTown.mount(app,data.world);sceneKind='town';}
+ else if(route==='home'){app.innerHTML=ThinkingHome.html();ThinkingHome.mount(app,data.world,sceneOptions());sceneKind='home';}
+ else if(route==='expedition'){app.innerHTML=ThinkingExpedition.html(data.world);ThinkingExpedition.mount(app,data.world,sceneOptions());sceneKind='camp';}
+ else {app.innerHTML=ThinkingTown.html(data.world,data.name);ThinkingTown.mount(app,data.world,{...sceneOptions(),homeArrival:previousRoute==='home'});sceneKind='town';}
  if(data.readonly){const p=document.createElement('p');p.className='readonly-note';p.textContent='正在查看学生的真实进度；如需操作体验，请返回教师端进入教师试玩。';app.prepend(p);}
  app.focus({preventScroll:true});
  // 新阶段从剧情开头展示；结果则定位到反馈，避免旧页面滚动位置遮住动画。

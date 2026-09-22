@@ -1,6 +1,12 @@
 import * as THREE from './vendor/three.module.js';
 import {GLTFLoader} from './vendor/GLTFLoader.js';
-import {createHeroActions} from './hero-actions.mjs';
+import {createHeroActions} from './hero-actions.mjs?v=20260922-motion1';
+import {heroes,heroFor} from './hero-catalog.mjs?v=20260922-motion1';
+
+const selectedHero=heroFor(new URLSearchParams(location.search).get('character'));
+const heroSelect=document.querySelector('#character');
+heroSelect.innerHTML=heroes.map(hero=>`<option value="${hero.id}">${hero.label}</option>`).join('');heroSelect.value=selectedHero.id;
+heroSelect.addEventListener('change',()=>{const url=new URL(location.href);url.searchParams.set('character',heroSelect.value);location.assign(url.href);});
 
 const scene=new THREE.Scene();scene.background=new THREE.Color('#f8f7ff');
 const canvasHeight=()=>Math.max(240,innerHeight-145);
@@ -45,7 +51,7 @@ document.querySelector('#bones').addEventListener('click',e=>{if(!helper)return;
 document.querySelector('#speed').addEventListener('change',e=>{speed=Number(e.target.value);});
 addEventListener('resize',()=>{renderer.setSize(innerWidth,canvasHeight());camera.aspect=innerWidth/canvasHeight();camera.updateProjectionMatrix();});
 try{
-  const gltf=await new GLTFLoader().loadAsync('./assets/explorer-actions-v2.glb?v=20260922-seats');
+  const gltf=await new GLTFLoader().loadAsync(selectedHero.asset);
   scene.add(gltf.scene);gltf.scene.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=false;}});
   helper=new THREE.SkeletonHelper(gltf.scene);helper.visible=false;helper.material.depthTest=false;helper.renderOrder=10;scene.add(helper);
   actions=createHeroActions(gltf.scene,gltf.animations,{canSit:()=>bench.visible});
