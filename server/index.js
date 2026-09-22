@@ -11,7 +11,10 @@ function createApp(pool, options = {}) {
   const app = express(), production = process.env.NODE_ENV === 'production';
   app.disable('x-powered-by');
   if (process.env.TRUST_PROXY === '1') app.set('trust proxy', 1);
-  app.use(helmet({ contentSecurityPolicy: { directives: { defaultSrc: ["'self'"], scriptSrc: ["'self'"], styleSrc: ["'self'", "'unsafe-inline'"], imgSrc: ["'self'", 'data:'], mediaSrc: ["'self'", 'https:', ...(production ? [] : ['http:'])], upgradeInsecureRequests: production ? [] : null } }, strictTransportSecurity: production ? undefined : false }));
+  const contentDirectives = { defaultSrc: ["'self'"], scriptSrc: ["'self'"], styleSrc: ["'self'", "'unsafe-inline'"], imgSrc: ["'self'", 'data:'], mediaSrc: ["'self'", 'https:', ...(production ? [] : ['http:'])], upgradeInsecureRequests: production ? [] : null };
+  app.use(helmet({ contentSecurityPolicy: { directives: contentDirectives }, strictTransportSecurity: production ? undefined : false }));
+  // GLB 内嵌贴图会被 Three.js 转为 blob；只为 3D 页面开放本地二进制资源。
+  app.use('/world3d', helmet.contentSecurityPolicy({ directives: { ...contentDirectives, imgSrc: ["'self'", 'data:', 'blob:'], connectSrc: ["'self'", 'blob:'] } }));
   app.use(express.json({ limit: '5mb' }));
   app.get('/health', async (req, res) => { await pool.query('SELECT 1'); res.json({ ok: true }); });
   app.use('/api', (req,res,next) => { res.set('Cache-Control','no-store'); next(); });

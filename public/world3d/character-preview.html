@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>新主角 · 动作预览</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;color:#302b49;font-family:system-ui,"Microsoft YaHei",sans-serif;background:#f8f7ff;overflow:hidden}canvas{display:block;touch-action:none}
+    header{position:fixed;top:18px;left:22px;right:22px;display:flex;justify-content:space-between;gap:16px;align-items:center;pointer-events:none}h1{font-size:21px;margin:0}header a{pointer-events:auto;color:inherit;text-decoration:none;background:#fff;padding:10px 15px;border-radius:14px;border:1px solid #ded9ed}
+    #status{font-size:13px;color:#706580;margin:6px 0 0}.panel{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);width:max-content;max-width:calc(100% - 28px);padding:14px 18px;background:rgba(255,255,255,.96);border:1px solid #e3ddef;border-radius:22px;box-shadow:0 8px 28px #39285516;text-align:center}.row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}button{font:inherit;font-size:14px;cursor:pointer;border:1px solid #d9d2e7;background:#fff;color:#302b49;border-radius:12px;padding:10px 16px}button[aria-pressed=true]{background:#ffe15d;border-color:#b39532}button:focus-visible,a:focus-visible{outline:3px solid #7d56d8;outline-offset:3px}.hint{font-size:12px;color:#80768e;margin:10px 0 0}#error{position:fixed;inset:40% 10% auto;text-align:center;color:#ae253e}label{font-size:13px;display:flex;gap:6px;align-items:center}.views{margin-top:10px}
+    @media(max-width:600px){header{top:14px;left:14px;right:14px}h1{font-size:17px}header a{font-size:12px}.panel{bottom:10px;padding:12px;width:calc(100% - 24px)}button{padding:8px 11px;font-size:13px}}
+  </style>
+</head>
+<body>
+  <header><div><h1>新主角 · 动作预览</h1><p id="status" role="status">正在加载角色…</p></div><a href="/world3d/#world">返回小镇</a></header>
+  <div id="error" role="alert" hidden></div>
+  <section class="panel" aria-label="角色预览控制">
+    <div class="row"><button data-action="Walk" aria-pressed="true">走路</button><button data-action="Idle" aria-pressed="false">站立</button><button id="pause" aria-pressed="false">暂停</button><button id="bones" aria-pressed="false">显示骨骼</button><label>速度 <select id="speed"><option value="0.5">慢速</option><option value="1" selected>正常</option><option value="1.5">快速</option></select></label></div>
+    <div class="row views"><button data-view="0">正面</button><button data-view="1.57079632679">侧面</button><button data-view="3.14159265359">背面</button><button data-view="0.6">斜侧面</button></div>
+    <p class="hint">拖动查看四周 · 滚轮缩放 · 可显示骨骼检查关节</p>
+  </section>
+  <script type="module" src="./character-preview.js?v=20260921-gait3"></script>
+</body>
+</html>

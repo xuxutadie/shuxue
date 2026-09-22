@@ -16,7 +16,9 @@ export function mountWorld(root,data,onTalk){
     box.innerHTML=`<button class="outline mini dialogue-close" data-close-dialogue>关闭对话</button><span class="pill">山谷通道</span><h2>${config.camp?'返回好奇心小镇':gateOpen()?'通往星光营地的路已开放':'远方就是星光营地'}</h2><p>${config.camp?'沿原路回到小镇，继续拜访朋友。':gateOpen()?'你已完成第一关，可以出发探索营地了。':`这里只能远眺。第一关全部 ${first?.total||48} 道题答对后才能通行，当前已答对 ${first?.correct||0} 道，还差 ${Math.max(0,(first?.total||48)-(first?.correct||0))} 道。`}</p>${config.camp||gateOpen()?'<button data-cross-gate>穿过山谷通道 →</button>':'<button disabled>通道尚未开放</button>'}`;
   }
   const viewport=root.querySelector('#town-viewport'),status=root.querySelector('#town-position'),loading=root.querySelector('#town-loading');
-  let disposed=false,frame=0,renderer,scene,hero,mixer,walk,observer;
+  let disposed=false,frame=0,renderer,scene,hero,mixer,walk,idle,observer;
+  // 新主角采用完整步态；移动速度与正常走路的节奏配合。
+  const moveSpeed=2.4;
   let position={x:-4,z:4},yaw=.18,pitch=.85,distance=20,route=[],destination=null,drag=null,stick={x:0,z:0};
   if(nextArrival===region){position={x:0,z:11.5};nextArrival=null;}
   const keys=new Set(),listeners=[],owned=[];const shell=root.querySelector('.world3d-shell');let expanded=false,previousOverflow='';
@@ -33,7 +35,7 @@ export function mountWorld(root,data,onTalk){
     on(fullButton,'click',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else{if(!expanded)expand();await document.documentElement.requestFullscreen();}}catch{say('当前浏览器未允许全屏，游戏已铺满窗口。');}});
   }
   const nearest=()=>stations.findIndex(([x,z],i)=>Math.hypot(position.x-x,position.z-(z+(i<3?4:-4)))<2.3);
-  function disposeModel(object){object.traverse(o=>{o.geometry?.dispose();if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material]){m.map?.dispose();m.dispose();}});}
+  function disposeModel(object){const skeletons=new Set();object.traverse(o=>{o.geometry?.dispose();if(o.skeleton)skeletons.add(o.skeleton);if(o.material)for(const m of Array.isArray(o.material)?o.material:[o.material]){m.map?.dispose();m.dispose();}});skeletons.forEach(skeleton=>skeleton.dispose());}
   function resetInput(){keys.clear();stick={x:0,z:0};drag=null;}
   function travel(target,index=null){const path=findPath(position,target);if(!path){say('那里无法到达，请点击道路或选择一位朋友。');return;}route=path;destination=index;say('正在走向目的地……');viewport.focus({preventScroll:true});}
   function talk(){if(atGate()){showGate();return;}const index=nearest();if(index<0){say('走到人物身边再交谈，或点击下方地点让角色自动前往。');return;}route=[];resetInput();onTalk(index);}
@@ -54,7 +56,7 @@ export function mountWorld(root,data,onTalk){
     on(viewport,'pointercancel',()=>drag=null);
     on(viewport,'wheel',e=>{e.preventDefault();distance=THREE.MathUtils.clamp(distance+e.deltaY*.012,8,31);},{passive:false});
     const codes=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyA','KeyS','KeyD'];
-    on(viewport,'keydown',e=>{if(e.target!==viewport)return;if(codes.includes(e.code)){e.preventDefault();route=[];destination=null;keys.add(e.code);if(!e.repeat&&hero){const v={ArrowUp:[0,-1],KeyW:[0,-1],ArrowDown:[0,1],KeyS:[0,1],ArrowLeft:[-1,0],KeyA:[-1,0],ArrowRight:[1,0],KeyD:[1,0]}[e.code];position=stepPosition(position,(v[0]*Math.cos(yaw)+v[1]*Math.sin(yaw))*.12,(-v[0]*Math.sin(yaw)+v[1]*Math.cos(yaw))*.12);}}if(e.code==='Escape'&&expanded)expand();if(e.code==='Enter'){e.preventDefault();talk();}});
+    on(viewport,'keydown',e=>{if(e.target!==viewport)return;if(codes.includes(e.code)){e.preventDefault();route=[];destination=null;keys.add(e.code);}if(e.code==='Escape'&&expanded)expand();if(e.code==='Enter'){e.preventDefault();talk();}});
     on(window,'keyup',e=>keys.delete(e.code));on(window,'blur',resetInput);on(viewport,'blur',()=>keys.clear());
     on(document,'visibilitychange',()=>{if(document.hidden){resetInput();route=[];}});
     const joystick=root.querySelector('#town-joystick'),knob=joystick.querySelector('span');let stickPointer=null;
@@ -65,14 +67,21 @@ export function mountWorld(root,data,onTalk){
     on(renderer.domElement,'webglcontextlost',e=>{e.preventDefault();cancelAnimationFrame(frame);resetInput();fail();});
     const loader=new GLTFLoader();
     // 模型来自 Blender 导出；网页仅负责显示、镜头和任务交互。
-    Promise.all([config.asset||'/world3d/assets/thinking-town.glb','/world3d/assets/explorer.glb'].map(url=>loader.loadAsync(url).then(g=>{if(disposed){disposeModel(g.scene);return null;}owned.push(g.scene);return g;}))).then(([town,player])=>{
+    Promise.all([config.asset||'/world3d/assets/thinking-town.glb','/world3d/assets/explorer-rigged-v1.glb?v=20260921-gait3'].map(url=>loader.loadAsync(url).then(g=>{if(disposed){disposeModel(g.scene);return null;}owned.push(g.scene);return g;}))).then(([town,player])=>{
       if(disposed||!town||!player)return;
       scene.add(town.scene);hero=player.scene;scene.add(hero);
       // 未通关时横杆仅作关口提示，真正的跨区动作还要核对服务端返回的通关状态。
       if(!config.camp&&!gateOpen()){const barrier=new THREE.Mesh(new THREE.BoxGeometry(3.2,.18,.18),new THREE.MeshStandardMaterial({color:0xb97d50}));barrier.position.set(0,1.2,12.7);scene.add(barrier);owned.push(barrier);}
       const gateButton=document.createElement('button');gateButton.className='outline mini';gateButton.dataset.gotoGate='';gateButton.textContent=config.camp?'前往小镇出口':'前往山谷入口';root.querySelector('.world3d-toolbar>div').append(gateButton);listeners.push(()=>gateButton.remove());
       scene.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}if(o.name.startsWith('Reward_')){const i=Number(o.name.slice(7));o.visible=!!data.areas[i]?.stamps;}});
-      mixer=new THREE.AnimationMixer(hero);if(player.animations[0]){walk=mixer.clipAction(player.animations[0]);walk.play();walk.paused=true;}
+      // 与动作预览保持一致，避免头发和面部的细节产生斑驳自阴影。
+      hero.traverse(o=>{if(o.isMesh)o.receiveShadow=false;});
+      // 按名称选动作，避免把文件中的第一个 Idle 误当作走路。
+      mixer=new THREE.AnimationMixer(hero);
+      const idleClip=THREE.AnimationClip.findByName(player.animations,'Idle');
+      const walkClip=THREE.AnimationClip.findByName(player.animations,'Walk');
+      if(idleClip){idle=mixer.clipAction(idleClip);idle.play();}
+      if(walkClip)walk=mixer.clipAction(walkClip);
       for(let i=0;i<6;i++){
         // 黄色感叹号标记可交互任务点；透明底与深色描边避免遮挡场景。
         const canvas=document.createElement('canvas');canvas.width=128;canvas.height=128;const ctx=canvas.getContext('2d');
@@ -92,12 +101,23 @@ export function mountWorld(root,data,onTalk){
       if(root.querySelector('.question-card[open]')){resetInput();route=[];destination=null;}
       if(hero){
         const old={...position};let dx=stick.x+(keys.has('ArrowRight')||keys.has('KeyD')?1:0)-(keys.has('ArrowLeft')||keys.has('KeyA')?1:0),dz=stick.z+(keys.has('ArrowDown')||keys.has('KeyS')?1:0)-(keys.has('ArrowUp')||keys.has('KeyW')?1:0);
-        if(Math.hypot(dx,dz)>.1){const length=Math.max(1,Math.hypot(dx,dz)),vx=(dx*Math.cos(yaw)+dz*Math.sin(yaw))/length,vz=(-dx*Math.sin(yaw)+dz*Math.cos(yaw))/length;position=stepPosition(position,vx*4.5*dt,vz*4.5*dt);}
-        else if(route.length){const step=advancePath(position,route,4.5*dt);position=step.position;if(step.blocked){route=[];destination=null;say('前面有障碍，请换一条路。');}}
+        if(Math.hypot(dx,dz)>.1){const length=Math.max(1,Math.hypot(dx,dz)),vx=(dx*Math.cos(yaw)+dz*Math.sin(yaw))/length,vz=(-dx*Math.sin(yaw)+dz*Math.cos(yaw))/length;position=stepPosition(position,vx*moveSpeed*dt,vz*moveSpeed*dt);}
+        else if(route.length){const step=advancePath(position,route,moveSpeed*dt);position=step.position;if(step.blocked){route=[];destination=null;say('前面有障碍，请换一条路。');}}
         const moving=Math.hypot(position.x-old.x,position.z-old.z)>.001;
         hero.position.set(position.x,.09,position.z);
-        if(moving){hero.rotation.y=Math.atan2(position.x-old.x,position.z-old.z);if(walk){walk.paused=false;mixer.update(dt);}}
-        else if(wasMoving&&walk){walk.reset();walk.play();mixer.update(0);walk.paused=true;}
+        if(moving){
+          const heading=Math.atan2(position.x-old.x,position.z-old.z);
+          const turn=Math.atan2(Math.sin(heading-hero.rotation.y),Math.cos(heading-hero.rotation.y));
+          hero.rotation.y+=turn*(1-Math.exp(-16*dt));
+          walk?.setEffectiveTimeScale(Math.max(.35,Math.min(1,Math.hypot(position.x-old.x,position.z-old.z)/Math.max(dt*moveSpeed,.0001))));
+        }
+        // 只在起步、停步时切换，答题和交谈期间也持续播放站立呼吸。
+        if(moving!==wasMoving){
+          const next=moving?walk:idle,previous=moving?idle:walk;
+          previous?.fadeOut(.22);
+          next?.reset().setEffectiveWeight(1).fadeIn(.22).play();
+        }
+        mixer?.update(dt);
         wasMoving=moving;
         if(!route.length&&destination!==null){const i=destination;destination=null;if(i==='gate'&&atGate()){showGate();}else if(nearest()===i){onTalk(i);say('已经到达，可以接受这位朋友的任务。');}}
         const look=new THREE.Vector3(position.x,1.15,position.z),offset=new THREE.Vector3(Math.sin(yaw)*Math.cos(pitch)*distance,Math.sin(pitch)*distance,Math.cos(yaw)*Math.cos(pitch)*distance);camera.position.lerp(look.clone().add(offset),Math.min(1,dt*6));camera.lookAt(look);

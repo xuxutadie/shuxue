@@ -1,0 +1,27 @@
+{
+  "bones": 22,
+  "actions": [
+    "Idle",
+    "Walk"
+  ],
+  "walkFrameRange": [
+    1.0,
+    73.0
+  ],
+  "groundRange": [
+    1.8470920622348785e-05,
+    0.004538708832114935
+  ],
+  "loopMaxVertexError": 0.0,
+  "halfCycleVertexMovement": 0.23360029818250802,
+  "textureSize": [
+    2048,
+    2048
+  ],
+  "footSeparation": [
+    0.20973683148622513,
+    0.21613375842571259
+  ],
+  "hipMaxFrameAcceleration": 0.0009626090784746177,
+  "footRollDegrees": 79.00004478092802
+}

@@ -1,0 +1,17 @@
+{
+  "source": "C:\\Users\\6\\Downloads\\a379d0a2fc31ce386872ca2a274f0837.glb",
+  "sourceBytes": 81037736,
+  "sourceSha256": "068d492dc232de5505f05c8720663de9b40fd51ac5fa6bc2f2f7640d477d0f32",
+  "triangles": 59999,
+  "vertices": 29985,
+  "bones": 22,
+  "unweightedVertices": 0,
+  "height": 2.0,
+  "assetBytes": 4011000,
+  "animations": [
+    "Idle",
+    "Walk"
+  ],
+  "gaitVersion": "reference-adapted-v3",
+  "walkReference": "walk-reference.json"
+}
