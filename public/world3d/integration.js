@@ -14,6 +14,22 @@ function clock(){const n=Math.round(seconds);return `${Math.floor(n/60)}分${n%6
 function capture(){if(!practice||practice.run.result)return;const answer=document.getElementById('answer'),note=document.getElementById('note');if(answer){practice.answer=answer.value;practice.note=note?.value||'';if(practice.run.storyStep){practice.bakery??=structuredClone(practice.run.bakery||{});practice.bakery.work??={};document.querySelectorAll('[data-work]').forEach(input=>practice.bakery.work[input.dataset.work]=input.value);}}}
 function fields(){capture();return {runId:practice.run.id,revision:practice.run.version,answer:practice.answer??practice.run.draft,note:practice.note??practice.run.note,seconds,...(practice.run.storyStep?{bakery:structuredClone(practice.bakery||practice.run.bakery||{})}:{})};}
 function syncText(text){const el=document.getElementById('sync');if(el)el.textContent=text;}
+async function loadLatest(preserveDraft=false){
+ // 等待正在进行的保存结束，但不能让失败的旧请求阻止读取最新进度。
+ await saveQueue.catch(()=>{});
+ capture();
+ const previous=practice,local=previous?{answer:previous.answer,note:previous.note,bakery:structuredClone(previous.bakery||previous.run.bakery||{}),seconds}:null;
+ const out=await request();
+ const keep=preserveDraft&&local&&!out.readonly&&!previous.run.result&&!out.run?.result&&out.run?.id===previous.run.id&&out.run?.index===previous.run.index&&out.run?.question.id===previous.run.question.id;
+ accept(out);saveQueue=Promise.resolve();dirty=false;paused=false;
+ if(keep){
+  // 只在同一道未提交题目上保留输入；已提交或已前进时以服务器记录为准。
+  Object.assign(practice,{answer:local.answer,note:local.note,bakery:local.bakery});
+  Object.assign(practice.run,{draft:local.answer,note:local.note,...(practice.run.storyStep?{bakery:local.bakery}:{})});
+  seconds=Math.max(seconds,local.seconds);dirty=true;
+ }
+ paint();return keep;
+}
 function saveDraft(){
  if(route!=='practice'||!practice||practice.run.result||data.readonly||(!dirty&&seconds===practice.run.seconds))return saveQueue;
  // 串行保存，避免自动保存与提交同时携带旧版本号。
@@ -84,7 +100,11 @@ async function act(action,courseId){
  if(action==='close-card'){
   busy=true;try{await saveDraft();location.hash=practice?.run.courseId.startsWith('camp-')?'expedition':'world';}catch(e){toast(e.message);}finally{busy=false;}return;
  }
- if(action==='reload'){if(dirty&&!confirm('载入服务器最新进度会替换本页未保存的文字，请先复制保留。继续吗？'))return;dirty=false;practice=null;return navigate();}
+ if(action==='reload'){
+  if(dirty&&!confirm('载入服务器最新进度会替换本页未保存的文字，请先复制保留。继续吗？'))return;
+  busy=true;document.body.inert=true;
+  try{await loadLatest();toast('已载入最新进度，可以继续。');}catch(e){toast(e.message);}finally{busy=false;document.body.inert=false;}return;
+ }
  if(data.readonly){toast('这里只查看学生记录，请进入教师试玩进行体验。');return;}
  busy=true;document.body.inert=true;
  try{
@@ -105,7 +125,16 @@ async function act(action,courseId){
    document.body.inert=false;
    GameCompletion.show(app,{story:wasStory,title:finishedRun.courseTitle,total:finishedRun.total,adventure:data.world.adventure});
   }else{if(action==='submit'&&out.run?.result)GameAudio.result(out.run.result.correct);paint();}
- }catch(e){paused=true;toast(e.message);syncText(e.message+' 当前输入仍在页面中。');}
+ }catch(e){
+  paused=true;
+  if(e.status===409){
+   try{
+    const kept=await loadLatest(true);
+    const message=kept?'进度已同步，你的答案和思路已保留，请再次验证。':'已恢复服务器保存的最新进度，请继续当前题目。';
+    toast(message);syncText(message);
+   }catch(syncError){toast(syncError.message);syncText('暂时无法同步，当前输入仍保留。请稍后载入最新进度。');}
+  }else{toast(e.message);syncText(e.message+' 当前输入仍在页面中。');}
+ }
  finally{busy=false;document.body.inert=false;}
 }
 app.addEventListener('submit',event=>{if(event.target.id==='game-answer-form'){event.preventDefault();void act('submit');}});
