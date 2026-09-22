@@ -1,0 +1,11 @@
+{
+  "assetBytes": 4112052,
+  "animations": [
+    "Idle",
+    "Jump",
+    "Run",
+    "SitDown",
+    "StandUp",
+    "Walk"
+  ]
+}
