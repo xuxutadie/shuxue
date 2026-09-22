@@ -45,6 +45,7 @@ def render(folder):
     run(['ffmpeg','-y','-v','error','-i',str(movie),'-vf',f"select='{expr}',scale=640:360,tile=2x4",'-frames:v','1',str(folder/'成片检查.jpg')],folder/'sheet.log').check_returncode()
     verified.write_text(json.dumps({'hash':digest,'seconds':float(info['format']['duration']),'bytes':int(info['format']['size']),'decode':'通过','video':'1920×1080 H264 24fps','audio':'AAC'},ensure_ascii=False,indent=2),encoding='utf-8')
     print(folder.name+' 成片已验证 '+str(round(timing['duration']))+'秒',flush=True)
-folders=[p for p in sorted(root.glob('lesson-*')) if (p/'index.html').exists() and (len(sys.argv)<2 or p.name in sys.argv[1:])]
-with ThreadPoolExecutor(max_workers=int(os.environ.get('MATH_VIDEO_RENDER_JOBS','2'))) as executor:list(executor.map(render,folders))
-print('本批次全部导出完成',flush=True)
+if __name__=='__main__':
+    folders=[p for p in sorted(root.glob('lesson-*')) if (p/'index.html').exists() and (len(sys.argv)<2 or p.name in sys.argv[1:])]
+    with ThreadPoolExecutor(max_workers=int(os.environ.get('MATH_VIDEO_RENDER_JOBS','2'))) as executor:list(executor.map(render,folders))
+    print('本批次全部导出完成',flush=True)

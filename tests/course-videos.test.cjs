@@ -30,7 +30,7 @@ test('12节课的默认视频、字幕、封面与章节都有对应交付文件
 });
 test('没有学生时教师可看视频，学生不会收到视频末题的教师答案',()=>{
  const c=context(true);
- for(let i=0;i<12;i++){c.number=i;const html=vm.runInContext('lessonId=number;courseVideoPanel()',c);assert.match(html,/<video /);assert.match(html,/video-seek/);assert.match(html,/教师用：视频末尾/);}
+ for(let i=0;i<12;i++){c.number=i;const html=vm.runInContext('lessonId=number;courseVideoPanel()',c);assert.match(html,/<video /);assert.match(html,/video-seek/);assert.match(html,/教师用：(视频末尾|独立讲解题)/);}
  assert.ok(lessons(true).every(l=>l.videoGuide));assert.ok(lessons(false).every(l=>!('videoGuide' in l)));
  const student=context(false);assert.doesNotMatch(vm.runInContext('courseVideoPanel()',student),/教师用：|参考思路：/);
 });
@@ -44,6 +44,24 @@ test('班级覆盖不混用默认片章节，清空或非法地址恢复默认�
  let html=vm.runInContext('courseVideoPanel()',c);assert.match(html,/custom.mp4/);assert.doesNotMatch(html,/data-action="video-seek"/);assert.doesNotMatch(html,/教师用：视频末尾/);
  vm.runInContext("state.videos[0]='javascript:alert(1)'",c);html=vm.runInContext('courseVideoPanel()',c);assert.match(html,/lesson-01-dopamine-v1.mp4/);assert.doesNotMatch(html,/javascript:/);
  vm.runInContext("state.videos[0]=''",c);assert.match(vm.runInContext('courseVideoPanel()',c),/data-action="video-seek"/);
+});
+
+test('第三课两道例题各有完整视频，章节定位到对应播放器，学生不展示教师答案',()=>{
+ const c=context(false);vm.runInContext('lessonId=2',c);
+ const html=vm.runInContext('courseVideoPanel()',c);
+ assert.equal((html.match(/<video /g)||[]).length,2);
+ assert.match(html,/例题1 · 彩色列车的循环/);assert.match(html,/例题2 · 加4减1/);
+ assert.match(html,/data-video="lesson-video-1"/);assert.doesNotMatch(html,/参考思路|教师用：/);
+ const parts=vm.runInContext('courseVideoMeta(2).examples',c);
+ for(const part of parts){
+  assert.ok(part.duration>150);let last=-1;
+  for(const chapter of part.chapters){assert.ok(chapter.start>last&&chapter.start<part.duration);last=chapter.start;}
+  for(const key of ['src','poster','captions'])assert.ok(fs.statSync(path.join('public',part[key])).size>100);
+  assert.match(fs.readFileSync(path.join('public',part.captions),'utf8'),/^WEBVTT/);
+ }
+ vm.runInContext("state.videos[2]='https://example.com/teacher.mp4'",c);
+ const custom=vm.runInContext('courseVideoPanel()',c);
+ assert.equal((custom.match(/<video /g)||[]).length,1);assert.doesNotMatch(custom,/lesson-03-example|data-action="video-seek"/);
 });
 test('部署后的媒体支持分段读取与中文字幕，源稿与教师答案不可静态读取',async()=>{
  const server=createApp({query:async()=>({rows:[]})}).listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));

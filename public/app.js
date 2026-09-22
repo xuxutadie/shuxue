@@ -169,7 +169,7 @@ document.addEventListener('click',async event=>{
   if(action==='finish-save'){await saveClassroomRecord();} if(action==='projection'){projecting=!projecting;document.body.classList.toggle('classroom-projection',projecting);b.textContent=projecting?'退出投屏展示':'投屏展示';}
   if(action==='connect')await startSession();if(action==='reload')await render({fresh:true});
   if(action==='video-seek'){
-   const video=document.getElementById('lesson-video'),time=Number(b.dataset.time);
+   const video=document.getElementById(b.dataset.video||'lesson-video'),time=Number(b.dataset.time);
    if(video&&Number.isFinite(time)&&time>=0){
     if(video.readyState<1)await new Promise((resolve,reject)=>{const timer=setTimeout(()=>{clean();reject(new Error('视频还没有加载完成，请稍后再选章节。'));},10000);const clean=()=>{clearTimeout(timer);video.removeEventListener('loadedmetadata',ready);video.removeEventListener('error',failed);};const ready=()=>{clean();resolve();};const failed=()=>{clean();reject(new Error('视频加载失败，请检查网络后重试。'));};video.addEventListener('loadedmetadata',ready,{once:true});video.addEventListener('error',failed,{once:true});video.load();});
     if(video.isConnected){video.currentTime=Math.min(time,Math.max(0,video.duration-.1));video.scrollIntoView({behavior:'smooth',block:'center'});await video.play().catch(()=>toast('已定位到章节，点击视频播放按钮即可观看。'));}
@@ -254,7 +254,10 @@ window.addEventListener('beforeunload',e=>{if(examSession?.dirty||classroomDraft
 window.addEventListener('online',()=>{if(examSession?.dirty)saveAnswers().catch(err=>toast(err.message));});
 window.addEventListener('offline',()=>status('网络已断开，请重连后保存',true));
 
-document.addEventListener('error',event=>{if(event.target?.id==='lesson-video'){const message=document.getElementById('video-error');if(message)message.hidden=false;}},true);
+document.addEventListener('error',event=>{if(/^lesson-video(?:-\d+)?$/.test(event.target?.id||'')){const message=document.getElementById(event.target.id+'-error')||document.getElementById('video-error');if(message)message.hidden=false;}},true);
+// 同一课切换例题时只播放一段旁白，避免两个播放器同时出声。
+document.addEventListener('play',event=>{if(event.target?.matches?.('.course-video video'))document.querySelectorAll('.course-video video').forEach(video=>{if(video!==event.target)video.pause();});},true);
+document.addEventListener('toggle',event=>{if(event.target?.matches?.('details.example-video')&&!event.target.open)event.target.querySelector('video')?.pause();},true);
 startSession();
 
 // 历史题保留当时的题干与作答，不参加新版练习完成度。

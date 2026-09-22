@@ -118,7 +118,9 @@ test('第一课数值用独立方程核验，第3课循环操作与第11课具�
   assert.deepEqual(prices(3,7,12.2,4,4,12), [[2.2,.8]]);
   let result=10;for(let i=0;i<7;i++)result+=i%2?-1:4;
   assert.equal(result,23);
-  assert.equal(bank.lessons[2].detail.mother.cards[1].answer,'23。');
+  assert.equal(bank.lessons[2].detail.mother.cards[1].answer,'最后停在23。');
+  assert.match(bank.lessons[2].detail.mother.cards[1].text,/向前走4格算1次操作/);
+  assert.match(bank.lessons[2].detail.mother.cards[1].explain,/10是起点/);
   const correction=bank.lessons[10].detail.variants;
   assert.equal(['红','黄','蓝','绿'][(40-1)%4],'绿');
   assert.equal((15*4+25)/5,17);

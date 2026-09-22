@@ -1,0 +1,92 @@
+{
+  "ok": true,
+  "strict": false,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "filesScanned": 7
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": []
+  },
+  "layout": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "duration": 280.0416666666667,
+    "samples": [
+      15.558,
+      46.674,
+      77.789,
+      108.905,
+      140.021,
+      171.137,
+      202.252,
+      233.368,
+      264.484
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 0,
+    "truncated": false
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": true,
+    "samples": [
+      15.558,
+      77.789,
+      140.021,
+      202.252,
+      264.484
+    ],
+    "checked": 101,
+    "passed": 101
+  },
+  "snapshots": {
+    "enabled": true,
+    "files": [
+      "snapshots\\frame-00-at-15.6s.png",
+      "snapshots\\frame-01-at-77.8s.png",
+      "snapshots\\frame-02-at-140.0s.png",
+      "snapshots\\frame-03-at-202.3s.png",
+      "snapshots\\frame-04-at-264.5s.png"
+    ],
+    "times": [
+      15.558,
+      77.789,
+      140.021,
+      202.252,
+      264.484
+    ],
+    "findingFiles": []
+  },
+  "_meta": {
+    "version": "0.8.17",
+    "latestVersion": "0.8.35",
+    "updateAvailable": true
+  }
+}

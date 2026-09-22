@@ -1,0 +1,62 @@
+[
+  {
+    "title": "例题1 · 彩色列车的循环",
+    "description": "找出四节一组，理解有余数和刚好整除时的位置。",
+    "src": "/media/lessons/lesson-03-example-1-v2.mp4",
+    "poster": "/media/lessons/lesson-03-example-1-v2.jpg",
+    "captions": "/media/lessons/lesson-03-example-1-v2.vtt",
+    "duration": 162.666667,
+    "chapters": [
+      {
+        "title": "第27节车厢是什么颜色？",
+        "start": 0
+      },
+      {
+        "title": "先圈出最短的重复组",
+        "start": 36.208
+      },
+      {
+        "title": "余数告诉我们剩下几步",
+        "start": 78.5
+      },
+      {
+        "title": "余数是0，停在哪里？",
+        "start": 120.042
+      }
+    ]
+  },
+  {
+    "title": "例题2 · 加4减1，跟着棋子找规律",
+    "description": "先走格子，圈出完整组，再处理第7次；最后解释算式中每个数的含义。",
+    "src": "/media/lessons/lesson-03-example-2-v2.mp4",
+    "poster": "/media/lessons/lesson-03-example-2-v2.jpg",
+    "captions": "/media/lessons/lesson-03-example-2-v2.vtt",
+    "duration": 280.041667,
+    "chapters": [
+      {
+        "title": "例题2：按顺序走格子",
+        "start": 0
+      },
+      {
+        "title": "先走两次：最后前进了几格？",
+        "start": 40.583
+      },
+      {
+        "title": "再走两组，观察同样的变化",
+        "start": 91.833
+      },
+      {
+        "title": "七次操作：三整组，还剩一次",
+        "start": 145.833
+      },
+      {
+        "title": "算式，是刚才走格子的记录",
+        "start": 198.208
+      },
+      {
+        "title": "检查：七个箭头，七次操作",
+        "start": 240.458
+      }
+    ]
+  }
+]

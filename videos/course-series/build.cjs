@@ -9,7 +9,7 @@ function split(v,max){let lines=[],line='',n=0;for(const char of v){const weight
 const wrap=(x,y,v,size=34,max=27,gap=48)=>split(v,max).map((l,i)=>text(x,y+i*gap,l,size)).join('');
 const stamp=n=>{const m=Math.round(n*1000);return `${String(Math.floor(m/3600000)).padStart(2,'0')}:${String(Math.floor(m/60000)%60).padStart(2,'0')}:${String(Math.floor(m/1000)%60).padStart(2,'0')}.${String(m%1000).padStart(3,'0')}`;};
 const css=`@font-face{font-family:'Microsoft YaHei';src:local('Microsoft YaHei')}*{box-sizing:border-box}body{margin:0}.scene{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;background:${C.cream};color:${C.ink};font-family:'Microsoft YaHei',sans-serif;padding:36px 70px}.head{display:flex;justify-content:space-between;align-items:center;height:56px;font-size:27px;font-weight:700}.tag{padding:10px 22px;border:3px solid ${C.ink};border-radius:17px;background:${C.purple}}h1{font-size:56px;line-height:1.2;margin:25px 0 20px}.board{width:1780px;height:687px;display:block;overflow:visible}.subtitle{position:absolute;left:72px;right:72px;bottom:26px;min-height:103px;padding:16px 28px;background:${C.ink};color:white;border-radius:20px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:35px;line-height:1.45}.progress{position:absolute;bottom:0;left:0;width:1920px;height:8px;background:${C.coral};transform-origin:left}.dot{display:inline-block;width:13px;height:13px;border-radius:50%;margin:0 5px;border:2px solid ${C.ink}}.active{background:${C.ink}}`;
-function build(root){
+function build(root,drawFigure=figure){
  const l=JSON.parse(fs.readFileSync(path.join(root,'lesson.json'),'utf8')),scenes=l.scenes,voice=JSON.parse(fs.readFileSync(path.join(root,'voice-meta.json'),'utf8'));
  let duration=0,captions=[],maps=[];
  fs.mkdirSync(path.join(root,'compositions'),{recursive:true});
@@ -36,7 +36,7 @@ function build(root){
    art+=g('prompt',box( sixty(),565,1620,90,s.kind==='challenge'?C.mint:C.yellow)+text(90,624,s.kind==='challenge'?'暂停视频，写草稿、画图，准备好后上台讲解。':'先读完整条件，圈出已知与所求，再开始分析。',37));
    show('prompt',0,1,{x:-55});
   }else{
-   art=box(10,12,980,650,'white')+figure(s,{C,text,box,g,show,move,pulse,svgPath,lineAt,wrap});
+   art=box(10,12,980,650,'white')+drawFigure(s,{C,text,box,g,show,move,pulse,svgPath,lineAt,wrap});
    s.notes.forEach((v,i)=>{const n='note'+i,y=35+i*153,lines=split(v,19);art+=g(n,box(1040,y,680,125,[C.yellow,C.blue,C.purple,C.mint][i%4])+lines.map((t,j)=>text(1065,y+49+j*44,t,33)).join(''));show(n,Math.min(i,s.lines.length-1),1,{x:55});});
   }
   code+=`tl.fromTo('#${id('heading')}',{opacity:0,x:-35},{opacity:1,x:0,duration:.6},0);tl.fromTo('#${id('progress')}',{scaleX:0},{scaleX:1,duration:${s.duration},ease:'none'},0);`;
@@ -57,5 +57,6 @@ function build(root){
  fs.writeFileSync(path.join(root,'STORYBOARD.md'),scenes.map((s,i)=>`## Frame ${i+1}\n\nstatus: animated\nsrc: compositions/${s.id}.html\nstart: ${s.start}\nduration: ${s.duration}\n\n${s.title}：dynamic-content-sequencing、svg-path-draw、stat-bars-and-fills，图示${s.kind}/${s.data.phase||'read'}随旁白定位。\n`).join('\n'));
  console.log(JSON.stringify({lesson:l.number,seconds:duration,scenes:scenes.length,motions:maps.reduce((v,s)=>v+s.events.length,0)}));
 }
-for(const folder of fs.readdirSync(base).filter(f=>/^lesson-\d+$/.test(f)))if(!process.argv[2]||folder===process.argv[2])build(path.join(base,folder));
+module.exports=build;
+if(require.main===module)for(const folder of fs.readdirSync(base).filter(f=>/^lesson-\d+$/.test(f)))if(!process.argv[2]||folder===process.argv[2])build(path.join(base,folder));
 function sixty(){return 60;}function seventy(){return 70;}
