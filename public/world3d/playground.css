@@ -9,3 +9,5 @@
 @media(max-width:700px){.park-panel{top:96px;left:10px;width:245px;padding:12px;max-height:calc(100% - 110px)}.park-panel-head{font-size:16px}.park-shortcut{right:10px;bottom:175px}.park-panel p{font-size:13px}.park-riding .park-panel{top:auto;bottom:10px;left:10px;width:min(290px,calc(100% - 20px));max-height:42vh}}
 @media(max-height:550px){.park-panel{top:78px;max-height:calc(100% - 90px);width:260px;padding:12px}.park-panel p{margin:6px 0}.park-panel progress{margin:4px 0}.park-panel small{font-size:11px}.park-surf-controls{margin:8px 0}}
 .park-energy{display:block;margin:12px 0;width:100%;min-height:46px;touch-action:manipulation}.park-charge-ready .park-energy{background:#92d8ba;color:#253f40;outline:3px solid #b8efcf}.park-ride-option:nth-of-type(4){background:#ffe4d8!important}.park-ride-option:nth-of-type(5){background:#e1edff!important}
+
+.park-surf-controls [data-drive]{touch-action:none;user-select:none;-webkit-user-select:none}

@@ -6,7 +6,7 @@ export const rides={
  wheel:{id:'wheel',name:'星光摩天轮',x:35,z:-7,entry:{x:35,z:-1.5},duration:36,description:'坐进座舱，从高处看看你的家。'},
  swing:{id:'swing',name:'彩虹秋千',x:50,z:-7,entry:{x:50,z:-2},duration:30,description:'坐上秋千，按空格或“加把劲”荡得更高。'},
  trampoline:{id:'trampoline',name:'云朵蹦床',x:52,z:7,entry:{x:47,z:7},duration:30,description:'按空格起跳，快落到垫子时再次按下，连续弹跳更高。'},
- surf:{id:'surf',name:'乘风冲浪',x:37,z:7,entry:{x:31,z:7},duration:40,description:'左右换道收集星星，跳过浮标。每局有 3 次碰撞机会。'},
+ surf:{id:'surf',name:'乘风冲浪',x:37,z:7,entry:{x:31,z:7},duration:40,description:'按住 W/↑ 前进，S/↓ 后退，左右换道收集星星，跳过浮标。每局有 3 次碰撞机会。'},
 };
 export function inPark(x,z){return x>=parkBounds.minX&&x<=parkBounds.maxX-.4&&z>=parkBounds.minZ+.4&&z<=parkBounds.maxZ-.4;}
 export function parkBlocked(x,z){
@@ -26,16 +26,19 @@ export function createRideClock(id){
 // 冲浪规则独立于画面，换道、跳跃、碰撞及计分可直接验证。
 export function createSurfRound(seed=Date.now()){
  let randomState=seed>>>0;const random=()=>{randomState=(Math.imul(randomState,1664525)+1013904223)>>>0;return randomState/4294967296;};
- let elapsed=0,lane=0,target=0,jumpTime=0,spawnTime=.7,nextId=0,score=0,lives=3,done=false,flash=0;
+ let elapsed=0,lane=0,target=0,forward=0,drive=0,jumpTime=0,spawnTime=.7,nextId=0,score=0,lives=3,done=false,flash=0;
  const items=[];
  return {items,get elapsed(){return elapsed;},get lane(){return lane;},get target(){return target;},get score(){return score;},get lives(){return lives;},get done(){return done;},get flash(){return flash;},get height(){return jumpTime>0?Math.sin(Math.PI*jumpTime/.9)*1.25:0;},
+  get forward(){return forward;},
+  drive(direction){if(!done)drive=Math.sign(direction);},
   steer(direction){if(!done)target=Math.max(-1,Math.min(1,target+Math.sign(direction)));},
   jump(){if(done||jumpTime>0)return false;jumpTime=.9;return true;},
   stop(){done=true;},
   update(dt){
-   if(done)return;dt=Math.max(0,Math.min(dt,.1));elapsed+=dt;lane+=(target-lane)*Math.min(1,dt*9);jumpTime=Math.max(0,jumpTime-dt);flash=Math.max(0,flash-dt);spawnTime-=dt;
+   if(done)return;dt=Math.max(0,Math.min(dt,.1));const previousForward=forward;forward=Math.max(0,Math.min(5,forward+drive*dt*3));elapsed+=dt;lane+=(target-lane)*Math.min(1,dt*9);jumpTime=Math.max(0,jumpTime-dt);flash=Math.max(0,flash-dt);spawnTime-=dt;
    if(spawnTime<=0){spawnTime=1.15;const obstacle=nextId%3===2;items.push({id:nextId++,kind:obstacle?'buoy':'star',lane:Math.floor(random()*3)-1,distance:9,passed:false});}
-   for(const item of items){const before=item.distance;item.distance-=dt*4.5;if(!item.passed&&before>0&&item.distance<=0){item.passed=true;if(Math.abs(item.lane-lane)<.48){if(item.kind==='star')score+=10;else if(this.height<.48){lives--;flash=.55;}}}}
+   // 按星星/浮标与冲浪板的相对距离判定，前进后不能仍用原起点判碰撞。
+   for(const item of items){const before=item.distance-previousForward;item.distance-=dt*4.5;if(!item.passed&&before>0&&item.distance-forward<=0){item.passed=true;if(Math.abs(item.lane-lane)<.48){if(item.kind==='star')score+=10;else if(this.height<.48){lives--;flash=.55;}}}}
    for(let i=items.length-1;i>=0;i--)if(items[i].distance<-2)items.splice(i,1);
    if(lives<=0||elapsed>=rides.surf.duration)done=true;
   },

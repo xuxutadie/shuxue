@@ -7,16 +7,23 @@ test('五种设施按Enter只扣款一次，任何阶段提前结束均立即停
  for(const id of Object.keys(rules.rides))for(const advance of [false,true]){
   const elements=[];
   function element(){const children=new Map();return {hidden:false,dataset:{},classList:{add(){},remove(){},toggle(){}},setAttribute(){},append(){},remove(){},focus(){},listeners:{},addEventListener(k,f){this.listeners[k]=f;},removeEventListener(){},querySelector(k){if(!children.has(k))children.set(k,{});return children.get(k);}};}
-  let payments=0,resets=0,returned=null,resolvePayment;const motions=[];
+  let payments=0,resets=0,returned=null,resolvePayment,surfRound;const motions=[];
   const hero={position:new T.Vector3(rules.rides[id].entry.x,0,rules.rides[id].entry.z),rotation:new T.Euler(),getObjectByName(){return null;},updateMatrixWorld(){}};
   const actions={busy:false,sitting:false,update(){},request(){},resetToIdle(){resets++;}};
-  const ctx=vm.createContext({T,...rules,crypto:require('node:crypto').webcrypto,document:{createElement(){const el=element();elements.push(el);return el;},addEventListener(){},removeEventListener(){}},window:{addEventListener(){},removeEventListener(){}},buildPlayground:()=>({group:{},motion(...args){motions.push(args);},riderPose(){return {position:new T.Vector3(1,9,2),yaw:0};},surfFrame(){return {position:new T.Vector3(1,1,2),yaw:0};},bounceFrame(){return {position:new T.Vector3(1,3,2),yaw:0};}})});
+  const ctx=vm.createContext({T,...rules,createSurfPose:(await import('../public/world3d/surf-pose.mjs')).createSurfPose,crypto:require('node:crypto').webcrypto,document:{createElement(){const el=element();elements.push(el);return el;},addEventListener(){},removeEventListener(){}},window:{addEventListener(){},removeEventListener(){}},buildPlayground:()=>({group:{},motion(...args){motions.push(args);},riderPose(){return {position:new T.Vector3(1,9,2),yaw:0};},surfFrame(round){if(round)surfRound=round;return {position:new T.Vector3(1,1,2),yaw:0};},bounceFrame(){return {position:new T.Vector3(1,3,2),yaw:0};}})});
   vm.runInContext(fs.readFileSync('public/world3d/playground.mjs','utf8').replace(/^import .*;\r?\n/gm,'').replace('export function mountPlayground','function mountPlayground'),ctx);
   const viewport=element(),park=ctx.mountPlayground({shell:element(),viewport,scene:{add(){}},travel(){},stopWalking(){},getHero:()=>hero,getActions:()=>actions,leave(p){returned=p;},say(){},wallet:{balance:40,spent:0},payRide:()=>{payments++;return new Promise(resolve=>resolvePayment=resolve);}});
   park.offer(id);park.offer(id);assert.equal(payments,1);assert.equal(park.active,false);
   resolvePayment({balance:20,spent:20});await new Promise(setImmediate);assert.equal(park.active,true);
   if(advance){for(let i=0;i<100;i++)park.update(.02,hero.position);}
   const panel=elements[0];const click=name=>panel.listeners.click({stopPropagation(){},target:{closest:()=>({dataset:{},hasAttribute:key=>key===name})}});
+  if(id==='surf'&&advance){
+   const key=code=>viewport.listeners.keydown({code,target:viewport,preventDefault(){},stopImmediatePropagation(){}});
+   key('KeyW');for(let i=0;i<10;i++)park.update(.02,hero.position);assert.ok(surfRound.forward>.5,'W 必须驱动冲浪板前进');
+   const at=surfRound.forward;click('data-ride-pause');for(let i=0;i<10;i++)park.update(.02,hero.position);assert.equal(surfRound.forward,at);
+   key('KeyW');click('data-ride-pause');park.update(.02,hero.position);assert.equal(surfRound.forward,at,'暂停清空按住状态，恢复不能自己继续前进');
+   key('KeyS');park.update(.02,hero.position);assert.ok(surfRound.forward<at,'S 应后退');
+  }
   if(advance)click('data-ride-pause');
   const motionCount=motions.length;click('data-ride-stop');
   assert.equal(park.active,false,'点击后当场结束，不能继续转圈或等待落地');assert.equal(viewport.dataset.ride,'');assert.deepEqual(returned,rules.rides[id].entry);assert.equal(resets,1);
@@ -88,4 +95,40 @@ test('蹦床正确时机蓄力会得分，空中结束要等落地，闲置也�
  for(let i=0;i<20;i++)r.update(.01);assert.ok(r.height>0);r.stop();assert.equal(r.done,false);
  for(let i=0;i<300&&!r.done;i++)r.update(.01);assert.equal(r.done,true);assert.equal(r.height,0);assert.equal(r.jump(),false);
  const idle=createBounceRound();for(let i=0;i<700;i++)idle.update(.05);assert.ok(idle.done);
+});
+
+test('冲浪前后移动不越出水池，前移后的星星与碰撞在板面位置判定',async()=>{
+ const {createSurfRound}=await import('../public/world3d/playground-rules.mjs');
+ const r=createSurfRound(1);r.drive(1);
+ for(let i=0;i<60;i++){r.items.splice(0);r.update(.02);}
+ assert.ok(Math.abs(r.forward-3.6)<1e-8);
+ r.drive(0);r.items.splice(0);r.items.push({id:910,kind:'star',lane:0,distance:r.forward+.01,passed:false});r.update(.02);assert.equal(r.score,10);
+ r.items.push({id:911,kind:'buoy',lane:0,distance:r.forward+.01,passed:false});r.update(.02);assert.equal(r.lives,2);
+ r.drive(1);for(let i=0;i<100;i++){r.items.splice(0);r.update(.02);}assert.equal(r.forward,5);
+ r.drive(-1);for(let i=0;i<100;i++){r.items.splice(0);r.update(.02);}assert.equal(r.forward,0);
+ r.stop();r.drive(1);r.update(.1);assert.equal(r.forward,0);
+});
+
+test('男女冲浪屈膝后双脚保持板面高度，反复叠加与恢复不会扭曲骨骼',async()=>{
+ const T=await import('../public/world3d/vendor/three.module.js'),{createSurfPose}=await import('../public/world3d/surf-pose.mjs');
+ for(const filename of ['explorer-actions-v2.glb','girl-explorer-v1.glb']){
+  const bytes=fs.readFileSync('public/world3d/assets/'+filename),json=JSON.parse(bytes.toString('utf8',20,20+bytes.readUInt32LE(12)));
+  const joints=new Set(json.skins[0].joints);
+  const nodes=json.nodes.map((n,i)=>{const o=joints.has(i)?new T.Bone():new T.Group();o.name=T.PropertyBinding.sanitizeNodeName(n.name||'');if(n.translation)o.position.fromArray(n.translation);if(n.rotation)o.quaternion.fromArray(n.rotation);if(n.scale)o.scale.fromArray(n.scale);return o;});
+  json.nodes.forEach((n,i)=>n.children?.forEach(j=>nodes[i].add(nodes[j])));
+  const hero=new T.Group();json.scenes[json.scene||0].nodes.forEach(i=>hero.add(nodes[i]));hero.position.set(37,.62,10.8);hero.rotation.y=Math.PI/2;hero.updateMatrixWorld(true);
+  const hips=hero.getObjectByName('Hips'),hipY=hips.position.y;
+  const spine=hero.getObjectByName('Spine'),neck=hero.getObjectByName('Neck');
+  const torsoBefore=hero.worldToLocal(neck.getWorldPosition(new T.Vector3())).sub(hero.worldToLocal(spine.getWorldPosition(new T.Vector3()))).normalize();
+  const feet=['L','R'].map(s=>hero.getObjectByName(T.PropertyBinding.sanitizeNodeName('Foot.'+s))),start=feet.map(f=>f.getWorldPosition(new T.Vector3())),initial=nodes.map(n=>n.quaternion.clone());
+  const pose=createSurfPose(hero);
+  for(let i=0;i<120;i++){
+   pose.apply(i*.02);hero.updateMatrixWorld(true);assert.ok(hips.position.y<hipY-.16);
+   const torso=hero.worldToLocal(neck.getWorldPosition(new T.Vector3())).sub(hero.worldToLocal(spine.getWorldPosition(new T.Vector3()))).normalize();
+   assert.ok(torso.z>torsoBefore.z+.2,filename+' 上身应从腰部明显前倾');
+   feet.forEach((f,j)=>{const p=f.getWorldPosition(new T.Vector3());assert.ok(Math.abs(p.y-start[j].y)<.002,filename+' 脚踝不能离开板面');});
+   assert.ok(feet[0].getWorldPosition(new T.Vector3()).distanceTo(feet[1].getWorldPosition(new T.Vector3()))>.6);
+  }
+  pose.restore();assert.equal(hips.position.y,hipY);nodes.forEach((n,i)=>assert.ok(1-Math.abs(n.quaternion.dot(initial[i]))<1e-6));
+ }
 });

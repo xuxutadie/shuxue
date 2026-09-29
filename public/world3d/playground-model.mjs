@@ -106,8 +106,9 @@ export function buildPlayground(){
   const active=new Set(round?.items.map(i=>i.id)||[]);for(const [id,m] of surfObjects)if(!active.has(id)){m.visible=false;waterGroup.remove(m);m.traverse(o=>{o.geometry?.dispose();o.material?.dispose();});surfObjects.delete(id);}
   if(!round)return null;
   for(const item of round.items){let object=surfObjects.get(item.id);if(!object){object=new T.Group();if(item.kind==='star')star(object,0xffd449,0,.55,0);else{cyl(object,.35,.6,0xf78f79,0,.32,0);cyl(object,.36,.12,0xfff7de,0,.36,0);}waterGroup.add(object);surfObjects.set(item.id,object);}object.position.set(surf.x+item.lane*2.4,.38,10.8-item.distance);object.visible=!item.passed;object.rotation.y=item.kind==='star'?time:0;}
-  board.position.set(surf.x+round.lane*2.4,.48+round.height,10.8);board.rotation.z=(round.target-round.lane)*-.16;
-  return {position:new T.Vector3(board.position.x,board.position.y+.12,10.8),yaw:Math.PI,roll:board.rotation.z};
+  board.position.set(surf.x+round.lane*2.4,.48+round.height,10.8-round.forward);board.rotation.z=(round.target-round.lane)*-.16;
+  // 人物侧身站在板上；先随板倾斜，再转向，脚底和板面保持一致。
+  return {position:new T.Vector3(board.position.x,board.position.y+.14,board.position.z),yaw:Math.PI/2,quaternion:board.quaternion.clone().multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),Math.PI/2))};
  }
  motion('wheel',0,0);motion('carousel',0,0);
  return {group,motion,riderPose,surfFrame,bounceFrame};
