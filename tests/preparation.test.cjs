@@ -208,7 +208,7 @@ test('学生练习每次只出一道题，移除母题讲解和预先展开的�
   for(const question of bank.lessons[0].practice)assert.ok(!independent.includes(question.explain));
 });
 
-test('第二课知识讲解先完成三道递增复习题，其他课程不出现该环节', async () => {
+test('第二课知识讲解先完成三道递增复习题，未配置的课程不出现该环节', async () => {
   const {context,element}=page();
   vm.runInContext(`teacher=false;user={id:'student',role:'student',name:'学生',mustChange:false};
     const learner={id:'student',name:'学生',completed:[],practice:{},talk:{},notes:{},games:{},history:[],settings:{dates:{},videos:{}}};
@@ -226,6 +226,32 @@ test('第二课知识讲解先完成三道递增复习题，其他课程不出�
     context.location.hash=`#lesson/${lesson}/learn`;await vm.runInContext('render()',context);
     assert.doesNotMatch(element('main').innerHTML,/上节课回顾 · 3题热身/);
   }
+});
+
+test('第五课回顾第四课的三种方法，完成状态按课程隔离，教师无学生也能备课',async()=>{
+ const {lessons}=require('../server/content');
+ const {context,element}=page();context.content.lessons=lessons(false);
+ vm.runInContext(`teacher=false;user={id:'student',role:'student',name:'学生',mustChange:false};
+ const learner={id:'student',name:'学生',completed:[],practice:{},warmups:{1:{version:'v1',completed:true,questions:{}}},talk:{},notes:{},games:{},history:[],settings:{dates:{},videos:{}}};
+ api=async url=>url==='/api/content'?content:learner;`,context);
+ context.location.hash='#lesson/4/learn';await vm.runInContext('render()',context);
+ let html=element('main').innerHTML;
+ assert.match(html,/上节课回顾 · 3题热身/);assert.match(html,/28颗珠子/);
+ assert.ok(html.indexOf('28颗珠子')<html.indexOf('本课母题'));
+ assert.doesNotMatch(html,/课前回顾参考答案/);
+ for(const q of bank.lessons[4].warmup.questions)assert.ok(!html.includes(q.explain));
+ vm.runInContext(`learner.warmups[4]={version:'factors-v1',completed:false,questions:{0:{correct:true,attempts:2}}}`,context);
+ await vm.runInContext('render()',context);assert.match(element('main').innerHTML,/21是奇数/);
+ vm.runInContext(`learner.warmups[4].completed=true`,context);
+ await vm.runInContext('render()',context);assert.doesNotMatch(element('main').innerHTML,/warmup-check/);
+ // 旧版本完成不能导致新版题目消失。
+ vm.runInContext(`learner.warmups[4].version='old'`,context);
+ await vm.runInContext('render()',context);assert.match(element('main').innerHTML,/28颗珠子/);
+ context.content.lessons=lessons(true);
+ vm.runInContext(`teacher=true;user={id:'teacher',role:'teacher',mustChange:false};api=async url=>url==='/api/content'?content:{classes:[],students:[]};`,context);
+ context.location.hash='#lesson/4/guide';await vm.runInContext('render()',context);
+ html=element('main').innerHTML;assert.match(html,/课前回顾参考答案/);assert.match(html,/18＝2×3×3/);
+ assert.doesNotMatch(html,/每把尺子4元|先唤醒第一课/);
 });
 
 test('课前回顾按已保存进度继续，全部完成后刷新不再显示', async () => {

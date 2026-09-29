@@ -55,37 +55,38 @@ function lesson(){
  <div class="tabs" role="group" aria-label="课堂环节">${[['learn','① 知识讲解'],['game','② 互动验证'],['talk','③ 小老师讲堂'],['work','④ 独立练习'],...(teacher?[['guide','教师教案']]:[])].map(([id,label])=>button(label,'lesson-tab',lessonTab===id?'active':'',`data-tab="${id}"`)).join('')}</div><div id="lesson-body">${lessonBody()}</div>`;
 }
 
-// 第二课先复习第一课。题目来自登录后的课程接口，学生端不会收到标准答案。
+// 根据当前课程显示回顾，记录按课程与学生分别保存。
 function lessonWarmupPanel(){
- if(lessonId!==1)return '';
- if(teacher)return warmupRecordPanel();
- const warmup=LESSONS[1]?.warmup,record=pupil()?.warmups?.[1];
+ if(teacher)return warmupRecordPanel(pupil(),lessonId);
+ const warmup=LESSONS[lessonId]?.warmup,saved=pupil()?.warmups?.[lessonId];
+ const record=saved?.version===warmup?.version?saved:null;
  if(!warmup||record?.version===warmup.version&&record.completed)return '';
  const step=warmup.questions.findIndex((_,index)=>!record?.questions?.[index]?.correct);
  if(step<0)return '';
  const item=warmup.questions[step],finished=Object.values(record?.questions||{}).filter(q=>q.correct).length;
  const field=item.kind==='reason'?`<label for="warmup-answer-${step}">先判断</label><select id="warmup-answer-${step}"><option value="">请选择</option><option value="yes">正确</option><option value="no">不正确</option></select><label for="warmup-reason-${step}">再用一句话说明理由</label><textarea id="warmup-reason-${step}" rows="3" placeholder="我这样判断是因为……"></textarea>`:`<label for="warmup-answer-${step}">写下结果</label><input id="warmup-answer-${step}" inputmode="decimal" autocomplete="off" placeholder="可以填写单位">`;
- return `<section class="panel lesson-warmup" id="lesson-warmup"><div class="section-head"><div><span class="tag">上节课回顾 · 3题热身</span><h2>先唤醒第一课的方法</h2></div><span class="warmup-progress">已完成 ${finished} / ${warmup.questions.length}</span></div><article class="warmup-card"><h3>第 ${step+1} / ${warmup.questions.length} 题 · ${esc(item.level)}</h3><p class="problem-stem">${esc(item.question)}</p><div class="warmup-fields">${field}</div><div class="controls">${button('检查并继续','warmup-check','',`data-q="${step}"`)}</div><p class="warmup-feedback" id="warmup-feedback" role="status">先在草稿纸上完成，再检查。</p></article><p class="tiny">答错时只会获得思路提示，不会直接显示标准答案；作答次数会帮助老师调整教学。</p></section>`;
+ return `<section class="panel lesson-warmup" id="lesson-warmup"><div class="section-head"><div><span class="tag">上节课回顾 · 3题热身</span><h2>${esc(warmup.title)}</h2></div><span class="warmup-progress">已完成 ${finished} / ${warmup.questions.length}</span></div><article class="warmup-card"><h3>第 ${step+1} / ${warmup.questions.length} 题 · ${esc(item.level)}</h3><p class="problem-stem">${esc(item.question)}</p><div class="warmup-fields">${field}</div><div class="controls">${button('检查并继续','warmup-check','',`data-q="${step}"`)}</div><p class="warmup-feedback" id="warmup-feedback" role="status">先在草稿纸上完成，再检查。</p></article><p class="tiny">答错时只会获得思路提示，不会直接显示标准答案；作答次数会帮助老师调整教学。</p></section>`;
 }
-function warmupRecordPanel(student=pupil()){
+function warmupRecordPanel(student=pupil(),id=null){
  if(!teacher||!student)return '';
- const warmup=LESSONS[1]?.warmup,record=student.warmups?.[1];
+ if(id===null)return LESSONS.map((l,i)=>l.warmup?warmupRecordPanel(student,i):'').join('');
+ const warmup=LESSONS[id]?.warmup,record=student.warmups?.[id];
  if(!warmup)return '';
- if(!record||record.version!==warmup.version)return `<section class="panel warmup-record teacher-private"><h2>${esc(student.name)}的回顾记录</h2><div class="empty">尚未开始第二课的上节课回顾。</div></section>`;
+ if(!record||record.version!==warmup.version)return `<section class="panel warmup-record teacher-private"><h2>${esc(student.name)}的回顾记录</h2><div class="empty">尚未开始第${id+1}课的上节课回顾。</div></section>`;
  const rows=warmup.questions.map((question,index)=>{
   const saved=record.questions?.[index],submissions=saved?.submissions||[];
   const history=submissions.length?submissions.map(item=>`${esc(item.answer)}（${item.correct?'正确':'未答对'}）${item.reason?`<small>理由：${esc(item.reason)}</small>`:''}`).join(' → '):'尚未作答';
   return `<tr><td>${index+1}. ${esc(question.level)}<small>${esc(question.question)}</small></td><td>共${saved?.attempts||0}次</td><td>${history}</td></tr>`;
  }).join('');
- return `<section class="panel warmup-record teacher-private"><div class="section-head"><div><span class="tag">第二课课前回顾</span><h2>${esc(student.name)}的回顾记录</h2></div><b>${record.completed?'已完成':'进行中'}</b></div><div class="table-wrap"><table><thead><tr><th>题目</th><th>作答次数</th><th>每次作答</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+ return `<section class="panel warmup-record teacher-private"><div class="section-head"><div><span class="tag">第${id+1}课课前回顾</span><h2>${esc(student.name)}的回顾记录</h2></div><b>${record.completed?'已完成':'进行中'}</b></div><div class="table-wrap"><table><thead><tr><th>题目</th><th>作答次数</th><th>每次作答</th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
 }
 function lessonWarmupGuide(){
- if(lessonId!==1)return '';
- const warmup=LESSONS[1]?.warmup;
+ if(!teacher)return '';
+ const warmup=LESSONS[lessonId]?.warmup;
  if(!warmup)return '';
- const answerText=['每把尺子4元','这一步正确','1张成人票和1张儿童票共40元'];
- const answers=warmup.questions.map((question,index)=>`<article class="guide-step"><h3>第${index+1}题 · ${esc(question.level)}</h3><p>${esc(question.question)}</p><p><b>答案：</b>${answerText[index]}</p><p>${esc(question.explain)}</p></article>`).join('');
- return `<section class="panel warmup-guide teacher-private"><span class="tag">第二课专用 · 教师可见</span><h2>课前回顾参考答案</h2><p>学生端逐题作答，只给方向提示。建议每题先留出独立思考时间，再根据学生表达追问。</p>${answers}</section>${warmupRecordPanel()}`;
+ const answerText=lessonId===1?['每把尺子4元','这一步正确','1张成人票和1张儿童票共40元']:warmup.questions.map(q=>q.kind==='reason'?(q.answer==='yes'?'判断正确':'判断不正确'):q.answer);
+ const answers=warmup.questions.map((question,index)=>`<article class="guide-step"><h3>第${index+1}题 · ${esc(question.level)}</h3><p>${esc(question.question)}</p><p><b>答案：</b>${esc(answerText[index])}</p><p>${esc(question.explain)}</p></article>`).join('');
+ return `<section class="panel warmup-guide teacher-private"><span class="tag">第${lessonId+1}课 · 教师可见</span><h2>课前回顾参考答案</h2><p>学生端逐题作答，只给方向提示。建议每题先留出独立思考时间，再根据学生表达追问。</p>${answers}</section>${warmupRecordPanel(pupil(),lessonId)}`;
 }
 function lessonBody(){
  const l=LESSONS[lessonId],d=l.detail;

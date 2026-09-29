@@ -73,13 +73,13 @@ function setupLearning(app, pool) {
     if (req.user.role !== 'student') fail(403, '请使用学生账号作答，教师可在学生预览中试做。');
     const l = lessonOf(req.params.lesson), n = Number(req.params.question);
     const warmup = require('./lesson-warmup');
-    const question = warmup.questions[n];
-    if (l !== 1 || !Number.isInteger(n) || !question) fail(400, '回顾题不存在。');
-    if (req.body.version !== warmup.VERSION) fail(409, '回顾题已更新，请刷新后再作答。');
+    const set = warmup.forLesson(l), question = set?.questions[n];
+    if (!Number.isInteger(n) || !question) fail(400, '回顾题不存在。');
+    if (req.body.version !== set.version) fail(409, '回顾题已更新，请刷新后再作答。');
     const answer = string(req.body.answer, 100);
     const reason = string(req.body.reason || '', 500, true);
     if (question.kind === 'reason' && reason.length < 4) fail(400, '请先用一句话说明判断理由。');
-    const correct = warmup.matches(n, answer);
+    const correct = warmup.matches(n, answer, l);
     if (req.studentPreview) {
       await ownedStudent(pool, req.user, req.params.id);
       return res.json({ correct, attempts: 1, completed: false, preview: true });
@@ -87,8 +87,8 @@ function setupLearning(app, pool) {
     res.json(await editProfile(pool, req, data => {
       data.warmups ||= {};
       let record = data.warmups[l];
-      if (!record || record.version !== warmup.VERSION) {
-        record = { version: warmup.VERSION, completed: false, questions: {} };
+      if (!record || record.version !== set.version) {
+        record = { version: set.version, completed: false, questions: {} };
         data.warmups[l] = record;
       }
       const previous = record.questions[n] || { correct: false, attempts: 0, submissions: [] };
@@ -99,7 +99,7 @@ function setupLearning(app, pool) {
         attempts: previous.attempts + 1,
         submissions: [...(previous.submissions || []), submission].slice(-100)
       };
-      record.completed = warmup.questions.every((_, index) => record.questions[index]?.correct);
+      record.completed = set.questions.every((_, index) => record.questions[index]?.correct);
       if (record.completed && !record.completedAt) record.completedAt = submission.date;
       return { correct, attempts: record.questions[n].attempts, completed: record.completed, warmup: record };
     }));

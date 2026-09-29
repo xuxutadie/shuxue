@@ -53,6 +53,35 @@ test('变式独立保存首次与重做结果，校验多问答案、版本、�
  r=await student1.request(`/api/students/${s1}/variants/3/1`,'POST',{version:factors.version,answers:['12、6、8','3']});assert.equal(r.data.correct,true);
 });
 
+test('第五课回顾隐藏答案，独立保存重试次数和完成记录，老师能查看且预览不写入',async()=>{
+ const material=(await student1.request('/api/content')).data;
+ const warmup=material.lessons[4].warmup;
+ assert.equal(warmup.questions.length,3);
+ for(const q of warmup.questions){assert.equal(q.answer,undefined);assert.equal(q.explain,undefined);}
+ // 独立枚举核对题目唯一答案。
+ assert.equal(Array.from({length:28},(_,i)=>i+1).filter(n=>28%n===0).length,6);
+ assert.equal(21%3,0);
+ const count=n=>{let k=0;for(let p=2;p<=n;p++)while(n%p===0){k++;n/=p;}return k;};
+ assert.deepEqual(Array.from({length:13},(_,i)=>i+6).filter(n=>90%n===0&&count(n)===3),[18]);
+ const path=n=>`/api/students/${s1}/warmups/4/${n}`,body=answer=>({version:warmup.version,answer});
+ const before=(await student1.request('/api/students/'+s1)).data;
+ assert.equal((await student2.request(path(0),'POST',body('6'))).status,404);
+ assert.equal((await student1.request(path(0),'POST',{version:'v1',answer:'6'})).status,409);
+ let r=await student1.request(path(0),'POST',body('5'));assert.equal(r.data.correct,false);
+ r=await student1.request(path(0),'POST',body('6种'));assert.equal(r.data.correct,true);assert.equal(r.data.attempts,2);
+ assert.equal((await student1.request(path(1),'POST',body('no'))).status,400);
+ r=await student1.request(path(1),'POST',{...body('no'),reason:'21还可以写成3乘7，所以有其他因数'});assert.equal(r.data.correct,true);
+ r=await student1.request(path(2),'POST',body('18枚'));assert.equal(r.data.completed,true);assert.equal(r.data.answer,undefined);assert.equal(r.data.explain,undefined);
+ const saved=(await student1.request('/api/students/'+s1)).data;
+ assert.equal(saved.warmups[4].completed,true);assert.equal(saved.warmups[4].questions[0].attempts,2);
+ assert.deepEqual(saved.warmups[1],before.warmups?.[1]);assert.deepEqual(saved.practice,before.practice);
+ const seen=(await teacher1.request('/api/teacher/overview')).data.students.find(s=>s.id===s1).warmups[4];
+ assert.deepEqual(seen.questions[0].submissions.map(s=>s.correct),[false,true]);
+ const preview=await teacher1.request(path(0),'POST',body('6'),{'X-Student-Preview':s1});assert.equal(preview.data.preview,true);
+ assert.deepEqual((await student1.request('/api/students/'+s1)).data.warmups[4],saved.warmups[4]);
+ assert.equal((await student1.request(path(0),'POST',body('6'))).status,409);
+});
+
 test('独立练习保留首次结果和重做，学生不能改教师评价',async()=>{
  let r=await student1.request(`/api/students/${s1}/practice/0/0`,'POST',{answer:'999'});assert.equal(r.data.correct,false);assert.equal(r.data.firstCorrect,false);
  r=await student1.request(`/api/students/${s1}/practice/0/0`,'POST',{answer:bank.lessons[0].practice[0].answer});assert.equal(r.data.correct,true);assert.equal(r.data.firstCorrect,false);assert.equal(r.data.attempts,2);
