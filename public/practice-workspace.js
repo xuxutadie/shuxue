@@ -29,23 +29,23 @@ function practiceWrongList(){
  return `<section class="panel" id="exam-wrong-list" aria-live="polite"><h2>测评错题</h2><p>正在读取已提交测评的错题…</p></section><section class="panel"><h2>课堂练习错题 · ${wrong.length} 道</h2>${wrong.length?wrong.map(({i,index,item,r})=>`<article class="question"><span class="tag">第${i+1}课 · ${item.type==='variant'?'变式题':'固定题'}</span><p>${item.type==='variant'?changedStem(item.q.text,item.q.changed):item.q.text}</p>${item.type==='fixed'?item.q.svg||'':''}<p class="tiny">上次答案：${esc(item.type==='variant'?r.answers.join('；'):r.answer)}</p><button type="button" data-practice-retry="${i}" data-practice-index="${index}">重新练习这道题</button></article>`).join(''):'<div class="empty">暂无需要重练的课堂固定题或变式题。AI 题的尝试记录在“AI 拔高”中查看。</div>'}</section>`;
 }
 function examWrongSection(data,kind){
- const r=data.record,label=kind==='A'?'前测 A 卷':'后测 B 卷';
+ const r=data.record,label=kind==='R'?'回顾性测试':kind==='A'?'前测 A 卷':'后测 B 卷';
  if(!r?.date)return `<p>${label}尚未交卷，完成后再收集错题。</p>`;
  // 沿用正式测评的讲评开放规则，教师预览也只能看到学生有权查看的内容。
  if(!r.released||!Array.isArray(r.correct))return `<div class="notice"><b>${label}已交卷，等待老师开放讲评。</b><p>开放后，本次测评中的错题和未作答题会自动显示在这里，无需重新考试。</p></div>`;
- const wrong=data.questions.map((q,i)=>({q,i})).filter(({i})=>r.correct[i]===false);
- return `<div class="exam-wrong-group"><h3>${label} · ${wrong.length} 道错题（含未作答）</h3><p class="tiny">测评日期：${esc(new Date(r.date).toLocaleDateString('zh-CN'))}。按当时的试卷收集，重做不会改变原测评分数。</p>${wrong.length?wrong.map(({q,i})=>`<article class="question"><span class="tag">${label} · 第${i+1}题 · ${esc(q.topic||'')}</span><p class="qtext">${q.text}</p>${q.svg||''}<p>当时的答案：${esc(r.answers[i]?.trim()||'未作答')}</p><details><summary>先在草稿纸重做，再查看答案与解析</summary><div class="answer"><b>正确答案：${esc(q.answer)}</b><p>${esc(q.explain)}</p></div></details></article>`).join(''):'<p>这次测评全部答对了。</p>'}<a href="#review/${kind}">查看${label}完整答题报告 →</a></div>`;
+ const wrong=data.questions.map((q,i)=>({q,i})).filter(({q,i})=>r.correct[i]===false||kind==='R'&&Number.isFinite(r.itemScores?.[i])&&r.itemScores[i]<q.points);
+ return `<div class="exam-wrong-group"><h3>${label} · ${wrong.length} 道错题（含未作答${kind==='R'?'和部分得分':''}）</h3><p class="tiny">测评日期：${esc(new Date(r.date).toLocaleDateString('zh-CN'))}。按当时的试卷收集，重做不会改变原测评分数。</p>${wrong.length?wrong.map(({q,i})=>`<article class="question"><span class="tag">${label} · 第${i+1}题 · ${esc(q.topic||'')}${kind==='R'?` · ${r.itemScores?.[i]??0}/${q.points}分`:''}</span>${kind==='R'?examQuestionStem(q,i,kind)+examQuestionDetails(q):`<p class="qtext">${q.text}</p>${q.svg||''}`}<p>当时的答案：${esc(kind==='R'?examAnswerText(q,r.answers[i]):r.answers[i]?.trim()||'未作答')}</p>${kind==='R'&&q.type==='application'&&r.workings?.[i]?`<p class="review-exam-working">当时的思路：${esc(r.workings[i])}</p>`:''}<details><summary>先在草稿纸重做，再查看答案与解析</summary><div class="answer"><b>正确答案：${esc(kind==='R'?examAnswerText(q,q.answer):q.answer)}</b><p>${esc(q.explain)}</p></div></details></article>`).join(''):'<p>这次测评全部答对了。</p>'}<a href="#review/${kind}">查看${label}完整答题报告 →</a></div>`;
 }
 const examWrongLoads=new WeakMap();
 async function loadExamWrongQuestions(){
  const root=document.getElementById('exam-wrong-list'),student=pupil(),owner=user?.id,preview=previewStudentId,token={};
  if(!root||!student)return;examWrongLoads.set(root,token);
- const kinds=['A','B'].filter(k=>student.exams?.[k]);
+ const kinds=['R','A','B'].filter(k=>student.exams?.[k]);
  if(!kinds.length){root.innerHTML='<h2>测评错题</h2><p>还没有已提交的测评。完成测评并由老师开放讲评后，错题会自动收集到这里。</p><a href="#practice/exams">前往测评挑战 →</a>';return;}
  // 仅在打开错题页时读卷，不让日常切页重复下载试卷；失败和未开放不显示为零道。
  const results=await Promise.allSettled(kinds.map(k=>api(`/api/students/${student.id}/exams/${k}`)));
  if(!root.isConnected||document.getElementById(root.id)!==root||examWrongLoads.get(root)!==token||user?.id!==owner||previewStudentId!==preview||pupil()?.id!==student.id)return;
- root.innerHTML='<h2>测评错题</h2>'+results.map((result,i)=>result.status==='fulfilled'?examWrongSection(result.value,kinds[i]):`<div class="notice">${kinds[i]==='A'?'前测 A 卷':'后测 B 卷'}暂时未能加载，请重试。<button type="button" data-exam-wrong-retry>重新读取测评错题</button></div>`).join('');
+ root.innerHTML='<h2>测评错题</h2>'+results.map((result,i)=>result.status==='fulfilled'?examWrongSection(result.value,kinds[i]):`<div class="notice">${kinds[i]==='R'?'回顾性测试':kinds[i]==='A'?'前测 A 卷':'后测 B 卷'}暂时未能加载，请重试。<button type="button" data-exam-wrong-retry>重新读取测评错题</button></div>`).join('');
 }
 function refreshPracticeProgress(){
  const el=document.getElementById('practice-progress');if(!el)return;

@@ -18,6 +18,22 @@ function packProfile(s, rows, assignments, user) {
   Object.assign(p, separatePracticeVersions(s.data));
   // 游戏详细记录从独立接口读取，避免每次打开课堂都传输游戏历史。
   delete p.world3d;
+  // 回顾测评的原始评分留在服务端，只按讲评权限返回安全记录。
+  delete p.reviewExam;
+  const review = require('./review-exams').profile(s.data, user.role === 'teacher');
+  p.assignments.R = review.enabled;
+  if (review.record) {
+    const record = review.record;
+    if (record.correct) {
+      record.topics = {};
+      bank.exams[record.version].R.forEach((q, i) => {
+        record.topics[q.topic] ||= { total: 0, correct: 0 };
+        record.topics[q.topic].total++;
+        if (record.correct[i]) record.topics[q.topic].correct++;
+      });
+    }
+    p[record.date ? 'exams' : 'drafts'].R = record;
+  }
   for (const row of rows) {
     const packed = pack(row, user.role === 'teacher');
     if (row.submitted_at && (user.role === 'teacher' || row.released)) {

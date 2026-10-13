@@ -184,20 +184,36 @@ test('隔天复习包含提示后答对的题，当天题目不提前进入复�
  assert.equal(engine.view(s).world.dueCount,1);
  engine.start(s,'review-due');assert.equal(engine.view(s).run.question.id,q.id);
 });
-test('教师与学生同样在48题全对后开放山谷，历史提前开启任务不能绕过',()=>{
+test('教师试玩可直接进入营地，学生仍须通关，试玩权限不写入存档',()=>{
+ const s=engine.initial(),before=JSON.stringify(s);
+ const demo=engine.view(s,{demo:true});
+ assert.equal(demo.world.campaign.first.unlocked,true);
+ assert.equal(demo.world.campaign.first.correct,0);
+ assert.equal(demo.world.campaign.missions[0].unlocked,true);
+ assert.equal(demo.world.observatory.unlocked,true);
+ assert.equal(JSON.stringify(s),before);
+ assert.equal(engine.view(s).world.campaign.first.unlocked,false);
+ assert.throws(()=>engine.start(s,campCourses[0].id),{status:403});
+ engine.start(s,campCourses[0].id,true);const r=s.runs[s.active];
+ engine.runAction(s,{runId:r.id,revision:r.revision,action:'hint'},true);
+ assert.equal(engine.view(s,{demo:true}).run.hints,1);
+ assert.throws(()=>engine.runAction(s,{runId:r.id,revision:r.revision,action:'hint',demo:true}),{status:403});
+ const scope=vm.createContext({});vm.runInContext(fs.readFileSync('public/world3d/expedition.js','utf8')+'\nthis.render=ThinkingExpedition.html;',scope);
+ assert.ok(scope.render(demo.world).includes('id="town-viewport"'));
+ assert.ok(!scope.render(engine.view(s).world).includes('id="town-viewport"'));
+});
+
+test('学生历史提前开启的营地任务仍被拦截，48道全对后才开放山谷',()=>{
  const s=engine.initial();
  for(const q of firstQuestions.slice(0,47))s.records[q.id]={passed:true};
- for(const demo of [false,true]){
-  assert.equal(engine.campaign(s,demo).first.unlocked,false);
-  assert.throws(()=>engine.start(s,campCourses[0].id,demo),{status:403});
- }
- const last=firstQuestions.at(-1);s.records[last.id]={passed:false};assert.equal(engine.campaign(s,true).first.unlocked,false);
- s.records[last.id].passed=true;assert.equal(engine.campaign(s,true).first.unlocked,true);
- engine.start(s,campCourses[0].id,true);const r=s.runs[s.active];
+ assert.equal(engine.campaign(s).first.unlocked,false);
+ assert.throws(()=>engine.start(s,campCourses[0].id),{status:403});
+ const last=firstQuestions.at(-1);s.records[last.id]={passed:true};
+ engine.start(s,campCourses[0].id);const r=s.runs[s.active];
  s.records[last.id].passed=false;
  assert.throws(()=>engine.runAction(s,{runId:r.id,revision:r.revision,action:'hint'}),{status:403});
  const scope=vm.createContext({});vm.runInContext(fs.readFileSync('public/world3d/expedition.js','utf8')+'\nthis.render=ThinkingExpedition.html;',scope);
- const html=scope.render({campaign:engine.campaign(s,true)});assert.match(html,/还差 1 道/);assert.ok(!html.includes('id="town-viewport"'));
+ const html=scope.render({campaign:engine.campaign(s)});assert.match(html,/还差 1 道/);assert.ok(!html.includes('id="town-viewport"'));
 });
 
 test('完成摸底开放小镇，48道全对开放营地；重复练习不虚增进度',()=>{
@@ -243,6 +259,25 @@ before(async()=>{
  server=createApp(pool).listen(0,'127.0.0.1');await new Promise(r=>server.once('listening',r));base='http://127.0.0.1:'+server.address().port;
 });
 after(async()=>{if(server){server.closeAllConnections();await new Promise(r=>server.close(r));}if(pool){try{await pool.query('DELETE FROM attempts WHERE student_id=ANY($1::uuid[])',[ids]);await pool.query('DELETE FROM sessions WHERE user_id=ANY($1::uuid[])',[ids]);await pool.query('DELETE FROM students WHERE user_id=ANY($1::uuid[])',[ids]);if(classId)await pool.query('DELETE FROM classes WHERE id=$1',[classId]);await pool.query('DELETE FROM users WHERE id=ANY($1::uuid[])',[ids]);}finally{await pool.end();}}});
+test('天文城入口执行权限与营地锁关，数据库并发提交只计一次并可由所属教师回看',async()=>{
+ const url='/api/world3d/'+ids[2],payload={stageId:'sky-1-1',config:{removed:6,groups:2,unit:6},revision:0,seconds:8,attemptId:crypto.randomUUID()};
+ assert.equal((await clients[0](url+'/observatory',payload)).status,403);
+ assert.equal((await clients[3](url+'/observatory',payload)).status,404);
+ assert.equal((await clients[2](url+'/observatory',payload)).status,403);
+ const saved=(await pool.query('SELECT data FROM students WHERE user_id=$1',[ids[2]])).rows[0].data;
+ try{
+  const seeded=structuredClone(saved);seeded.world3d=engine.initial();
+  for(const q of firstQuestions)seeded.world3d.records[q.id]={passed:true,count:1,first:{correct:true,hints:0,created:new Date().toISOString()},last:{correct:true,hints:0,created:new Date().toISOString()},history:[]};
+  for(let i=0;i<6;i++)seeded.world3d.repairs[i]={passed:true,count:1,history:[]};
+  await pool.query('UPDATE students SET data=$2 WHERE user_id=$1',[ids[2],JSON.stringify(seeded)]);
+  const results=await Promise.all([clients[2](url+'/observatory',payload),clients[2](url+'/observatory',payload)]);
+  assert.deepEqual(results.map(r=>r.status),[200,200]);assert.equal(results.reduce((n,r)=>n+r.data.reward,0),10);
+  const student=(await clients[2](url)).data,teacher=(await clients[0](url)).data;
+  assert.equal(student.world.observatory.completed,1);assert.equal(teacher.report.observatory[0].count,1);assert.equal(teacher.report.observatory[0].firstSuccessAt,1);
+  assert.equal((await clients[1](url)).status,404);
+  assert.equal((await clients[0]('/api/world3d/demo')).data.world.observatory.completed,0);
+ }finally{await pool.query('UPDATE students SET data=$2 WHERE user_id=$1',[ids[2],JSON.stringify(saved)]);}
+});
 test('游乐设施扣款经过账号权限与数据库行锁，并发和重试只消费一次',async()=>{
  const url='/api/world3d/'+ids[2],body={rideId:'wheel',requestId:crypto.randomUUID(),expectedSpent:0};
  assert.equal((await clients[0](url+'/playground',body)).status,403);
@@ -271,9 +306,11 @@ test('账号权限、教师只读与独立试玩、跨学生隔离和持久化',
  r=await clients[2](url+'/run',{runId:run.id,revision:run.version,action:'submit',answer:'1000',note:'先凑成两个500',seconds:30});assert.equal(r.status,200);assert.equal(r.data.run.result.correct,true);
  const viewed=await clients[0](url);assert.equal(viewed.data.readonly,true);assert.equal(viewed.data.report.questions[0].count,1);
  assert.equal((await clients[2](url)).data.run.result.correct,true);
- const demo=await clients[0]('/api/world3d/demo');assert.ok(demo.data.world.campaign.missions.every(m=>!m.unlocked));assert.equal(demo.data.report.questions.length,0);
- assert.equal((await clients[0]('/api/world3d/demo/start',{courseId:campCourses[0].id})).status,403);
- assert.equal((await clients[0]('/api/world3d/demo/camp',{mission:0,config:{pieces:[0,2,3]},seconds:20,attemptId:crypto.randomUUID()})).status,403);
+ const demo=await clients[0]('/api/world3d/demo');assert.equal(demo.data.world.campaign.first.unlocked,true);assert.equal(demo.data.world.campaign.missions[0].unlocked,true);assert.equal(demo.data.report.questions.length,0);
+ assert.equal((await clients[0]('/api/world3d/demo/start',{courseId:campCourses[0].id})).status,200);
+ const demoRun=(await clients[0]('/api/world3d/demo')).data.run;
+ assert.equal((await clients[0]('/api/world3d/demo/run',{runId:demoRun.id,revision:demoRun.version,action:'hint'})).status,200);
+ assert.equal((await clients[0]('/api/world3d/demo/camp',{mission:0,config:{pieces:[0,2,3]},seconds:20,attemptId:crypto.randomUUID()})).status,200);
  await clients[0]('/api/world3d/demo/start',{courseId:'diagnostic'});
  assert.equal((await clients[1]('/api/world3d/demo')).data.run,null);
  const raw=(await pool.query('SELECT data FROM students WHERE user_id=$1',[ids[2]])).rows[0].data;

@@ -4,6 +4,7 @@ const {worldPlan}=require('./world.cjs');
 const {judgeCampGame,gameTitles,gameTopics}=require('./camp-games.cjs');
 const {townCourses,campCourses,courses,questions,firstQuestions,isAnswer}=require('./content.cjs');
 const adventure=require('./adventure.cjs');
+const observatory=require('./observatory.cjs');
 function initial(){return {version:1,records:{},runs:{},active:null,repairs:{}};}
 function selectCharacter(s,id){
  if(!['boy','girl'].includes(id))fail(400,'请选择男生或女生探险家。');
@@ -12,7 +13,8 @@ function selectCharacter(s,id){
 function campaign(s,demo=false){
  const passed=q=>!!s.records[q.id]?.passed;
  const first={total:firstQuestions.length,correct:firstQuestions.filter(passed).length};
- first.unlocked=first.correct===first.total;
+ // demo 仅由服务端确认教师身份后传入；开放地图不伪造答题记录。
+ first.unlocked=demo||first.correct===first.total;
  const repaired=i=>!!s.repairs[i]?.passed||campCourses[i].questions.every(passed);
  const missions=campCourses.map((c,i)=>({id:c.id,title:gameTitles[i],total:c.questions.length,correct:c.questions.filter(passed).length,repaired:repaired(i),unlocked:first.unlocked&&campCourses.slice(0,i).every((_,j)=>repaired(j))}));
  return {first,missions,complete:first.unlocked&&missions.every(m=>m.repaired)};
@@ -39,11 +41,12 @@ function view(s,{demo=false,readonly=false,name='探索家'}={}){
  world.homes=require('./home.cjs').view(s);
  if(demo)world.diagnosticDone=true;
  world.campaign=campaign(s,demo);
+ world.observatory=observatory.view(s,world.campaign.complete||demo);
  world.adventure=adventure.view(s);
  world.playground=require('./playground.cjs').wallet(s,{demo});
  if(!world.adventure.done)world.tasks=[{kind:'course',courseId:adventure.chapter.courseId,title:'帮助米米准备救援口粮',reason:'完成四项准备，获得口粮箱与下一站的线索。'}];
  return {world,run:publicRun(s),name,demo,readonly,courses:courses.map(c=>({id:c.id,title:c.title,description:c.description,count:c.questions.length,unlocked:!c.id.startsWith('camp-')||world.campaign.missions.find(m=>m.id===c.id)?.unlocked})),
-  report:{questions:Object.entries(s.records).map(([qid,r])=>({qid,title:questions.get(qid)?.title,count:r.count,passed:r.passed,firstCorrect:r.first.correct,firstHints:r.first.hints,last:r.last,history:r.history})),repairs:Object.entries(s.repairs).map(([index,r])=>({title:gameTitles[index],passed:r.passed,count:r.count,history:r.history}))}};
+  report:{observatory:observatory.report(s),questions:Object.entries(s.records).map(([qid,r])=>({qid,title:questions.get(qid)?.title,count:r.count,passed:r.passed,firstCorrect:r.first.correct,firstHints:r.first.hints,last:r.last,history:r.history})),repairs:Object.entries(s.repairs).map(([index,r])=>({title:gameTitles[index],passed:r.passed,count:r.count,history:r.history}))}};
 }
 function start(s,courseId,demo=false){
  const c=courses.find(c=>c.id===courseId);
@@ -61,11 +64,11 @@ function start(s,courseId,demo=false){
  if(!s.runs[courseId])s.runs[courseId]={id:randomUUID(),revision:0,title,qids:qs.map(q=>q.id),index:0,seconds:0,hints:0,draft:'',note:'',result:null,...(courseId===adventure.chapter.courseId?{story:true}: {})};
  s.active=courseId;return publicRun(s);
 }
-function runAction(s,body){
+function runAction(s,body,demo=false){
  const r=s.runs[s.active];
  if(!r||r.id!==body.runId||r.revision!==body.revision)fail(409,'另一页面已更新进度，请先载入最新记录。');
- // 旧版本教师试玩可能留下提前开启的营地任务，继续作答也必须核对解锁条件。
- if(s.active.startsWith('camp-')&&!campaign(s).missions.find(m=>m.id===s.active)?.unlocked)fail(403,'请先完成小镇题目和前面的关卡。');
+ // 继续作答同样使用服务端身份，学生不能借请求字段绕过营地解锁。
+ if(s.active.startsWith('camp-')&&!campaign(s,demo).missions.find(m=>m.id===s.active)?.unlocked)fail(403,'请先完成小镇题目和前面的关卡。');
  if(!['draft','hint','submit','reveal','next','retry','transfer'].includes(body.action))fail(400,'未知的答题操作。');
  const q=questions.get(r.qids[r.index]);
  if(body.action==='transfer'){

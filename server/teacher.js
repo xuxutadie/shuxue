@@ -102,6 +102,7 @@ function setupTeacher(app, pool) {
   });
   app.post('/api/teacher/assign', async (req, res) => {
     const { kind, classId, studentId, enabled } = req.body;
+    if (kind === 'R') { await require('./review-exams').assign(pool, req.user, req.body); return res.json({ ok: true }); }
     if (!['A','B'].includes(kind) || typeof enabled !== 'boolean' || (!classId && !studentId)) fail(400, '请选择学生或班级和试卷。');
     await transaction(pool, async db => {
       let ids;

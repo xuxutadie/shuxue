@@ -4,7 +4,7 @@ const aiPracticeUI = (() => {
  const generating = new Set();
  const e = value => esc(value);
  const action = (label, name, extra = '') => `<button type="button" data-ai-action="${name}" ${extra}>${label}</button>`;
- const rules = () => `<aside class="ai-rules" aria-label="AI 练习规则"><span class="ai-sticker">先想一想，再问一步</span><h2>AI 陪你思考，答案由你找到。</h2><ol><li><b>只出新题、只给逐步提示。</b>不会展示标准答案或完整解答。</li><li>每题最多展开 3 级提示；先在草稿纸尝试，再提交自己的答案。</li><li><b>前测、后测作答期间暂停 AI 练习。</b>练习记录不计入测评分数。</li></ol></aside>`;
+ const rules = () => `<aside class="ai-rules" aria-label="AI 练习规则"><span class="ai-sticker">先想一想，再问一步</span><h2>AI 陪你思考，答案由你找到。</h2><ol><li><b>只出新题、只给逐步提示。</b>不会展示标准答案或完整解答。</li><li>每题最多展开 3 级提示；先在草稿纸尝试，再提交自己的答案。</li><li><b>独立测评作答期间暂停 AI 练习。</b>练习记录不计入测评分数。</li></ol></aside>`;
  const lessonOptions = selected => LESSONS.map((l, i) => `<option value="${i}" ${i === selected ? 'selected' : ''}>第 ${i + 1} 课 · ${e(l.title)}</option>`).join('');
  const previewing = () => typeof previewStudentId !== 'undefined' && !!previewStudentId;
  const viewOwner = () => previewing() ? user?.id + ':' + previewStudentId : user?.id;
@@ -31,7 +31,7 @@ const aiPracticeUI = (() => {
  }
  function statusView(root) {
   const s = pages.get(root), v = s.status;
-  root.querySelector('[data-ai-status]').innerHTML = v.blocked ? '<b>独立测评进行中</b><span>请先完成前测或后测并交卷，再回来练习。现在无法出题、读取记录、获取提示或检查答案。</span>' : !v.enabled || !v.configured || !v.encryptionReady ? `<b>AI 练习尚未准备好</b><span>${teacher ? '请在教师 AI 设置中保存有效配置并启用。' : '请联系老师开启 AI 引导练习。'}</span>` : `<b>今日还可生成 ${e(v.remaining)} 题</b><span>已使用 ${e(v.used)} / ${e(v.dailyLimit)} 题 · ${teacher ? '教师试用额度' : '个人每日额度'}</span>`;
+  root.querySelector('[data-ai-status]').innerHTML = v.blocked ? '<b>独立测评进行中</b><span>请先完成当前测评并交卷，再回来练习。现在无法出题、读取记录、获取提示或检查答案。</span>' : !v.enabled || !v.configured || !v.encryptionReady ? `<b>AI 练习尚未准备好</b><span>${teacher ? '请在教师 AI 设置中保存有效配置并启用。' : '请联系老师开启 AI 引导练习。'}</span>` : `<b>今日还可生成 ${e(v.remaining)} 题</b><span>已使用 ${e(v.used)} / ${e(v.dailyLimit)} 题 · ${teacher ? '教师试用额度' : '个人每日额度'}</span>`;
   if(previewing())message(root, '学生预览仅查看 AI 状态和已有记录，不生成新题或消耗学生额度。');
   availability(root);
  }

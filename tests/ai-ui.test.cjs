@@ -47,7 +47,7 @@ test('练习页默认当前课程、12课可选，规则醒目且没有自由聊
  assert.match(html, /value="4" selected/);
  assert.equal((html.match(/第 \d+ 课/g) || []).length, 12);
  assert.match(html, /不会展示标准答案或完整解答/);
- assert.match(html, /前测、后测作答期间暂停/);
+ assert.match(html, /独立测评作答期间暂停/);
  assert.match(html, /&lt;小禾&gt;/);
  assert.doesNotMatch(html, /data-action=|textarea|type="password"/);
 });

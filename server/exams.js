@@ -2,7 +2,8 @@ const { randomUUID } = require('node:crypto');
 const { transaction, fail } = require('./db');
 const { ownedStudent, teacher } = require('./auth');
 const { bank, grade, publicQuestion, currentExamVersions } = require('./content');
-function kindOf(kind) { if (!['A','B'].includes(kind)) fail(400, '试卷不存在。'); return kind; }
+const review = require('./review-exams');
+function kindOf(kind) { if (!['A','B','R'].includes(kind)) fail(400, '试卷不存在。'); return kind; }
 async function finalize(db, row, timedOut = false) {
   if (row.submitted_at) return row;
   const g = grade(row.kind, row.version, row.answers);
@@ -14,6 +15,7 @@ async function expireAttempts(pool) {
     const { rows } = await db.query('SELECT * FROM attempts WHERE submitted_at IS NULL AND deadline<=now() FOR UPDATE SKIP LOCKED');
     for (const row of rows) await finalize(db, row, true);
   });
+  await review.expireReviewAttempts(pool);
   await pool.query('DELETE FROM sessions WHERE expires_at<=now()');
 }
 function pack(row, isTeacher) {
@@ -25,6 +27,7 @@ function pack(row, isTeacher) {
 function setupExams(app, pool) {
   app.get('/api/students/:id/exams/:kind', async (req, res) => {
     const kind = kindOf(req.params.kind);
+    if (kind === 'R') { const out = await review.handle(pool, req, 'read'); return res.status(out.status || 200).json(out); }
     await ownedStudent(pool, req.user, req.params.id);
     if (req.studentPreview) {
       // 预览读卷不启动计时，也不触发到期交卷；保留原卷版本和讲评开放规则。
@@ -46,14 +49,16 @@ function setupExams(app, pool) {
   });
   app.post('/api/students/:id/exams/:kind/start', async (req, res) => {
     const kind = kindOf(req.params.kind);
+    if (kind === 'R') { const out = await review.handle(pool, req, 'start'); return res.status(out.status || 200).json(out); }
     // 教师只负责布置，学生亲自开始以确定45分钟计时。
     if (req.user.role !== 'student' || req.params.id !== req.user.id) fail(403, '请由学生登录后开始测评。');
     const row = await transaction(pool, async db => {
-      await ownedStudent(db, req.user, req.params.id, true);
+      const student = await ownedStudent(db, req.user, req.params.id, true);
       const assigned = await db.query('SELECT enabled FROM assignments WHERE student_id=$1 AND kind=$2', [req.params.id, kind]);
       if (!assigned.rows[0]?.enabled) fail(403, '老师尚未布置这份测评。');
       const old = await db.query('SELECT * FROM attempts WHERE student_id=$1 AND kind=$2', [req.params.id, kind]);
       if (old.rows[0]) return old.rows[0];
+      if (review.hasActive(student.data)) fail(409, '请先完成正在进行的测评。');
       const running = await db.query('SELECT id FROM attempts WHERE student_id=$1 AND submitted_at IS NULL AND deadline>now()', [req.params.id]);
       if (running.rowCount) fail(409, '请先完成正在进行的测评。');
       const { rows } = await db.query("INSERT INTO attempts(id,student_id,kind,answers,deadline,version) VALUES($1,$2,$3,$4,now()+interval '45 minutes',$5) RETURNING *", [randomUUID(), req.params.id, kind, JSON.stringify(Array(20).fill('')), currentExamVersions[kind]]);
@@ -63,6 +68,7 @@ function setupExams(app, pool) {
   });
   app.put('/api/students/:id/exams/:kind/answers', async (req, res) => {
     const kind = kindOf(req.params.kind);
+    if (kind === 'R') { const out = await review.handle(pool, req, 'save'); return res.status(out.status || 200).json(out); }
     if (req.user.role !== 'student' || req.params.id !== req.user.id) fail(403, '只能保存自己的答案。');
     const { answers, revision } = req.body;
     if (!Array.isArray(answers) || answers.length !== 20 || answers.some(x => typeof x !== 'string' || x.length > 100) || !Number.isInteger(revision)) fail(400, '答案格式不正确。');
@@ -78,6 +84,7 @@ function setupExams(app, pool) {
   });
   app.post('/api/students/:id/exams/:kind/submit', async (req, res) => {
     const kind = kindOf(req.params.kind);
+    if (kind === 'R') { const out = await review.handle(pool, req, 'submit'); return res.status(out.status || 200).json(out); }
     if (req.user.role !== 'student' || req.params.id !== req.user.id) fail(403, '只能提交自己的试卷。');
     const row = await transaction(pool, async db => {
       const { rows } = await db.query('SELECT * FROM attempts WHERE student_id=$1 AND kind=$2 FOR UPDATE', [req.params.id, kind]);
@@ -87,7 +94,9 @@ function setupExams(app, pool) {
     res.json({ record: pack(row, false) });
   });
   app.post('/api/students/:id/exams/:kind/release', teacher, async (req, res) => {
-    const kind = kindOf(req.params.kind); await ownedStudent(pool, req.user, req.params.id);
+    const kind = kindOf(req.params.kind);
+    if (kind === 'R') { const out = await review.handle(pool, req, 'release'); return res.status(out.status || 200).json(out); }
+    await ownedStudent(pool, req.user, req.params.id);
     if (typeof req.body.released !== 'boolean') fail(400, '请选择是否开放。');
     const result = await pool.query('UPDATE attempts SET released=$3 WHERE student_id=$1 AND kind=$2 AND submitted_at IS NOT NULL', [req.params.id, kind, req.body.released]);
     if (!result.rowCount) fail(400, '学生尚未交卷。'); res.json({ ok: true });

@@ -76,3 +76,21 @@ test('点击后测分数打开后测报告，筛选名册不额外读取全班�
  h.handlers.change({target:{id:'analysis-focus',value:'pending',closest:()=>h.root}});
  assert.equal(h.calls.length,1);assert.match(h.node('[data-analysis-matrix]').innerHTML,/没有符合筛选/);
 });
+
+test('回顾测评面板使用100分与60分线，完整展示选择项和应用小问',async()=>{
+ const data={kind:'R',totalScore:100,totalStudents:2,submittedCount:2,pendingCount:0,students:[
+  {id:'r1',name:'小白',username:'review1',status:'submitted',scores:{R:59}},
+  {id:'r2',name:'小雨',username:'review2',status:'submitted',scores:{R:60}}],groups:[{
+  version:'r1',submittedCount:2,students:[
+   {id:'r1',name:'小白',score:59,wrongNumbers:[1,23],blankNumbers:[]},
+   {id:'r2',name:'小雨',score:60,wrongNumbers:[23],blankNumbers:[]}],questions:[
+   {number:1,type:'multiple',topic:'等量',text:'请选择所有正确关系',options:[{value:'A',text:'两组同倍扩大'},{value:'B',text:'仅一项扩大'}],answer:['A'],explain:'各项一起扩大',wrongCount:1,blankCount:0,wrongRate:50,wrongStudents:[{id:'r1',name:'小白',username:'review1',answer:'B',blank:false}]},
+   {number:23,type:'application',topic:'消去',text:'根据两张订单作答',parts:[{text:'每支笔多少钱？',points:5},{text:'每本本子多少钱？',points:5}],answer:['4','6'],explain:'先相减再代回',wrongCount:2,blankCount:0,wrongRate:100,wrongStudents:[{id:'r1',name:'小白',username:'review1',answer:'["4","5"]',blank:false}]}]}]};
+ const h=harness(async()=>data);h.node('#analysis-kind').value='R';await h.run('loadExamAnalysis()');
+ const html=h.node('[data-analysis-body]').innerHTML;
+ assert.match(html,/59.5/);assert.match(html,/\/ 100/);assert.match(html,/低于60分/);assert.doesNotMatch(html,/120|72分|设计变式作业/);
+ assert.match(html,/两组同倍扩大/);assert.match(html,/每本本子多少钱/);assert.match(html,/（1）4；（2）5/);assert.match(html,/（1）4；（2）6/);
+ assert.match(html,/data-kind="R"/);assert.doesNotMatch(html,/<th scope="col">变化/);
+ h.ctx.reviewData=data;h.ctx.reviewGroup=data.groups[0];
+ const low=h.run("classMatrixView(reviewData,reviewGroup,'low')");assert.match(low,/小白/);assert.doesNotMatch(low,/小雨/);
+});

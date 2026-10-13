@@ -11,6 +11,7 @@ function summarizeExams(rows, kind) {
   if (!groups.has(row.version)) groups.set(row.version, {
    version: row.version, submittedCount: 0, students: [],
    questions: paper.map((q,i) => ({ number: i+1, text:q.text, svg:q.svg||'', topic:q.topic,
+    ...(kind==='R'?{type:q.type,points:q.points,options:q.options,parts:q.parts}:{}),
     answer:q.answer, explain:q.explain, wrongCount:0, blankCount:0, wrongStudents:[] }))
   });
   const group=groups.get(row.version);group.submittedCount++;
@@ -18,7 +19,12 @@ function summarizeExams(rows, kind) {
    accountDisabled:row.account_disabled===true,score:row.score,wrongNumbers:[],blankNumbers:[]};
   group.questions.forEach((q,i)=>{
    if(row.correct[i]===true)return;
-   const answer=String(row.answers[i]??''),blank=!answer.trim();
+   const answer=String(row.answers[i]??'');
+   // 应用题使用分问答案数组；两个小问都未填才算整题空白。
+   let blank=!answer.trim();
+   if(kind==='R'&&q.type==='application'&&answer.trim()){
+    try{const parts=JSON.parse(answer);blank=Array.isArray(parts)&&parts.every(a=>!String(a??'').trim());}catch{}
+   }
    q.wrongCount++;if(blank)q.blankCount++;
    q.wrongStudents.push({id:student.id,name:student.name,username:student.username,answer,blank});
    student.wrongNumbers.push(i+1);if(blank)student.blankNumbers.push(i+1);
@@ -30,13 +36,13 @@ function summarizeExams(rows, kind) {
   group.questions.sort((a,b)=>b.wrongCount-a.wrongCount||a.number-b.number);
  }
  const submittedCount=rows.filter(r=>r.submitted_at).length;
- return {kind,totalStudents:rows.length,submittedCount,pendingCount:rows.length-submittedCount,
+ return {kind,...(kind==='R'?{totalScore:100}:{}),totalStudents:rows.length,submittedCount,pendingCount:rows.length-submittedCount,
   // 面板需要全班名册，不能只列已交卷学生；仅返回展示用的成绩与状态。
   students:rows.map(row=>{
-   const scores={A:null,B:null},scoreVersions={A:null,B:null};
+   const scores=kind==='R'?{R:null}:{A:null,B:null},scoreVersions=kind==='R'?{R:null}:{A:null,B:null};
    if(row.submitted_at){scores[kind]=row.score;scoreVersions[kind]=row.version;}
    const other=kind==='A'?'B':'A';
-   if(row.other_submitted_at){scores[other]=row.other_score;scoreVersions[other]=row.other_version;}
+   if(kind!=='R'&&row.other_submitted_at){scores[other]=row.other_score;scoreVersions[other]=row.other_version;}
    return {id:row.user_id,name:row.name,username:row.username,className:row.class_name,accountDisabled:row.account_disabled===true,
     version:row.version||null,scores,scoreVersions,
     status:row.submitted_at?'submitted':row.attempt_id?(new Date(row.deadline)<=new Date()?'overdue':'in_progress'):row.assigned?'assigned':'unassigned'};
@@ -46,10 +52,22 @@ function summarizeExams(rows, kind) {
 
 async function examAnalysis(pool,user,query){
  const kind=query.kind||'A',classId=query.classId||'';
- if(!['A','B'].includes(kind)||typeof classId!=='string')fail(400,'请选择前测或后测及有效班级。');
+ if(!['A','B','R'].includes(kind)||typeof classId!=='string')fail(400,'请选择测评及有效班级。');
  if(classId){
   if(!/^[0-9a-f-]{36}$/i.test(classId))fail(404,'班级不存在。');
   if(!(await pool.query('SELECT 1 FROM classes WHERE id=$1 AND teacher_id=$2',[classId,user.id])).rowCount)fail(404,'班级不存在。');
+ }
+ if(kind==='R'){
+  // 新测评沿用学生档案存储，整班一次读取即可组成同样的分析面板。
+  const students=(await pool.query(`SELECT s.user_id,s.data,u.name,u.username,c.name AS class_name
+   FROM students s JOIN users u ON u.id=s.user_id JOIN classes c ON c.id=s.class_id
+   WHERE c.teacher_id=$1 ${classId?'AND c.id=$2':''} ORDER BY u.name,u.username`,classId?[user.id,classId]:[user.id])).rows;
+  return summarizeExams(students.map(s=>{
+   const a=s.data.reviewExam?.attempt||{};
+   return {...s,account_disabled:s.data.accountDisabled===true,attempt_id:a.id,deadline:a.deadline,
+    version:a.version,submitted_at:a.submitted_at,score:a.score,correct:a.correct,answers:a.answers,
+    assigned:s.data.reviewExam?.enabled===true};
+  }),'R');
  }
  // 一次联表读取整班，不逐个请求学生档案，避免拖慢工作台。
  const rows=(await pool.query(`SELECT s.user_id,(s.data->>'accountDisabled'='true') AS account_disabled,u.name,u.username,c.name AS class_name,

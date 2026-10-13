@@ -1,0 +1,4 @@
+.airship-travel-panel{position:absolute;z-index:12;bottom:28px;left:50%;transform:translateX(-50%);display:grid;grid-template-columns:1fr auto;gap:12px 24px;align-items:center;width:min(540px,calc(100% - 32px));padding:18px 22px;background:#fff7def2;border:2px solid #584576;border-radius:22px;box-shadow:0 8px 32px #49365b30;color:#49365b}
+.airship-travel-panel[hidden]{display:none}.airship-travel-panel strong{font-size:18px}.airship-travel-panel progress{grid-row:2;width:100%;height:8px;accent-color:#a282e2}.airship-travel-panel button{grid-column:2;grid-row:1/3}
+.airship-travelling .world3d-toolbar,.airship-travelling .world3d-controls{pointer-events:none;opacity:.35}.airship-travelling .world3d-label{display:none}
+@media(max-width:600px){.airship-travel-panel{gap:10px;padding:14px;bottom:16px}.airship-travel-panel strong{font-size:15px}}

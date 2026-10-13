@@ -12,13 +12,18 @@ import {createHomeEntrance,createHomeDistrict} from './home-model.mjs';
 import {townHome} from './home-layout.mjs';
 import {mountPlayground} from './playground.mjs';
 import {parkEntrance,rides} from './playground-rules.mjs';
+import {mountAirship,prepareCampDock} from './airship.mjs';
+import {takeArrival} from './airship-journey.mjs';
 
 // 仅保留一次场景往返的落点，不保存或改变学习进度。
 let nextArrival=null;
 export function mountWorld(root,data,onTalk,options={}){
   const config=data.sceneConfig||{};
+  let sceneAnimator=null;
+  const missions=()=>config.getMissions?.()||data.campaign?.missions||[];
   const seats=config.camp?campSeats:townSeats;
-  const region=config.camp?'camp':'town',gatePoint=config.camp?{x:0,z:11.5}:valleyGate.approach;
+  const region=config.sky?'sky':config.camp?'camp':'town',gatePoint=config.camp?{x:0,z:11.5}:valleyGate.approach;
+  const flightArrival=takeArrival(region);
   const atGate=()=>Math.hypot(position.x-gatePoint.x,position.z-gatePoint.z)<1.8;
   const atHome=()=>!config.camp&&Math.hypot(position.x-townHome.door.x,position.z-townHome.door.z)<1;
   function showHome(){route=[];destination=null;resetInput();const box=root.querySelector('#town-dialogue');shell.append(box);box.hidden=false;box.innerHTML=`<button class="outline mini dialogue-close" data-close-dialogue>关闭</button><span class="pill">探险家之家</span><h2>${data.character==='girl'?'星光花园之家':'森林探索之家'}</h2><p>回家休息，也可以换一套喜欢的装饰。</p><button data-enter-home>进入家园 →</button>`;}
@@ -27,10 +32,11 @@ export function mountWorld(root,data,onTalk,options={}){
     route=[];destination=null;resetInput();yaw=Math.PI;pitch=.55;distance=18;
     const box=root.querySelector('#town-dialogue');shell.append(box);box.hidden=false;
     const first=data.campaign?.first;
-    box.innerHTML=`<button class="outline mini dialogue-close" data-close-dialogue>关闭对话</button><span class="pill">山谷通道</span><h2>${config.camp?'返回好奇心小镇':gateOpen()?'通往星光营地的路已开放':'远方就是星光营地'}</h2><p>${config.camp?'沿原路回到小镇，继续拜访朋友。':gateOpen()?'你已完成第一关，可以出发探索营地了。':`这里只能远眺。第一关全部 ${first?.total||48} 道题答对后才能通行，当前已答对 ${first?.correct||0} 道，还差 ${Math.max(0,(first?.total||48)-(first?.correct||0))} 道。`}</p>${config.camp||gateOpen()?'<button data-cross-gate>穿过山谷通道 →</button>':'<button disabled>通道尚未开放</button>'}`;
+    if(config.sky){airship?.offer();return;}
+    box.innerHTML=`<button class="outline mini dialogue-close" data-close-dialogue>关闭对话</button><span class="pill">山谷通道</span><h2>${config.camp?'返回好奇心小镇':gateOpen()?'通往星光营地的路已开放':'远方就是星光营地'}</h2><p>${config.camp?'沿原路回到小镇，继续拜访朋友。':gateOpen()?(options.demo?'教师试玩可直接进入星光营地，学生仍需通关后解锁。':'你已完成第一关，可以出发探索营地了。'):`这里只能远眺。第一关全部 ${first?.total||48} 道题答对后才能通行，当前已答对 ${first?.correct||0} 道，还差 ${Math.max(0,(first?.total||48)-(first?.correct||0))} 道。`}</p>${config.camp||gateOpen()?'<button data-cross-gate>穿过山谷通道 →</button>':'<button disabled>通道尚未开放</button>'}`;
   }
   const viewport=root.querySelector('#town-viewport'),status=root.querySelector('#town-position'),loading=root.querySelector('#town-loading');
-  let disposed=false,frame=0,renderer,scene,hero,actions,observer,homeEntrance,park,fountain,clouds;
+  let disposed=false,frame=0,renderer,scene,hero,actions,observer,homeEntrance,park,fountain,clouds,airship;
   let seatLock=null,seatingPending=false;
   let characterLoading=false;
   let position={x:-4,z:4},yaw=.18,pitch=.85,distance=20,route=[],destination=null,drag=null,stick={x:0,z:0};
@@ -51,7 +57,7 @@ export function mountWorld(root,data,onTalk,options={}){
   controls.innerHTML='<button type="button" class="outline mini" data-hero-action="run" aria-pressed="false" disabled>跑步 R</button><button type="button" class="outline mini" data-hero-action="jump" disabled>跳跃 空格</button><button type="button" class="outline mini" data-hero-action="sit" aria-pressed="false" disabled>坐下 C</button>';
   root.querySelector('[data-talk]').before(controls);
   listeners.push(()=>controls.remove());
-  const modalOpen=()=>characterLoading||park?.panelOpen||!!root.querySelector('.question-card[open],.town-dialogue:not([hidden])');
+  const modalOpen=()=>characterLoading||airship?.active||park?.panelOpen||!!root.querySelector('.question-card[open],.town-dialogue:not([hidden])');
   function command(name){
     if(!actions||modalOpen()||park?.active)return;
     if(seatingPending)return;
@@ -95,13 +101,13 @@ export function mountWorld(root,data,onTalk,options={}){
   function resetInput(){keys.clear();stick={x:0,z:0};drag=null;}
   function requestStand(){if(seatingPending){seatingPending=false;seatLock=null;}actions?.request('stand');}
   function travel(target,index=null){if(modalOpen()||park?.active)return;const path=findPath(position,target,!config.camp);if(!path){say('那里无法到达，请点击道路或选择一位朋友。');return;}requestStand();route=path;route.push({...target});destination=index;say('正在走向目的地……');viewport.focus({preventScroll:true});}
-  function talk(){if(park?.active)return;const ride=park?.nearby(position);if(ride){park.offer(ride.id);return;}if(actions?.busy){say('等动作完成后再交谈。');return;}if(atHome()){showHome();return;}if(atGate()){showGate();return;}const index=nearest();if(index<0){say('走到人物身边再交谈，或点击下方地点让角色自动前往。');return;}route=[];resetInput();onTalk(index);}
+  function talk(){if(park?.active||airship?.active)return;if(airship?.nearby(position)){route=[];resetInput();airship.offer();return;}const ride=park?.nearby(position);if(ride){park.offer(ride.id);return;}if(actions?.busy){say('等动作完成后再交谈。');return;}if(atHome()){showHome();return;}if(atGate()){showGate();return;}const index=nearest();if(index<0){say('走到人物身边再交谈，或点击下方地点让角色自动前往。');return;}route=[];resetInput();onTalk(index);}
   function fail(){if(disposed)return;loading.hidden=false;loading.innerHTML='<strong>暂时无法打开3D场景</strong><p>请检查网络与浏览器的图形加速，刷新页面重试。你仍然可以从下方学习路线进入练习。</p><a class="button outline" href="#courses">进入课程与练习</a>';say('3D场景未就绪，课程和学习记录仍可使用。');}
   try{
     renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});
     renderer.setPixelRatio(Math.min(window.devicePixelRatio||1,1.5));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;
     renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.12;
-    renderer.domElement.setAttribute('aria-label','可旋转视角的三维思维小镇');viewport.prepend(renderer.domElement);
+    renderer.domElement.setAttribute('aria-label',config.sky?'可旋转视角的云海天文城':'可旋转视角的三维思维小镇');viewport.prepend(renderer.domElement);
     scene=new THREE.Scene();scene.background=new THREE.Color('#c5e8ee');scene.fog=new THREE.Fog('#c6deed',65,145);
     const camera=new THREE.PerspectiveCamera(46,1,.1,180);camera.position.set(0,16,24);
     scene.add(new THREE.HemisphereLight(0xfff7de,0x819987,2.0));const sunlight=new THREE.DirectionalLight(0xfff0dd,2.5);sunlight.position.set(-12,24,10);sunlight.castShadow=true;sunlight.shadow.mapSize.set(config.camp?2048:1024,config.camp?2048:1024);Object.assign(sunlight.shadow.camera,{left:-45,right:45,top:38,bottom:-38,near:1,far:70});sunlight.shadow.normalBias=.025;sunlight.shadow.bias=-.0001;scene.add(sunlight);
@@ -109,7 +115,7 @@ export function mountWorld(root,data,onTalk,options={}){
     const raycaster=new THREE.Raycaster(),pointer=new THREE.Vector2(),plane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
     on(viewport,'pointerdown',e=>{if(e.target!==renderer.domElement)return;viewport.focus({preventScroll:true});drag={id:e.pointerId,x:e.clientX,y:e.clientY,lastX:e.clientX,lastY:e.clientY,moved:false};viewport.setPointerCapture(e.pointerId);});
     on(viewport,'pointermove',e=>{if(!drag||drag.id!==e.pointerId)return;const dx=e.clientX-drag.lastX,dy=e.clientY-drag.lastY;if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)>6)drag.moved=true;if(drag.moved){yaw-=dx*.007;pitch=THREE.MathUtils.clamp(pitch+dy*.005,.32,1.15);}drag.lastX=e.clientX;drag.lastY=e.clientY;});
-    on(viewport,'pointerup',e=>{if(!drag||drag.id!==e.pointerId)return;const click=!drag.moved;drag=null;if(!hero||!click||park?.active)return;const rect=viewport.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);raycaster.setFromCamera(pointer,camera);const hits=raycaster.intersectObjects(scene.children,true);for(const hit of hits){const seat=seatAtPoint(hit.point,seats);if(seat){travel(seat.approach,`seat:${seat.id}`);return;}let o=hit.object;while(o){if(o.userData.rideId&&park){travel(rides[o.userData.rideId].entry,`ride:${o.userData.rideId}`);return;}if(o.userData.homeDoor&&!config.camp){travel(townHome.door,'home');return;}if(o.userData.worldGate){travel(gatePoint,'gate');return;}if(Number.isInteger(o.userData.stationIndex)){const i=o.userData.stationIndex;travel(meetingPoint(i),i);return;}o=o.parent;}}const point=new THREE.Vector3();if(raycaster.ray.intersectPlane(plane,point))travel({x:point.x,z:point.z});});
+    on(viewport,'pointerup',e=>{if(!drag||drag.id!==e.pointerId)return;const click=!drag.moved;drag=null;if(!hero||!click||park?.active)return;const rect=viewport.getBoundingClientRect();pointer.set((e.clientX-rect.left)/rect.width*2-1,-(e.clientY-rect.top)/rect.height*2+1);raycaster.setFromCamera(pointer,camera);const hits=raycaster.intersectObjects(scene.children,true);for(const hit of hits){const seat=seatAtPoint(hit.point,seats);if(seat){travel(seat.approach,`seat:${seat.id}`);return;}let o=hit.object;while(o){if(o.userData.airship&&airship){travel(airship.port.approach,'airship');return;}if(o.userData.rideId&&park){travel(rides[o.userData.rideId].entry,`ride:${o.userData.rideId}`);return;}if(o.userData.homeDoor&&!config.camp){travel(townHome.door,'home');return;}if(o.userData.worldGate){travel(gatePoint,'gate');return;}if(Number.isInteger(o.userData.stationIndex)){const i=o.userData.stationIndex;travel(meetingPoint(i),i);return;}o=o.parent;}}const point=new THREE.Vector3();if(raycaster.ray.intersectPlane(plane,point))travel({x:point.x,z:point.z});});
     on(viewport,'pointercancel',()=>drag=null);
     on(viewport,'wheel',e=>{e.preventDefault();distance=THREE.MathUtils.clamp(distance+e.deltaY*.012,8,31);},{passive:false});
     const codes=['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyA','KeyS','KeyD'];
@@ -121,7 +127,7 @@ export function mountWorld(root,data,onTalk,options={}){
     on(joystick,'pointerdown',e=>{stickPointer=e.pointerId;joystick.setPointerCapture(e.pointerId);moveStick(e);});on(joystick,'pointermove',moveStick);
     const stopStick=()=>{stickPointer=null;stick={x:0,z:0};knob.style.transform='';};on(joystick,'pointerup',stopStick);on(joystick,'pointercancel',stopStick);on(window,'blur',stopStick);
     on(controls,'click',e=>{const button=e.target.closest('[data-hero-action]');if(button&&!button.disabled)command(button.dataset.heroAction);});
-    on(root,'click',e=>{if(park?.active)return;if(e.target.closest('[data-go-park]'))travel(parkEntrance,'park');if(e.target.closest('[data-go-home]'))travel(townHome.door,'home');if(e.target.closest('[data-enter-home]')&&atHome()){nextArrival='home';location.hash='home';return;}if(e.target.closest('[data-close-dialogue]')){root.querySelector('#town-dialogue').hidden=true;viewport.focus({preventScroll:true});}if(e.target.closest('[data-camera-full]'))expand();if(e.target.closest('[data-goto-gate]')&&hero)travel(gatePoint,'gate');if(e.target.closest('[data-cross-gate]')&&atGate()){if(!config.camp&&!gateOpen()){showGate();return;}nextArrival=config.camp?'town':'camp';window.location.hash=config.camp?'world':'expedition';return;}const place=e.target.closest('[data-place]');if(place&&hero){const i=Number(place.dataset.place);travel(meetingPoint(i),i);}if(e.target.closest('[data-talk]')&&hero)talk();if(e.target.closest('[data-camera-reset]')){yaw=.18;pitch=.85;distance=20;}if(e.target.closest('[data-camera-out]'))distance=Math.min(31,distance+3);if(e.target.closest('[data-camera-in]'))distance=Math.max(8,distance-3);});
+    on(root,'click',e=>{if(park?.active||airship?.active)return;if(e.target.closest('[data-airship-go]')&&airship){travel(airship.port.approach,'airship');return;}if(e.target.closest('[data-go-park]'))travel(parkEntrance,'park');if(e.target.closest('[data-go-home]'))travel(townHome.door,'home');if(e.target.closest('[data-enter-home]')&&atHome()){nextArrival='home';location.hash='home';return;}if(e.target.closest('[data-close-dialogue]')){root.querySelector('#town-dialogue').hidden=true;viewport.focus({preventScroll:true});}if(e.target.closest('[data-camera-full]'))expand();if(e.target.closest('[data-goto-gate]')&&hero)travel(gatePoint,'gate');if(e.target.closest('[data-cross-gate]')&&atGate()){if(config.sky){airship?.start();return;}if(!config.camp&&!gateOpen()){showGate();return;}nextArrival=config.sky?'camp':config.camp?'town':'camp';window.location.hash=config.sky?'expedition':config.camp?'world':'expedition';return;}const place=e.target.closest('[data-place]');if(place&&hero){const i=Number(place.dataset.place);travel(meetingPoint(i),i);}if(e.target.closest('[data-talk]')&&hero)talk();if(e.target.closest('[data-camera-reset]')){yaw=.18;pitch=.85;distance=20;}if(e.target.closest('[data-camera-out]'))distance=Math.min(31,distance+3);if(e.target.closest('[data-camera-in]'))distance=Math.max(8,distance-3);});
     on(renderer.domElement,'webglcontextlost',e=>{e.preventDefault();cancelAnimationFrame(frame);resetInput();fail();});
     const loader=new GLTFLoader();
     on(characterSelect,'change',async()=>{
@@ -151,10 +157,10 @@ export function mountWorld(root,data,onTalk,options={}){
       }
     });
     // 模型来自 Blender 导出；网页仅负责显示、镜头和任务交互。
-    Promise.all([config.asset||'/world3d/assets/thinking-town.glb',heroFor(data.character).asset].map(url=>loader.loadAsync(url).then(g=>{if(disposed){disposeModel(g.scene);return null;}owned.push(g.scene);return g;}))).then(([town,player])=>{
+    Promise.all([config.createScene?Promise.resolve().then(config.createScene):loader.loadAsync(config.asset||'/world3d/assets/thinking-town.glb'),loader.loadAsync(heroFor(data.character).asset)].map(p=>p.then(g=>{if(disposed){disposeModel(g.scene);return null;}owned.push(g.scene);return g;}))).then(([town,player])=>{
       if(disposed||!town||!player)return;
-      if(!config.camp){preparePlaza(town.scene);hideOldValley(town.scene);}
-      scene.add(town.scene);hero=player.scene;scene.add(hero);if(returningHome)hero.rotation.y=townHome.yaw;updateHomeEntrance();
+      if(!config.camp){preparePlaza(town.scene);hideOldValley(town.scene);}else if(!config.sky)prepareCampDock(town.scene);
+      sceneAnimator=town.animate;scene.add(town.scene);hero=player.scene;scene.add(hero);if(returningHome)hero.rotation.y=townHome.yaw;updateHomeEntrance();
       if(!config.camp){
        const district=createHomeDistrict();scene.add(district);owned.push(district);
        park=mountPlayground({shell,viewport,scene,travel,payRide:options.payRide,wallet:data.playground,readonly:options.readonly,stopWalking(){route=[];destination=null;resetInput();},getHero:()=>hero,getActions:()=>actions,leave(point){position={...point};hero.position.set(position.x,.09,position.z);hero.rotation.z=0;resetInput();},say});owned.push(park.group);
@@ -163,7 +169,8 @@ export function mountWorld(root,data,onTalk,options={}){
       if(!config.camp){const b=document.createElement('button');b.className='outline mini';b.dataset.goHome='';b.textContent='回家';root.querySelector('.world3d-toolbar>div').append(b);listeners.push(()=>b.remove());}
       // 未通关时横杆仅作关口提示，真正的跨区动作还要核对服务端返回的通关状态。
       if(!config.camp){const entrance=createValleyEntrance(gateOpen());scene.add(entrance);owned.push(entrance);}
-      const gateButton=document.createElement('button');gateButton.className='outline mini';gateButton.dataset.gotoGate='';gateButton.textContent=config.camp?'前往小镇出口':'前往山谷入口';root.querySelector('.world3d-toolbar>div').append(gateButton);listeners.push(()=>gateButton.remove());
+      if(config.camp&&!config.sky){const b=document.createElement('button');b.className='outline mini';b.textContent=data.observatory?.unlocked?'乘飞艇前往天文城':'天文城 · 完成营地后开放';b.disabled=true;b.dataset.airshipGo='';root.querySelector('.world3d-toolbar>div').append(b);listeners.push(()=>b.remove());}
+      const gateButton=document.createElement('button');gateButton.className='outline mini';gateButton.dataset.gotoGate='';gateButton.textContent=config.sky?'前往返航码头':config.camp?'前往小镇出口':'前往山谷入口';root.querySelector('.world3d-toolbar>div').append(gateButton);listeners.push(()=>gateButton.remove());
       scene.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;}if(o.name.startsWith('Reward_')){const i=Number(o.name.slice(7));o.visible=!!data.areas[i]?.stamps;}});
       clouds=createIslandClouds({camp:!!config.camp});scene.add(clouds.group);owned.push(clouds.group);scene.background=clouds.background;
       if(!config.camp){fountain=createPlazaFountain();scene.add(fountain.group);owned.push(fountain.group);}
@@ -171,6 +178,7 @@ export function mountWorld(root,data,onTalk,options={}){
       hero.traverse(o=>{if(o.isMesh)o.receiveShadow=false;});
       actions=createHeroActions(hero,player.animations,{canSit:()=>!!seatLock||!!park?.canSit});
       viewport.dataset.character=heroFor(data.character).id;
+      if(config.camp){airship=mountAirship({root,viewport,scene,region,getHero:()=>hero,getActions:()=>actions,enabled:config.sky||!!data.observatory?.unlocked,arrival:flightArrival,stopWalking(){route=[];destination=null;resetInput();seatLock=null;seatingPending=false;},leave(point){position={...point};hero.position.set(position.x,.09,position.z);hero.rotation.set(0,config.sky?Math.PI:0,0);yaw=-Math.PI/2;pitch=.7;distance=18;},say,navigate:target=>{window.location.hash=target;}});owned.push(airship.group);root.querySelectorAll('[data-airship-go]').forEach(b=>b.disabled=!data.observatory?.unlocked);}
       // 营地原木凳过高；统一座面高度，让同一主角的脚底和膝盖都能自然落位。
       if(config.camp)town.scene.traverse(o=>{if(!o.isMesh||!o.name.startsWith('休息木凳'))return;o.position.y=seatHeight-.2;const legs=new THREE.Group();for(const x of [-.9,.9])for(const z of [-.25,.25]){const leg=new THREE.Mesh(new THREE.BoxGeometry(.12,.32,.12),new THREE.MeshStandardMaterial({color:0x94704b}));leg.position.set(o.position.x+x,.22,o.position.z+z);leg.castShadow=true;legs.add(leg);}scene.add(legs);owned.push(legs);});
       for(let i=0;i<6;i++){
@@ -181,18 +189,20 @@ export function mountWorld(root,data,onTalk,options={}){
         ctx.beginPath();ctx.arc(64,103,14,0,Math.PI*2);ctx.fill();ctx.stroke();
         ctx.fillStyle='#fff2a5';ctx.beginPath();ctx.roundRect(53,19,7,44,3);ctx.fill();
         const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;
-        const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,depthTest:false,depthWrite:false,toneMapped:false}));sprite.scale.set(.65,.65,1);sprite.renderOrder=10;sprite.userData.nameplate=true;sprite.position.set(stations[i][0],2.75,stations[i][1]+(i<3?4:-4));sprite.userData.stationIndex=i;const active=config.camp?data.campaign.missions.findIndex(m=>m.unlocked&&!m.repaired):data.adventure?.activeNpc; sprite.visible=active===undefined||active===i;scene.add(sprite);owned.push(sprite);
+        const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,depthTest:false,depthWrite:false,toneMapped:false}));sprite.scale.set(.65,.65,1);sprite.renderOrder=10;sprite.userData.nameplate=true;sprite.position.set(stations[i][0],2.75,stations[i][1]+(i<3?4:-4));sprite.userData.stationIndex=i;const active=config.camp?missions().findIndex(m=>m.unlocked&&!m.repaired):data.adventure?.activeNpc; sprite.visible=active===undefined||active===i;scene.add(sprite);owned.push(sprite);
       }
-      loading.hidden=true;say('3D小镇已就绪。点击道路前往，拖动画面转动镜头。');
-      root.querySelectorAll('[data-place],[data-talk]').forEach(b=>{b.disabled=config.camp&&b.dataset.place!==undefined?!data.campaign.missions[Number(b.dataset.place)].unlocked:false;});
+      loading.hidden=true;say(config.sky?'天文城已抵达。前往黄色感叹号，开始修复。':'3D小镇已就绪。点击道路前往，拖动画面转动镜头。');
+      root.querySelectorAll('[data-place],[data-talk]').forEach(b=>{b.disabled=config.camp&&b.dataset.place!==undefined?!missions()[Number(b.dataset.place)].unlocked:false;});
     }).catch(fail);
     let last=performance.now();
-    function animate(time){if(disposed)return;frame=requestAnimationFrame(animate);const dt=Math.min((time-last)/1000,.05);last=time;if(document.hidden)return;
+    function animate(time){if(disposed)return;frame=requestAnimationFrame(animate);const elapsed=Math.max(0,(time-last)/1000),dt=Math.min(elapsed,.05);last=time;if(document.hidden)return;
       // 弹出答题卡时停止角色移动，场景仍保持渲染。
       const blocked=modalOpen();
       if(blocked){resetInput();stopStick();route=[];destination=null;if(seatingPending){seatingPending=false;seatLock=null;}}
+      const wasFlying=airship?.active;airship?.update(elapsed);
+      if(wasFlying||airship?.active){updateControls(true);const view=airship.camera;if(view){camera.position.lerp(view.look.clone().add(view.offset),Math.min(1,dt*8));camera.lookAt(view.look);}clouds?.update(dt);sceneAnimator?.(dt);renderer.render(scene,camera);return;}
       const wasRiding=park?.active;
-      clouds?.update(dt);
+      clouds?.update(dt);sceneAnimator?.(dt);
       fountain?.update(dt);
       park?.update(dt,position);
       if(wasRiding){
@@ -224,15 +234,15 @@ export function mountWorld(root,data,onTalk,options={}){
         if(wasSeated&&actions.phase==='Idle')seatLock=null;
         updateControls(blocked);
         if(viewport.dataset.heroState!==actions?.phase)viewport.dataset.heroState=actions?.phase||'loading';
-        if(!route.length&&destination!==null&&!actions?.busy){const i=destination;destination=null;if(typeof i==='string'&&i.startsWith('seat:')){seatLock=seats.find(s=>`seat:${s.id}`===i);if(seatLock){seatingPending=true;resetInput();}}else if(i==='park'&&park){park.showMenu();}else if(typeof i==='string'&&i.startsWith('ride:')&&park){say('已到达设施入口，按 Enter 游玩 · 20 星光。');}else if(i==='home'&&atHome()){showHome();}else if(i==='gate'&&atGate()){showGate();}else if(nearest()===i){onTalk(i);say('已经到达，可以接受这位朋友的任务。');}}
+        if(!route.length&&destination!==null&&!actions?.busy){const i=destination;destination=null;if(typeof i==='string'&&i.startsWith('seat:')){seatLock=seats.find(s=>`seat:${s.id}`===i);if(seatLock){seatingPending=true;resetInput();}}else if(i==='airship'&&airship){airship.offer();}else if(i==='park'&&park){park.showMenu();}else if(typeof i==='string'&&i.startsWith('ride:')&&park){say('已到达设施入口，按 Enter 游玩 · 20 星光。');}else if(i==='home'&&atHome()){showHome();}else if(i==='gate'&&atGate()){showGate();}else if(nearest()===i){onTalk(i);say('已经到达，可以接受这位朋友的任务。');}}
         const overview=park?.overview,look=overview?.look||new THREE.Vector3(position.x,1.15,position.z),offset=overview?.offset||new THREE.Vector3(Math.sin(yaw)*Math.cos(pitch)*distance,Math.sin(pitch)*distance,Math.cos(yaw)*Math.cos(pitch)*distance);camera.position.lerp(look.clone().add(offset),Math.min(1,dt*6));camera.lookAt(look);
-        const interaction=root.querySelector('[data-talk]');interaction.textContent=park?.nearby(position)?'游玩 · 20 星光':config.camp?'检查附近设施':'与附近人物交谈';
-        const label=root.querySelector('#town-nearby'),i=nearest(),ride=park?.nearby(position);label.hidden=i<0&&!atGate()&&!atHome()&&!ride;label.textContent=ride?`${ride.name} · Enter 游玩 · 20 星光`:atHome()?'家门口 · 按 Enter 进入家园':atGate()?'山谷入口 · 按 Enter 查看通道':i<0?'':`附近：${(config.names||['面包师米米','乐手多多','侦探阿布','建筑师方方','园丁芽芽','店长圆圆'])[i]} · 按 Enter ${config.camp?'检查':'交谈'}`;
+        const interaction=root.querySelector('[data-talk]');interaction.textContent=airship?.nearby(position)?'登艇 / 查看航线':park?.nearby(position)?'游玩 · 20 星光':config.camp?'检查附近设施':'与附近人物交谈';
+        const label=root.querySelector('#town-nearby'),i=nearest(),ride=park?.nearby(position);label.hidden=i<0&&!atGate()&&!atHome()&&!ride&&!airship?.nearby(position);label.textContent=airship?.nearby(position)?'飞艇码头 · 按 Enter 查看航线':ride?`${ride.name} · Enter 游玩 · 20 星光`:atHome()?'家门口 · 按 Enter 进入家园':atGate()?(config.sky?'飞艇码头 · 按 Enter 返回营地':'山谷入口 · 按 Enter 查看通道'):i<0?'':`附近：${(config.names||['面包师米米','乐手多多','侦探阿布','建筑师方方','园丁芽芽','店长圆圆'])[i]} · 按 Enter ${config.camp?'检查':'交谈'}`;
       }
-      for(const o of owned){if(!o.userData.nameplate)continue;const d=camera.position.distanceTo(o.position),height=2*d*Math.tan(camera.fov*Math.PI/360)/Math.max(1,viewport.clientHeight)*(nearest()===o.userData.stationIndex?38:30);o.scale.set(height,height,1);}
+      for(const o of owned){if(!o.userData.nameplate)continue;if(config.getMissions)o.visible=missions().findIndex(m=>m.unlocked&&!m.repaired)===o.userData.stationIndex;const d=camera.position.distanceTo(o.position),height=2*d*Math.tan(camera.fov*Math.PI/360)/Math.max(1,viewport.clientHeight)*(nearest()===o.userData.stationIndex?38:30);o.scale.set(height,height,1);}
       renderer.render(scene,camera);
     }
     frame=requestAnimationFrame(animate);
   }catch{fail();}
-  return ()=>{document.body.classList.remove('world-expanded');if(expanded){document.body.style.overflow=previousOverflow;expanded=false;}disposed=true;cancelAnimationFrame(frame);resetInput();observer?.disconnect();listeners.forEach(remove=>remove());park?.dispose();clouds?.background.dispose();actions?.dispose();owned.forEach(disposeModel);renderer?.dispose();renderer?.domElement.remove();};
+  return ()=>{document.body.classList.remove('world-expanded');if(expanded){document.body.style.overflow=previousOverflow;expanded=false;}disposed=true;cancelAnimationFrame(frame);resetInput();observer?.disconnect();listeners.forEach(remove=>remove());park?.dispose();airship?.dispose();clouds?.background.dispose();actions?.dispose();owned.forEach(disposeModel);renderer?.dispose();renderer?.domElement.remove();};
 }

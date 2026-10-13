@@ -9,7 +9,9 @@ for (const file of ['data.js', 'exam-legacy.js', 'exams.js', 'pretest-v3.js']) {
 const bank = JSON.parse(vm.runInContext('JSON.stringify({lessons:LESSONS,flow:FLOW,testFlow:TEST_FLOW,exams:{v1:{A:examQuestions("A","v1"),B:examQuestions("B","v1")},v2:EXAMS}})', context));
 // 新开始的前测使用第三版，已存在的测评继续按其记录版本取题、评分。
 bank.exams.v3 = { A: JSON.parse(vm.runInContext('JSON.stringify(PRETEST_V3)', context)) };
-const currentExamVersions = { A: 'v3', B: 'v2' };
+const reviewPaper = require('./review-paper.cjs');
+bank.exams.r1 = { R: reviewPaper.paper.questions };
+const currentExamVersions = { A: 'v3', B: 'v2', R: 'r1' };
 const teaching = require('./lesson-details');
 const problems = require('./lesson-problems');
 bank.lessons = bank.lessons.map((lesson, i) => ({ ...lesson, steps: teaching.details[i].steps, detail: { ...teaching.details[i], ...problems[i] } }));

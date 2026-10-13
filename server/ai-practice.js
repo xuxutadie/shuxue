@@ -13,7 +13,7 @@ async function teacherId(db, user) {
 async function activeExam(db, user) {
  if (user.role !== 'student') return false;
  const r = await db.query('SELECT 1 FROM attempts WHERE student_id=$1 AND submitted_at IS NULL AND deadline>now() LIMIT 1', [user.id]);
- return r.rowCount > 0;
+ return r.rowCount > 0 || await require('./review-exams').activeForStudent(db, user.id);
 }
 async function examGuard(db, user) {
  if (await activeExam(db, user)) fail(403, '正在进行正式测评，请交卷后再使用 AI 引导练习。');

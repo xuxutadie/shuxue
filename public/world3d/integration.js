@@ -50,9 +50,13 @@ function practiceHTML(){
 
 }
 function coursesHTML(){return `<h1>小镇与营地的数学任务</h1><p>48 道小镇题＋48 道营地进阶题。起点摸底的6题与小镇题重合，不重复计数。</p><div class="game-tasks">${data.courses.map(c=>`<article class="card"><span class="pill">${c.count} 道题</span><h2>${esc(c.title)}</h2><details><summary>练什么？</summary><p>${esc(c.description)}</p></details><button data-start="${esc(c.id)}" ${!c.unlocked||data.readonly?'disabled':''}>${c.unlocked?'开始 / 继续任务':'完成前置关卡后开放'}</button></article>`).join('')}</div>`;}
+function skyReportHTML(){
+ const rows=data.report.observatory||[];
+ return `<section class="card game-report"><h2>云海天文城 · ${rows.filter(r=>r.passed).length}/18</h2><details><summary>查看18项任务的尝试次数与操作记录</summary><table><thead><tr><th>任务</th><th>已尝试</th><th>第几次答对</th><th>操作记录</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.title)}</td><td>${r.count}</td><td>${r.firstSuccessAt||'尚未完成'}</td><td><details><summary>查看方案</summary>${r.history.map(a=>`<p>${esc(a.description)} · ${a.correct?'通过':'未通过'}<br>${esc(a.feedback)}</p>`).join('')||'尚未尝试'}</details></td></tr>`).join('')}</tbody></table></details></section>`;
+}
 function reportHTML(){
  const rows=data.report.questions;
- return ThinkingAdventure.bag(data.world.adventure)+`<h1>${esc(data.name)}的游戏足迹</h1><p>已探索 ${rows.length} 道不同题目；${rows.filter(r=>r.passed).length} 道曾答对。游戏记录不计入课堂测评分数。</p><div class="card game-report"><table><thead><tr><th>题目</th><th>作答次数</th><th>第一次</th><th>通关</th><th>最近作答与思路</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.title)}</td><td>${r.count}</td><td>${r.firstCorrect?r.firstHints?'提示后答对':'独立答对':'待巩固'}</td><td>${r.passed?'✓':'尚未答对'}</td><td><details><summary>展开记录</summary>${r.history.map(a=>`<p>${esc(a.created.slice(0,16).replace('T',' '))} · ${esc(a.answer||'未填写')} · ${a.revealed?'学习解析':a.correct?'答对':'未答对'}<br>思路：${esc(a.note||'未填写')}${a.workLabels?'<br>观察：'+a.workLabels.labels.map((label,i)=>esc(label)+'：'+esc(a.work?.[['first','second'][i]]||'未填')).join('；')+(a.workLabels.extra?'；'+esc(a.workLabels.extra)+'：'+esc(a.work?.extra||'未填'):''):''}</p>`).join('')}</details></td></tr>`).join('')||'<tr><td colspan="5">完成一题后，这里就会留下足迹。</td></tr>'}</tbody></table></div><h2>营地修复记录</h2><div class="game-tasks">${data.report.repairs.map(r=>`<article class="card"><h3>${esc(r.title)}</h3><p>${r.passed?'已修复':'还在尝试'} · 共验证 ${r.count} 次</p><details><summary>查看最近方案</summary>${r.history.map(a=>`<p>${esc(a.description)}<br>${esc(a.feedback)}</p>`).join('')}</details></article>`).join('')||'<p>开始修复营地后显示。</p>'}</div>`;
+ return skyReportHTML()+ThinkingAdventure.bag(data.world.adventure)+`<h1>${esc(data.name)}的游戏足迹</h1><p>小镇与营地练习：已探索 ${rows.length} 道不同题目；${rows.filter(r=>r.passed).length} 道曾答对。游戏记录不计入课堂测评分数。</p><div class="card game-report"><table><thead><tr><th>题目</th><th>作答次数</th><th>第一次</th><th>通关</th><th>最近作答与思路</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.title)}</td><td>${r.count}</td><td>${r.firstCorrect?r.firstHints?'提示后答对':'独立答对':'待巩固'}</td><td>${r.passed?'✓':'尚未答对'}</td><td><details><summary>展开记录</summary>${r.history.map(a=>`<p>${esc(a.created.slice(0,16).replace('T',' '))} · ${esc(a.answer||'未填写')} · ${a.revealed?'学习解析':a.correct?'答对':'未答对'}<br>思路：${esc(a.note||'未填写')}${a.workLabels?'<br>观察：'+a.workLabels.labels.map((label,i)=>esc(label)+'：'+esc(a.work?.[['first','second'][i]]||'未填')).join('；')+(a.workLabels.extra?'；'+esc(a.workLabels.extra)+'：'+esc(a.work?.extra||'未填'):''):''}</p>`).join('')}</details></td></tr>`).join('')||'<tr><td colspan="5">完成一题后，这里就会留下足迹。</td></tr>'}</tbody></table></div><h2>营地修复记录</h2><div class="game-tasks">${data.report.repairs.map(r=>`<article class="card"><h3>${esc(r.title)}</h3><p>${r.passed?'已修复':'还在尝试'} · 共验证 ${r.count} 次</p><details><summary>查看最近方案</summary>${r.history.map(a=>`<p>${esc(a.description)}<br>${esc(a.feedback)}</p>`).join('')}</details></article>`).join('')||'<p>开始修复营地后显示。</p>'}</div>`;
 }
 let sceneKind=null;
 async function saveCharacter(character){
@@ -71,8 +75,8 @@ async function payRide(payload){
  if(!data.demo)data.world.adventure.points=out.balance;
  return out;
 }
-function sceneOptions(){return {submitGame,saveCharacter,saveHome,payRide,readonly:data.readonly};}
-function dispose(){GameDictation.cancel();QuestionCard.close();GameCompletion.close();ThinkingTown.dispose();ThinkingExpedition.dispose();ThinkingHome.dispose();sceneKind=null;}
+function sceneOptions(){return {submitSky,submitGame,saveCharacter,saveHome,payRide,readonly:data.readonly,demo:data.demo};}
+function dispose(){GameDictation.cancel();QuestionCard.close();GameCompletion.close();ThinkingTown.dispose();ThinkingExpedition.dispose();ThinkingHome.dispose();ThinkingObservatory.dispose();sceneKind=null;}
 function showQuestion(options={}){GameDictation.cancel();QuestionCard.render(app,practiceHTML(),{onClose:()=>void act('close-card'),...options});}
 function paint(){
  const previousRoute=route;
@@ -95,12 +99,19 @@ function paint(){
  else if(route==='courses')app.innerHTML=coursesHTML();
  else if(route==='report')app.innerHTML=reportHTML();
  else if(route==='home'){app.innerHTML=ThinkingHome.html();ThinkingHome.mount(app,data.world,sceneOptions());sceneKind='home';}
+ else if(route==='observatory'){app.innerHTML=ThinkingObservatory.html(data.world,data.demo);ThinkingObservatory.mount(app,data.world,sceneOptions());sceneKind='sky';}
  else if(route==='expedition'){app.innerHTML=ThinkingExpedition.html(data.world);ThinkingExpedition.mount(app,data.world,sceneOptions());sceneKind='camp';}
  else {app.innerHTML=ThinkingTown.html(data.world,data.name);ThinkingTown.mount(app,data.world,{...sceneOptions(),homeArrival:previousRoute==='home'});sceneKind='town';}
  if(data.readonly){const p=document.createElement('p');p.className='readonly-note';p.textContent='正在查看学生的真实进度；如需操作体验，请返回教师端进入教师试玩。';app.prepend(p);}
  app.focus({preventScroll:true});
  // 新阶段从剧情开头展示；结果则定位到反馈，避免旧页面滚动位置遮住动画。
  requestAnimationFrame(()=>{if(route==='practice'&&practice?.run.result){app.querySelector('.story-feedback')?.scrollIntoView({block:'center'});}else window.scrollTo(0,0);});
+}
+async function submitSky(payload){
+ if(data.readonly)throw Error('当前仅查看学生进度。');
+ const ticket=serial,out=await request('/observatory',payload);
+ if(ticket===serial){accept(out.state);GameAudio.result(out.correct);}
+ return out;
 }
 async function submitGame(mission,config,time,attemptId){
  if(data.readonly)throw Error('当前仅查看学生进度。');
@@ -191,7 +202,7 @@ document.addEventListener('click',async event=>{
   if(params.get('student')&&gameUser.role==='student'&&params.get('student')!==gameUser.id)throw Error('不能查看其他学生的游戏档案。');
   document.getElementById('player-name').textContent=gameUser.name;
   if(gameUser.role==='teacher')document.querySelector('.game-header').insertAdjacentHTML('beforeend',owner==='demo'?'<a href="/#world3d/student" data-leave-game>查看所选学生进度</a>':'<a href="/world3d/#world" data-leave-game>返回教师试玩</a>');
-  document.getElementById('mode-note').textContent=owner==='demo'?'教师试玩 · 不影响学生记录':'进度随账号保存';
+  document.getElementById('mode-note').textContent=owner==='demo'?'教师试玩 · 全部地图开放 · 不影响学生记录':'进度随账号保存';
   await navigate();
  }catch(e){app.innerHTML=`<section class="card game-error"><h1>请先登录学习空间</h1><p>${esc(e.message)}</p><a class="button" href="/#home" target="_top">返回主站登录</a></section>`;}
 })();
