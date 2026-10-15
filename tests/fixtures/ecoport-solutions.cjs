@@ -1,0 +1,21 @@
+// 仅用于测试的独立验收方案；不得作为公开静态资源发送给学生。
+module.exports=[
+ {pairs:[[0,1],[2,3],[4,5],[6,7]],area:44},
+ {moved:[-3,2],mirror:[3,2],distance:18},
+ {heights:[[1,2],[2,4]],front:[2,4],total:9},
+ {halves:[[0,0],[0,1],[1,0],[1,1],[2,0],[2,1],[3,0],[3,1]],area:108},
+ {moved:[-3,3],mirrors:[[3,3],[2,5]],path:['W','N','N'],distance:6},
+ {min:[[3,1],[1,4]],max:[[3,3],[3,4]],minTotal:9,maxTotal:13},
+ {slowStart:-8,fastStart:0,catchTime:12,meeting:900},
+ {slowStart:-6,fastStart:0,checkSlow:540,checkFast:360,checkGap:180,catchTime:9,meeting:810},
+ {slowStart:-5,fastStart:0,catchTime:10,meeting:720,beforeBridge:false},
+ {phases:[{mode:'walk',minutes:6,gap:180},{mode:'rest',minutes:2,gap:270},{mode:'walk',minutes:9,gap:0}],elapsed:17,walking:15,meeting:1125},
+ {phases:[{mode:'walk',minutes:3,gap:225},{mode:'rest',minutes:2,gap:315},{mode:'walk',minutes:7,gap:0}],elapsed:12,walking:10,meeting:900},
+ {phases:[{mode:'walk',minutes:5,gap:140},{mode:'rest',minutes:2,gap:220},{mode:'walk',minutes:4,gap:140},{mode:'rest',minutes:1,gap:180},{mode:'walk',minutes:9,gap:0}],elapsed:21,walking:18,meeting:1080},
+ {growth:3,consumption:9,netChange:-6,days:8,remaining:0},
+ {records:[{days:12,consumed:72},{days:6,consumed:60}],growth:2,initial:48,cows:14,days:4},
+ {trials:[{cows:3,trend:'increase',days:6,remaining:30},{cows:4,trend:'steady',days:6,remaining:24},{cows:6,trend:'decrease',days:12,remaining:0}],sustainable:4},
+ {inflow:3,outflow:9,netChange:-6,minutes:9,remaining:0},
+ {phases:[{inflow:4,outflow:10,minutes:5,remaining:30},{inflow:4,outflow:9,minutes:6,remaining:0}]},
+ {records:[{outflow:10,minutes:12,totalOut:120},{outflow:16,minutes:6,totalOut:96}],inflow:4,initial:72,outflow:13,minutes:8,totalOut:104,remaining:0}
+];

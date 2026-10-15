@@ -30,6 +30,8 @@ function setupWorld3d(app,pool){
  app.post('/api/world3d/:id/start',async(req,res)=>res.json(await access(req,true,(s,opts)=>{engine.start(s,req.body.courseId,opts.demo);return engine.view(s,opts);})));
  app.post('/api/world3d/:id/run',async(req,res)=>res.json(await access(req,true,(s,opts)=>({...engine.runAction(s,req.body,opts.demo),...engine.view(s,opts)}))));
  app.post('/api/world3d/:id/observatory',async(req,res)=>res.json(await access(req,true,(s,opts)=>({...require('./observatory.cjs').submit(s,req.body,engine.campaign(s).complete||opts.demo),state:engine.view(s,opts)}))));
+ // 地图权限由服务端进度与教师身份决定，不采纳浏览器声明的 demo。
+ app.post('/api/world3d/:id/ecoport',async(req,res)=>res.json(await access(req,true,(s,opts)=>({...require('./ecoport.cjs').submit(s,req.body,require('./observatory.cjs').view(s).complete||opts.demo,!!opts.demo),state:engine.view(s,opts)}))));
  app.post('/api/world3d/:id/camp',async(req,res)=>res.json(await access(req,true,(s,opts)=>({...engine.submitGame(s,req.body,opts.demo),state:engine.view(s,opts)}))));
 }
 module.exports={setupWorld3d};

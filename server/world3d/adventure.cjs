@@ -14,7 +14,7 @@ const variants=townCourses.find(c=>c.id==='seed-1-0').questions;
 function progress(s){return s.adventure?.chapters?.[chapter.id];}
 function ensure(s){s.adventure??={chapters:{}};return s.adventure.chapters[chapter.id]??={rewards:{},done:false};}
 function earned(s){return Object.values(progress(s)?.rewards||{}).reduce((a,b)=>a+b,0);}
-function view(s){const p=progress(s);return {chapter,started:!!p,done:!!p?.done,points:Math.max(0,earned(s)+require('./observatory.cjs').earned(s)-(s.playground?.spent||0)),items:p?.done?chapter.items:[],completedSteps:Object.keys(p?.rewards||{}).filter(k=>k!=='completion'),activeNpc:p?.done?1:0};}
+function view(s){const p=progress(s);return {chapter,started:!!p,done:!!p?.done,points:Math.max(0,earned(s)+require('./observatory.cjs').earned(s)+require('./ecoport.cjs').earned(s)-(s.playground?.spent||0)),items:p?.done?chapter.items:[],completedSteps:Object.keys(p?.rewards||{}).filter(k=>k!=='completion'),activeNpc:p?.done?1:0};}
 function cleanBoard(b){
  if(!b||typeof b!=='object'||Array.isArray(b)||JSON.stringify(b).length>3000)fail(400,'操作台数据不正确，请重新摆放。');
  const places={};for(const [key,value] of Object.entries(b.places||{})){if(!/^\d{1,2}$/.test(key)||Number(key)>19||!Number.isInteger(value)||value<0||value>9)fail(400,'配送篮数据不正确。');places[key]=value;}

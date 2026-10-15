@@ -2,7 +2,8 @@
 export const flightDuration=3.5;
 export const ports={
  camp:{position:{x:18.5,z:0},yaw:-Math.PI/2,approach:{x:14.5,z:0},destination:'sky',route:'observatory'},
- sky:{position:{x:0,z:16.5},yaw:Math.PI,approach:{x:0,z:12.5},destination:'camp',route:'expedition'}
+ sky:{position:{x:0,z:16.5},yaw:Math.PI,approach:{x:0,z:12.5},destination:'camp',route:'expedition'},
+ eco:{position:{x:0,z:16.5},yaw:Math.PI,approach:{x:0,z:12.5},destination:'sky',route:'observatory'}
 };
 
 export function createVoyageClock(onFinish,arriving=false){

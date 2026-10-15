@@ -5,6 +5,7 @@ const {judgeCampGame,gameTitles,gameTopics}=require('./camp-games.cjs');
 const {townCourses,campCourses,courses,questions,firstQuestions,isAnswer}=require('./content.cjs');
 const adventure=require('./adventure.cjs');
 const observatory=require('./observatory.cjs');
+const ecoport=require('./ecoport.cjs');
 function initial(){return {version:1,records:{},runs:{},active:null,repairs:{}};}
 function selectCharacter(s,id){
  if(!['boy','girl'].includes(id))fail(400,'请选择男生或女生探险家。');
@@ -42,11 +43,12 @@ function view(s,{demo=false,readonly=false,name='探索家'}={}){
  if(demo)world.diagnosticDone=true;
  world.campaign=campaign(s,demo);
  world.observatory=observatory.view(s,world.campaign.complete||demo);
+ world.ecoport=ecoport.view(s,world.observatory.complete||demo,demo);
  world.adventure=adventure.view(s);
  world.playground=require('./playground.cjs').wallet(s,{demo});
  if(!world.adventure.done)world.tasks=[{kind:'course',courseId:adventure.chapter.courseId,title:'帮助米米准备救援口粮',reason:'完成四项准备，获得口粮箱与下一站的线索。'}];
  return {world,run:publicRun(s),name,demo,readonly,courses:courses.map(c=>({id:c.id,title:c.title,description:c.description,count:c.questions.length,unlocked:!c.id.startsWith('camp-')||world.campaign.missions.find(m=>m.id===c.id)?.unlocked})),
-  report:{observatory:observatory.report(s),questions:Object.entries(s.records).map(([qid,r])=>({qid,title:questions.get(qid)?.title,count:r.count,passed:r.passed,firstCorrect:r.first.correct,firstHints:r.first.hints,last:r.last,history:r.history})),repairs:Object.entries(s.repairs).map(([index,r])=>({title:gameTitles[index],passed:r.passed,count:r.count,history:r.history}))}};
+  report:{ecoport:ecoport.report(s),observatory:observatory.report(s),questions:Object.entries(s.records).map(([qid,r])=>({qid,title:questions.get(qid)?.title,count:r.count,passed:r.passed,firstCorrect:r.first.correct,firstHints:r.first.hints,last:r.last,history:r.history})),repairs:Object.entries(s.repairs).map(([index,r])=>({title:gameTitles[index],passed:r.passed,count:r.count,history:r.history}))}};
 }
 function start(s,courseId,demo=false){
  const c=courses.find(c=>c.id===courseId);

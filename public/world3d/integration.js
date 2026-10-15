@@ -54,9 +54,13 @@ function skyReportHTML(){
  const rows=data.report.observatory||[];
  return `<section class="card game-report"><h2>云海天文城 · ${rows.filter(r=>r.passed).length}/18</h2><details><summary>查看18项任务的尝试次数与操作记录</summary><table><thead><tr><th>任务</th><th>已尝试</th><th>第几次答对</th><th>操作记录</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.title)}</td><td>${r.count}</td><td>${r.firstSuccessAt||'尚未完成'}</td><td><details><summary>查看方案</summary>${r.history.map(a=>`<p>${esc(a.description)} · ${a.correct?'通过':'未通过'}<br>${esc(a.feedback)}</p>`).join('')||'尚未尝试'}</details></td></tr>`).join('')}</tbody></table></details></section>`;
 }
+function ecoReportHTML(){
+ const rows=data.report.ecoport||[];
+ return `<section class="card game-report"><h2>云海生态港 · ${rows.filter(r=>r.passed).length}/18</h2><details><summary>查看关卡、尝试次数与提示使用</summary><table><thead><tr><th>任务</th><th>验证次数</th><th>首次通过</th><th>操作记录</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.title)}<br><small>${esc(r.topic)}</small></td><td>${r.count}</td><td>${r.firstSuccessAt?'第'+r.firstSuccessAt+'次':'尚未完成'}</td><td><details><summary>查看方案</summary>${r.history.map(a=>`<p>${esc(a.description)} · ${a.correct?'通过':'未通过'} · 提示 ${a.hintsUsed||0} 次<br>${esc(a.feedback)}</p>`).join('')||'尚未尝试'}</details></td></tr>`).join('')}</tbody></table></details></section>`;
+}
 function reportHTML(){
  const rows=data.report.questions;
- return skyReportHTML()+ThinkingAdventure.bag(data.world.adventure)+`<h1>${esc(data.name)}的游戏足迹</h1><p>小镇与营地练习：已探索 ${rows.length} 道不同题目；${rows.filter(r=>r.passed).length} 道曾答对。游戏记录不计入课堂测评分数。</p><div class="card game-report"><table><thead><tr><th>题目</th><th>作答次数</th><th>第一次</th><th>通关</th><th>最近作答与思路</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.title)}</td><td>${r.count}</td><td>${r.firstCorrect?r.firstHints?'提示后答对':'独立答对':'待巩固'}</td><td>${r.passed?'✓':'尚未答对'}</td><td><details><summary>展开记录</summary>${r.history.map(a=>`<p>${esc(a.created.slice(0,16).replace('T',' '))} · ${esc(a.answer||'未填写')} · ${a.revealed?'学习解析':a.correct?'答对':'未答对'}<br>思路：${esc(a.note||'未填写')}${a.workLabels?'<br>观察：'+a.workLabels.labels.map((label,i)=>esc(label)+'：'+esc(a.work?.[['first','second'][i]]||'未填')).join('；')+(a.workLabels.extra?'；'+esc(a.workLabels.extra)+'：'+esc(a.work?.extra||'未填'):''):''}</p>`).join('')}</details></td></tr>`).join('')||'<tr><td colspan="5">完成一题后，这里就会留下足迹。</td></tr>'}</tbody></table></div><h2>营地修复记录</h2><div class="game-tasks">${data.report.repairs.map(r=>`<article class="card"><h3>${esc(r.title)}</h3><p>${r.passed?'已修复':'还在尝试'} · 共验证 ${r.count} 次</p><details><summary>查看最近方案</summary>${r.history.map(a=>`<p>${esc(a.description)}<br>${esc(a.feedback)}</p>`).join('')}</details></article>`).join('')||'<p>开始修复营地后显示。</p>'}</div>`;
+ return ecoReportHTML()+skyReportHTML()+ThinkingAdventure.bag(data.world.adventure)+`<h1>${esc(data.name)}的游戏足迹</h1><p>小镇与营地练习：已探索 ${rows.length} 道不同题目；${rows.filter(r=>r.passed).length} 道曾答对。游戏记录不计入课堂测评分数。</p><div class="card game-report"><table><thead><tr><th>题目</th><th>作答次数</th><th>第一次</th><th>通关</th><th>最近作答与思路</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.title)}</td><td>${r.count}</td><td>${r.firstCorrect?r.firstHints?'提示后答对':'独立答对':'待巩固'}</td><td>${r.passed?'✓':'尚未答对'}</td><td><details><summary>展开记录</summary>${r.history.map(a=>`<p>${esc(a.created.slice(0,16).replace('T',' '))} · ${esc(a.answer||'未填写')} · ${a.revealed?'学习解析':a.correct?'答对':'未答对'}<br>思路：${esc(a.note||'未填写')}${a.workLabels?'<br>观察：'+a.workLabels.labels.map((label,i)=>esc(label)+'：'+esc(a.work?.[['first','second'][i]]||'未填')).join('；')+(a.workLabels.extra?'；'+esc(a.workLabels.extra)+'：'+esc(a.work?.extra||'未填'):''):''}</p>`).join('')}</details></td></tr>`).join('')||'<tr><td colspan="5">完成一题后，这里就会留下足迹。</td></tr>'}</tbody></table></div><h2>营地修复记录</h2><div class="game-tasks">${data.report.repairs.map(r=>`<article class="card"><h3>${esc(r.title)}</h3><p>${r.passed?'已修复':'还在尝试'} · 共验证 ${r.count} 次</p><details><summary>查看最近方案</summary>${r.history.map(a=>`<p>${esc(a.description)}<br>${esc(a.feedback)}</p>`).join('')}</details></article>`).join('')||'<p>开始修复营地后显示。</p>'}</div>`;
 }
 let sceneKind=null;
 async function saveCharacter(character){
@@ -75,8 +79,8 @@ async function payRide(payload){
  if(!data.demo)data.world.adventure.points=out.balance;
  return out;
 }
-function sceneOptions(){return {submitSky,submitGame,saveCharacter,saveHome,payRide,readonly:data.readonly,demo:data.demo};}
-function dispose(){GameDictation.cancel();QuestionCard.close();GameCompletion.close();ThinkingTown.dispose();ThinkingExpedition.dispose();ThinkingHome.dispose();ThinkingObservatory.dispose();sceneKind=null;}
+function sceneOptions(){return {submitSky,submitEco,submitGame,saveCharacter,saveHome,payRide,readonly:data.readonly,demo:data.demo};}
+function dispose(){GameDictation.cancel();QuestionCard.close();GameCompletion.close();ThinkingTown.dispose();ThinkingExpedition.dispose();ThinkingHome.dispose();ThinkingObservatory.dispose();ThinkingEcoport.dispose();sceneKind=null;}
 function showQuestion(options={}){GameDictation.cancel();QuestionCard.render(app,practiceHTML(),{onClose:()=>void act('close-card'),...options});}
 function paint(){
  const previousRoute=route;
@@ -100,6 +104,7 @@ function paint(){
  else if(route==='report')app.innerHTML=reportHTML();
  else if(route==='home'){app.innerHTML=ThinkingHome.html();ThinkingHome.mount(app,data.world,sceneOptions());sceneKind='home';}
  else if(route==='observatory'){app.innerHTML=ThinkingObservatory.html(data.world,data.demo);ThinkingObservatory.mount(app,data.world,sceneOptions());sceneKind='sky';}
+ else if(route==='ecoport'){app.innerHTML=ThinkingEcoport.html(data.world,data.demo);ThinkingEcoport.mount(app,data.world,sceneOptions());sceneKind='eco';}
  else if(route==='expedition'){app.innerHTML=ThinkingExpedition.html(data.world);ThinkingExpedition.mount(app,data.world,sceneOptions());sceneKind='camp';}
  else {app.innerHTML=ThinkingTown.html(data.world,data.name);ThinkingTown.mount(app,data.world,{...sceneOptions(),homeArrival:previousRoute==='home'});sceneKind='town';}
  if(data.readonly){const p=document.createElement('p');p.className='readonly-note';p.textContent='正在查看学生的真实进度；如需操作体验，请返回教师端进入教师试玩。';app.prepend(p);}
@@ -110,6 +115,12 @@ function paint(){
 async function submitSky(payload){
  if(data.readonly)throw Error('当前仅查看学生进度。');
  const ticket=serial,out=await request('/observatory',payload);
+ if(ticket===serial){accept(out.state);GameAudio.result(out.correct);}
+ return out;
+}
+async function submitEco(payload){
+ if(data.readonly)throw Error('当前仅查看学生进度。');
+ const ticket=serial,out=await request('/ecoport',payload);
  if(ticket===serial){accept(out.state);GameAudio.result(out.correct);}
  return out;
 }

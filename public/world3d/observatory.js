@@ -6,7 +6,7 @@ const ThinkingObservatory=(()=>{
  const colors={黄:'#ffd34f',蓝:'#67cee9',粉:'#f99bb7'};
  function html(world,demo=false){const o=world.observatory;
   if(!o?.unlocked)return `<section class="card"><span class="pill">第三张地图 · 云海天文城</span><h1>远方传来了微弱的求救信号</h1><p>先完成星光探险营的六站修复，飞艇就能出发。目前已修复 ${world.campaign.missions.filter(m=>m.repaired).length} / 6 站。</p><a class="button" href="#expedition">回营地继续修复</a></section>`;
-  return `<section class="world3d-shell sky-shell" aria-label="云海天文城"><div class="world3d-toolbar"><strong data-sky-progress>☀ 云海天文城 · ${o.completed}/18</strong><div><button class="outline mini" data-sky-current data-place="${o.active<0?5:Math.floor(o.active/3)}">前往当前任务</button><button class="outline mini" data-camera-out aria-label="拉远视角">－</button><button class="outline mini" data-camera-in aria-label="拉近视角">＋</button><button class="outline mini" data-camera-reset>重置视角</button><button class="outline mini" data-camera-full>沉浸模式</button></div></div><div id="town-viewport" tabindex="0" role="group" aria-label="云海天文城，方向键移动，Enter检查设施"><div id="town-loading" role="status">正在乘飞艇抵达天文城……</div><div class="world3d-label" id="town-nearby" hidden></div></div><div class="world3d-controls"><div id="town-joystick" aria-label="触屏移动摇杆"><span></span></div><div><p id="town-position" role="status">${demo?'教师独立试玩 · 可以提前体验本地图':'营地恢复信号，天文城等待你的帮助'}</p><small>WASD 移动 · R 跑步 · 空格跳跃 · Enter 交谈</small></div><button data-talk disabled>检查附近设施</button></div><section id="town-dialogue" class="card town-dialogue sky-dialogue" hidden></section></section>`;
+  return `<section class="world3d-shell sky-shell" aria-label="云海天文城"><div class="world3d-toolbar"><strong data-sky-progress>☀ 云海天文城 · ${o.completed}/18</strong><div><button class="outline mini" data-sky-current disabled data-place="${o.active<0?5:Math.floor(o.active/3)}">前往当前任务</button><button class="outline mini" data-camera-out aria-label="拉远视角">－</button><button class="outline mini" data-camera-in aria-label="拉近视角">＋</button><button class="outline mini" data-camera-reset>重置视角</button><button class="outline mini" data-camera-full>沉浸模式</button></div></div><div id="town-viewport" tabindex="0" role="group" aria-label="云海天文城，方向键移动，Enter检查设施"><div id="town-loading" role="status">正在乘飞艇抵达天文城……</div><div class="world3d-label" id="town-nearby" hidden></div></div><div class="world3d-controls"><div id="town-joystick" aria-label="触屏移动摇杆"><span></span></div><div><p id="town-position" role="status">${demo?'教师独立试玩 · 可以提前体验本地图':'营地恢复信号，天文城等待你的帮助'}</p><small>WASD 移动 · R 跑步 · 空格跳跃 · Enter 交谈</small></div><button data-talk disabled>检查附近设施</button></div><section id="town-dialogue" class="card town-dialogue sky-dialogue" hidden></section></section>`;
  }
  function mount(root,world,options={}){
   cleanup();if(!world.observatory?.unlocked)return;
@@ -19,15 +19,15 @@ const ThinkingObservatory=(()=>{
    if(m.repaired){box.innerHTML=`<button class="outline mini" data-close-dialogue>回到地图</button><span class="pill">设施已修复</span><h2>${esc(m.title)}</h2><p>${o.complete?'云海星图已重新点亮，谢谢你！':'这里已经恢复运行，下一站在等你。'}</p><details><summary>回看三项任务与尝试次数</summary>${o.stages.filter(q=>q.station===i).map(q=>`<p>${esc(q.text)}<br>完成 · 共尝试 ${q.count} 次</p>`).join('')}</details>`;return;}
    const q=o.stages[o.active];if(q.station!==i)return;
    stopTask=task(box,q,o,{...options,openSkyCurrent:()=>speak(Math.floor(world.observatory.active/3))},async out=>{
-    if(disposed)return;world.observatory=out.state.world.observatory;world.playground=out.state.world.playground;update();
+    if(disposed)return;world.observatory=out.state.world.observatory;world.ecoport=out.state.world.ecoport;world.playground=out.state.world.playground;update();
     if(out.stationComplete)celebrationTimer=setTimeout(()=>{if(disposed)return;stopTask();box.hidden=true;GameCompletion.show(root,{title:out.complete?'云海天文城 · 星图重新点亮':m.title+' · 修复成功',total:out.complete?18:3,story:false});},1400);
    },()=>{box.hidden=true;root.querySelector('#town-viewport').focus();});
   };
   function click(e){if(e.target.closest('[data-close-dialogue],[data-sky-next]'))clearTimeout(celebrationTimer);if(e.target.closest('[data-close-dialogue]'))stopTask();}
   root.addEventListener('click',click);
-  Promise.all([import('./town3d.js?v=20261013-airship'),import('./observatory-model.mjs')]).then(([town,model])=>{
+  Promise.all([import('./town3d.js?v=20261015-ecoport'),import('./observatory-model.mjs')]).then(([town,model])=>{
    if(disposed)return;
-   stop=town.mountWorld(root,{...world,areas:[],sceneConfig:{camp:true,sky:true,names:missions().map(m=>m.title),getMissions:missions,createScene:()=>model.createObservatory(()=>world.observatory)}},speak,options);update();
+   stop=town.mountWorld(root,{...world,areas:[],sceneConfig:{camp:true,sky:true,getEcoport:()=>world.ecoport,names:missions().map(m=>m.title),getMissions:missions,createScene:()=>model.createObservatory(()=>world.observatory)}},speak,options);update();
   }).catch(()=>{if(!disposed)root.querySelector('#town-loading').textContent='天文城加载失败，请刷新重试。';});
   cleanup=()=>{disposed=true;clearTimeout(celebrationTimer);stopTask();stop();root.removeEventListener('click',click);};
  }

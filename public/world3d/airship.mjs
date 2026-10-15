@@ -7,8 +7,12 @@ const smooth=t=>t*t*(3-2*t);
 export function prepareCampDock(scene){
  scene.traverse(o=>{if(o.isMesh&&/^(营地松树|松树树干)/.test(o.name)&&o.position.x>13&&Math.abs(o.position.z)<3.2)o.visible=false;});
 }
-export function mountAirship({root,viewport,scene,region,getHero,getActions,stopWalking,leave,say,enabled,arrival,navigate}){
+export function mountAirship({root,viewport,scene,region,getHero,getActions,stopWalking,leave,say,enabled,arrival,navigate,routes}){
  const port=ports[region],model=createAirship(),group=new T.Group();
+ const names={camp:'星光探险营',sky:'云海天文城',eco:'云海生态港'};
+ // 每次打开码头重新读取解锁状态，本站刚通关也能立即出发。
+ const itineraries=()=>routes?routes():[{destination:port.destination,route:port.route,label:names[port.destination],enabled}];
+ let chosen=itineraries()[0];
  group.name='往返飞艇码头';group.userData.airship=true;group.add(model.group);scene.add(group);
  const home=new T.Vector3(port.position.x,.18,port.position.z);
  model.group.position.copy(home);model.group.rotation.y=port.yaw;
@@ -26,9 +30,9 @@ export function mountAirship({root,viewport,scene,region,getHero,getActions,stop
  const ramp=box(1.15,.09,rampStart.distanceTo(rampEnd),0xffe4ae,0,0,0);
  ramp.position.copy(rampStart).lerp(rampEnd,.5);ramp.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),rampEnd.clone().sub(rampStart).normalize());
  const canvas=document.createElement('canvas');canvas.width=640;canvas.height=110;const ctx=canvas.getContext('2d');
- ctx.fillStyle='#fff4c9';ctx.fillRect(0,0,640,110);ctx.fillStyle='#49355f';ctx.font='bold 38px Microsoft Yahei';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(region==='camp'?'飞艇码头 · 云海天文城':'飞艇码头 · 返回营地',320,55);
+ ctx.fillStyle='#fff4c9';ctx.fillRect(0,0,640,110);ctx.fillStyle='#49355f';ctx.font='bold 38px Microsoft Yahei';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(region==='sky'?'云海航站 · 营地 / 生态港':`飞艇码头 · ${names[port.destination]}`,320,55);
  const texture=new T.CanvasTexture(canvas);texture.colorSpace=T.SRGBColorSpace;
- const sign=new T.Sprite(new T.SpriteMaterial({map:texture}));sign.position.set(port.approach.x+(region==='sky'?2.8:0),2.1,port.approach.z);sign.scale.set(4,.69,1);group.add(sign);
+ const sign=new T.Sprite(new T.SpriteMaterial({map:texture}));sign.position.set(port.approach.x+(region!=='camp'?2.8:0),2.1,port.approach.z);sign.scale.set(4,.69,1);group.add(sign);
  const clouds=new T.Group();clouds.visible=false;group.add(clouds);
  const geometry=new T.SphereGeometry(1,12,8),material=new T.MeshStandardMaterial({color:0xfffdf8,roughness:1});
  for(let i=0;i<16;i++){
@@ -46,10 +50,10 @@ export function mountAirship({root,viewport,scene,region,getHero,getActions,stop
  const deckPoint=()=>{model.group.updateMatrixWorld(true);return model.group.localToWorld(model.rider.clone()).add(new T.Vector3(0,.09,0));};
  const groundPoint=()=>new T.Vector3(port.approach.x,.09,port.approach.z);
  function stop(){clock?.dispose();clock=null;view=null;clouds.visible=false;panel.hidden=true;root.querySelector('.world3d-shell')?.classList.remove('airship-travelling');viewport.dataset.voyage='';}
- function finishArrival(){stop();model.group.position.copy(home);getActions().resetToIdle();leave(port.approach);say(region==='sky'?'已抵达云海天文城，走到黄色感叹号开始修复。':'已返回星光探险营。');viewport.focus({preventScroll:true});}
+ function finishArrival(){stop();model.group.position.copy(home);getActions().resetToIdle();leave(port.approach);say(region==='camp'?'已返回星光探险营。':`已抵达${names[region]}，走到黄色感叹号开始修复。`);viewport.focus({preventScroll:true});}
  function depart(skip){
   if(disposed)return;
-  queueArrival(port.destination,skip);stop();navigate(port.route);
+  queueArrival(chosen.destination,skip);stop();navigate(chosen.route);
  }
  function begin(arriving=false){
   if(disposed||clock||!getHero()||!getActions())return;
@@ -62,11 +66,13 @@ export function mountAirship({root,viewport,scene,region,getHero,getActions,stop
  function offer(){
   if(clock||disposed)return;
   const box=root.querySelector('#town-dialogue');box.classList.remove('is-playing');box.hidden=false;
-  box.innerHTML=`<button class="outline mini dialogue-close" data-close-dialogue>关闭</button><span class="pill">云海航线</span><h2>${region==='camp'?'乘飞艇前往天文城':'乘飞艇返回营地'}</h2><p>${enabled?'飞艇已停稳。登艇后穿过云海，在对岸码头下艇。':'完成营地六站修复后，飞艇就会开放。'}</p>${enabled?'<button data-board-airship>登艇出发 →</button>':'<button disabled>航线尚未开放</button>'}`;
+  box.innerHTML=`<button class="outline mini dialogue-close" data-close-dialogue>关闭</button><span class="pill">云海航线</span><h2>选择飞艇目的地</h2><p>登艇穿过云海，约4秒后在对岸下艇。</p>${itineraries().map((trip,i)=>`<p><button data-board-airship data-flight-route="${i}" ${trip.enabled?'':'disabled'}>乘飞艇${trip.destination==='camp'?'返回':'前往'}${trip.label} →</button>${trip.enabled?'':`<small> 完成${region==='sky'?'天文城18项任务':'营地六站修复'}后开放</small>`}</p>`).join('')}`;
  }
- function start(){
-  if(!enabled||clock||!getHero()||getActions()?.busy)return;
+ function start(routeIndex=0){
+  const trip=itineraries()[routeIndex];
+  if(!trip?.enabled||clock||!getHero()||getActions()?.busy)return;
   if(Math.hypot(getHero().position.x-port.approach.x,getHero().position.z-port.approach.z)>1.9)return;
+  chosen=trip;
   root.querySelector('#town-dialogue').hidden=true;begin();
  }
  function update(dt){
@@ -90,10 +96,10 @@ export function mountAirship({root,viewport,scene,region,getHero,getActions,stop
   hero.rotation.set(0,walking?Math.atan2(direction.x,direction.z):model.group.rotation.y,0);
   const look=hero.position.clone().add(new T.Vector3(0,2.3,0));
   view={look,offset:phase==='landing'||phase==='disembarking'?(region==='sky'?new T.Vector3(-10,6,-3):new T.Vector3(-9,5.5,8)):new T.Vector3(8,4.6,9)};
-  const labels={boarding:'正在登艇',flying:region==='camp'?'穿过云海 · 前往天文城':'穿过云海 · 返回营地',landing:'飞艇正在降落',disembarking:'已停稳，正在下艇'};
+  const labels={boarding:'正在登艇',flying:`穿过云海 · 前往${chosen.label}`,landing:'飞艇正在降落',disembarking:'已停稳，正在下艇'};
   panel.querySelector('[data-flight-status]').textContent=labels[phase];panel.querySelector('progress').value=clock.progress;
  }
- function click(e){if(e.target.closest('[data-board-airship]'))start();if(e.target.closest('[data-flight-skip]')){e.stopPropagation();clock?.skip();}}
+ function click(e){const board=e.target.closest('[data-board-airship]');if(board)start(Number(board.dataset.flightRoute||0));if(e.target.closest('[data-flight-skip]')){e.stopPropagation();clock?.skip();}}
  root.addEventListener('click',click);
  if(arrival){if(arrival.skip)finishArrival();else begin(true);}
  return {group,port,offer,start,update,get active(){return !!clock;},get camera(){return view;},nearby:position=>Math.hypot(position.x-port.approach.x,position.z-port.approach.z)<1.9,dispose(){disposed=true;stop();panel.remove();root.removeEventListener('click',click);}};

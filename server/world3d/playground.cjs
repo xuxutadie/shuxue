@@ -4,7 +4,7 @@ const rides=['carousel','wheel','surf','swing','trampoline'];
 const price=20;
 function wallet(s,{demo=false}={}){
  const spent=s.playground?.spent||0;
- const earned=adventure.earned(s)+require('./observatory.cjs').earned(s)+(demo?120:0);
+ const earned=adventure.earned(s)+require('./observatory.cjs').earned(s)+require('./ecoport.cjs').earned(s)+(demo?120:0);
  return {balance:Math.max(0,earned-spent),spent,price,demo};
 }
 // 使用原档案的行锁保存扣款；版本校验和请求编号防止双击、重试及多标签重复消费。
